@@ -13,11 +13,13 @@ import { UserRegisterResultComponent } from './passport/register-result/register
 import { UserLockComponent } from './passport/lock/lock.component';
 // single pages
 import { CallbackComponent } from './callback/callback.component';
+import { SimpleGuard, JWTGuard } from '@delon/auth';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutProComponent,
+    canActivateChild: [JWTGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },

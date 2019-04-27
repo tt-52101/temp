@@ -1,4 +1,9 @@
-import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
@@ -6,7 +11,7 @@ import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 @Component({
   selector: 'layout-pro-user',
   templateUrl: 'user.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutProWidgetUserComponent implements OnInit {
   constructor(
@@ -17,17 +22,19 @@ export class LayoutProWidgetUserComponent implements OnInit {
 
   ngOnInit(): void {
     // mock
-    const token = this.tokenService.get() || {
-      token: 'nothing',
-      name: 'Admin',
-      avatar: './assets/logo-color.svg',
-      email: 'cipchk@qq.com',
-    };
-    this.tokenService.set(token);
+    // const token = this.tokenService.get() || {
+    //   token: 'nothing',
+    //   name: 'Admin',
+    //   avatar: './assets/logo-color.svg',
+    //   email: 'cipchk@qq.com',
+    // };
+    // this.tokenService.set(token);
   }
 
   logout() {
     this.tokenService.clear();
+    localStorage.removeItem('chq');
+    localStorage.removeItem('user');
     this.router.navigateByUrl(this.tokenService.login_url);
   }
 }
