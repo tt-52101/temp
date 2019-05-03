@@ -5,11 +5,13 @@ import { DelonFormModule, WidgetRegistry } from '@delon/form';
 import { EditorWidget } from './widgets/editor/editor.widget';
 import { ImgWidget } from './widgets/img/img.widget';
 import { AddressWidget } from './widgets/address/address.widget';
+import { TinymceComponent } from './widgets/tinymce/tinymce.component';
 
 export const SCHEMA_THIRDS_COMPONENTS = [
   EditorWidget,
   ImgWidget,
   AddressWidget,
+  TinymceComponent,
 ];
 
 @NgModule({
@@ -23,5 +25,6 @@ export class JsonSchemaModule {
     widgetRegistry.register(EditorWidget.KEY, EditorWidget);
     widgetRegistry.register(ImgWidget.KEY, ImgWidget);
     widgetRegistry.register(AddressWidget.KEY, AddressWidget);
+    widgetRegistry.register(TinymceComponent.KEY, TinymceComponent);
   }
 }

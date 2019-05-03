@@ -40,6 +40,7 @@ export class StartupService {
   load(): Promise<any> {
     // only works with promises
     // https://github.com/angular/angular/issues/15088
+
     return new Promise(resolve => {
       zip(
         // this.httpClient.get(`http://localhost:4200//${this.i18n.defaultLang}`),
@@ -66,10 +67,18 @@ export class StartupService {
             this.settingService.setApp(res.app);
             // // 用户信息：包括姓名、头像、邮箱地址
             // this.settingService.setUser(userData);
-            // ACL：设置权限为全量
-            this.aclService.setFull(true);
             // 初始化菜单
+
+            let d = this.aclService.data;
+            const st = localStorage.getItem('user');
+            const localUser = JSON.parse(st);
+            const cc = this.settingService.user;
+            if (st) {
+              const ss = localUser['Roles'];
+              this.aclService.setRole(ss);
+            }
             this.menuService.add(res.menu);
+            console.log(this.i18n.defaultLang);
             // 设置页面标题的后缀
             this.titleService.default = '';
             this.titleService.suffix = res.app.name;

@@ -1,0 +1,39 @@
+<div style="background: #ECECEC; padding: 30px;">
+  <nz-row [nzGutter]="20">
+    <nz-col [nzSpan]="12">
+      <nz-card style="height: 150px;">
+        <nz-statistic [nzValue]="record.TotalCount" [nzTitle]="'Total Project'" [nzPrefix]="prefixTplOne"
+          [nzSuffix]="'个'" [nzValueStyle]="{ color: '#3F8600' }">
+        </nz-statistic>
+        <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="12">
+      <nz-card style="height: 150px;">
+        <nz-statistic [nzValue]="record.LiveCount" [nzTitle]="'Live Project'" [nzPrefix]="prefixTplTwo" [nzSuffix]="'个'"
+          [nzValueStyle]="{ color: '#CF1322' }">
+        </nz-statistic>
+        <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
+      </nz-card>
+    </nz-col>
+
+  </nz-row>
+  <nz-row [nzGutter]="20">
+    <nz-col [nzSpan]="12">
+      <nz-card style="height: 150px;">
+        <nz-statistic [nzValue]="record.StartDate|date" [nzTitle]="'从'" [nzPrefix]="prefixTplTwo"
+          [nzValueStyle]="{ color: '#CF1322'}">
+        </nz-statistic>
+        <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="12">
+      <nz-card style="height: 150px;">
+        <nz-statistic [nzValue]="record.LastUpdateTime|date" [nzTitle]="'到'" [nzPrefix]="prefixTplTwo"
+          [nzValueStyle]="{ color: '#CF1322' }">
+        </nz-statistic>
+        <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
+      </nz-card>
+    </nz-col>
+  </nz-row>
+</div>

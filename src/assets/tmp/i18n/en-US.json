@@ -5,11 +5,16 @@
   "menu.clear.local.storage": "Clear Local Storage",
   "menu.lang": "Language",
   "menu.main": "Main Navigation",
-  "menu.dashboard": "Dashboard",
-  "menu.dashboard.v1": "Default",
-  "menu.dashboard.analysis": "Analysis",
-  "menu.dashboard.monitor": "Monitor",
-  "menu.dashboard.workplace": "Workplace",
+  "menu.workspace": "Work Space",
+  "menu.workspace.dashboards": "Working Desk",
+  "menu.workspace.personeldataservice": "Data Analysis-Personal",
+  "menu.workspace.teamdataservice": "Data Analysis-Team",
+
+  "menu.setting": "Settings",
+  "menu.settings.import": "Data Import",
+  "menu.settings.set": "Rule Setting",
+
+
   "menu.shortcut": "Shortcut",
   "menu.widgets": "Widgets",
   "menu.alain": "Alain",
@@ -246,6 +251,6 @@
   "app.sys.menu.root": "Add Root Menu",
   "app.sys.permission.list": "Permission List",
   "app.sys.permission.root": "Add Root Node",
-  "layout.pro.user.link.home": "Pro Home",
-  "layout.pro.user.link.alain": "Alain"
+  "layout.pro.user.link.home": "Lum Hangzhou Home",
+  "layout.pro.user.link.alain": "LUM HZ"
 }

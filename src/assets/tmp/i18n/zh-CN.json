@@ -5,11 +5,15 @@
   "menu.clear.local.storage": "清理本地缓存",
   "menu.lang": "语言",
   "menu.main": "主导航",
-  "menu.dashboard": "仪表盘",
-  "menu.dashboard.v1": "默认页",
-  "menu.dashboard.analysis": "分析页",
-  "menu.dashboard.monitor": "监控页",
-  "menu.dashboard.workplace": "工作台",
+  "menu.workspace": "工作台",
+  "menu.workspace.dashboards": "工作区域",
+  "menu.workspace.personeldataservice": "数据窗口-个人",
+  "menu.workspace.teamdataservice": "数据窗口-团队",
+
+  "menu.setting": "设置",
+  "menu.settings.import": "数据导入",
+  "menu.settings.set": "规则设置",
+
   "menu.shortcut": "快捷菜单",
   "menu.widgets": "小部件",
   "menu.alain": "Alain",
@@ -246,6 +250,6 @@
   "app.sys.menu.root": "添加根目录",
   "app.sys.permission.list": "权限列表",
   "app.sys.permission.root": "添加根节点",
-  "layout.pro.user.link.home": "Pro 首页",
-  "layout.pro.user.link.alain": "Alain Pro"
+  "layout.pro.user.link.home": "Lum Hangzhou 首页",
+  "layout.pro.user.link.alain": "LUM HZ"
 }

@@ -1,3 +1,4 @@
+import { ACLService } from '@delon/acl';
 import { SettingsService, _HttpClient } from '@delon/theme';
 import { Component, OnDestroy, Inject, Optional } from '@angular/core';
 import { Router } from '@angular/router';
@@ -30,6 +31,7 @@ export class UserLoginComponent implements OnDestroy {
     private router: Router,
     private settingsService: SettingsService,
     private socialService: SocialService,
+    private aclService: ACLService,
     @Optional()
     @Inject(ReuseTabService)
     private reuseTabService: ReuseTabService,
@@ -125,7 +127,10 @@ export class UserLoginComponent implements OnDestroy {
         // 设置用户Token信息
         this.tokenService.set({ token: res.AccessToken });
         localStorage.setItem('chq', res.RefreshToken);
-        this.settingsService.setUser(res);
+        if (this.settingsService.setUser(res)) {
+          this.aclService.setRole(res['Roles']);
+        }
+
         // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
         this.startupSrv.load().then(() => {
           let url = this.tokenService.referrer.url || '/';

@@ -4,8 +4,6 @@ import { environment } from '@env/environment';
 // layout
 import { LayoutProComponent } from '@brand';
 import { LayoutPassportComponent } from '../layout/passport/passport.component';
-// dashboard pages
-import { DashboardComponent } from './dashboard/dashboard.component';
 // passport pages
 import { UserLoginComponent } from './passport/login/login.component';
 import { UserRegisterComponent } from './passport/register/register.component';
@@ -14,6 +12,10 @@ import { UserLockComponent } from './passport/lock/lock.component';
 // single pages
 import { CallbackComponent } from './callback/callback.component';
 import { SimpleGuard, JWTGuard } from '@delon/auth';
+import { RoutesHomeTeamComponent } from './home/team/team.component';
+import { RoutesHomeDashboardsComponent } from './home/dashboards/dashboards.component';
+import { RoutesHomePersonelComponent } from './home/personel/personel.component';
+import { RoutesHomeDashboardsEditComponent } from './home/dashboards/edit/edit.component';
 
 const routes: Routes = [
   {
@@ -21,8 +23,15 @@ const routes: Routes = [
     component: LayoutProComponent,
     canActivateChild: [JWTGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
+      { path: '', redirectTo: 'home/dashboards', pathMatch: 'full' },
+      { path: 'home', redirectTo: 'home/dashboards', pathMatch: 'full' },
+      { path: 'home/team', component: RoutesHomeTeamComponent },
+      { path: 'home/dashboards', component: RoutesHomeDashboardsComponent },
+      { path: 'home/personel', component: RoutesHomePersonelComponent },
+      {
+        path: 'settings',
+        loadChildren: './setting/setting.module#SettingModule',
+      },
       // Exception
       {
         path: 'exception',
