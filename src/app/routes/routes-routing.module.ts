@@ -32,6 +32,10 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: './setting/setting.module#SettingModule',
       },
+      {
+        path: 'tools',
+        loadChildren: './tools/tools.module#ToolsModule',
+      },
       // Exception
       {
         path: 'exception',

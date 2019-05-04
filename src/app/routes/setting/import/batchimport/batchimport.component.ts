@@ -18,7 +18,7 @@ import { ProjectTransfer } from 'app/services/biz/projecttransfer';
 export class SettingImportBatchimportComponent implements OnInit, OnChanges {
   private _inputValue: string;
   @Input() set inputValue(value: string) {
-    if (this._inputValue != value) {
+    if (this._inputValue !== value) {
       this._inputValue = value;
       this.inputObjs = JSON.parse(value);
       this.pCount = this.inputObjs.length;
@@ -31,8 +31,8 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
 
   layout: 'vertical';
   inputObjs: ProjectTransfer[];
-  pCount: number = 0;
-  pTime: number = 0;
+  pCount = 0;
+  pTime = 0;
   loading = false;
   disabled = false;
   inputSetting = { minRows: 10, maxRows: 15 };

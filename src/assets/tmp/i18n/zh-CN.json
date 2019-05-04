@@ -14,6 +14,14 @@
   "menu.settings.import": "数据导入",
   "menu.settings.set": "规则设置",
 
+  "menu.tools": "工具",
+  "menu.tools.safety": "安规",
+  "menu.tools.performance": "性能",
+  "menu.tools.safety.thermal": "温度计算",
+  "menu.tools.safety.phototool": "照片处理",
+  "menu.tools.performance.photometric": "光效计算",
+  "menu.tools.performance.colormetric": "色度计算",
+
   "menu.shortcut": "快捷菜单",
   "menu.widgets": "小部件",
   "menu.alain": "Alain",

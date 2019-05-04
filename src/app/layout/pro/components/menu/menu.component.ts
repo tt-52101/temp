@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  OnInit,
+} from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -15,7 +22,7 @@ import { ProMenu } from '../../pro.types';
     '[class.alain-pro__menu]': 'true',
     '[class.alain-pro__menu-only-icon]': 'pro.onlyIcon',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutProMenuComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -28,8 +35,8 @@ export class LayoutProMenuComponent implements OnInit, OnDestroy {
     private menuSrv: MenuService,
     private router: Router,
     public pro: BrandService,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   private cd() {
     this.cdr.markForCheck();
@@ -38,7 +45,10 @@ export class LayoutProMenuComponent implements OnInit, OnDestroy {
   private genMenus(data: Menu[]) {
     const res: ProMenu[] = [];
     // ingores category menus
-    const ingoreCategores = data.reduce((prev, cur) => prev.concat(cur.children), []);
+    const ingoreCategores = data.reduce(
+      (prev, cur) => prev.concat(cur.children),
+      [],
+    );
     this.menuSrv.visit(ingoreCategores, (item, parent) => {
       if (!item._aclResult) {
         if (this.disabledAcl) {
@@ -48,7 +58,7 @@ export class LayoutProMenuComponent implements OnInit, OnDestroy {
         }
       }
       if (item._hidden === true) {
-        return ;
+        return;
       }
       if (parent === null) {
         res.push(item);
@@ -94,7 +104,7 @@ export class LayoutProMenuComponent implements OnInit, OnDestroy {
   }
 
   to(item: ProMenu) {
-    if (item.disabled) return ;
+    if (item.disabled) return;
 
     const { router, pro } = this;
     const { externalLink, target, link } = item;
@@ -107,7 +117,10 @@ export class LayoutProMenuComponent implements OnInit, OnDestroy {
       return;
     }
     // Wait closed sub-menu panel
-    setTimeout(() => router.navigateByUrl(link), pro.collapsed || pro.isTopMenu ? 25 : 0);
+    setTimeout(
+      () => router.navigateByUrl(link),
+      pro.collapsed || pro.isTopMenu ? 25 : 0,
+    );
     if (pro.isMobile) {
       setTimeout(() => pro.setCollapsed(true), 25);
     }
@@ -115,19 +128,23 @@ export class LayoutProMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const { unsubscribe$, router, pro } = this;
-    this.menuSrv.change.pipe(
-      takeUntil(unsubscribe$)
-    ).subscribe(res => this.genMenus(res));
+    this.menuSrv.change
+      .pipe(takeUntil(unsubscribe$))
+      .subscribe(res => this.genMenus(res));
 
-    router.events.pipe(
-      takeUntil(unsubscribe$),
-      filter(e => e instanceof NavigationEnd)
-    ).subscribe(() => this.openStatus());
+    router.events
+      .pipe(
+        takeUntil(unsubscribe$),
+        filter(e => e instanceof NavigationEnd),
+      )
+      .subscribe(() => this.openStatus());
 
-    pro.notify.pipe(
-      takeUntil(unsubscribe$),
-      filter(() => !!this.menus)
-    ).subscribe(() => this.cd());
+    pro.notify
+      .pipe(
+        takeUntil(unsubscribe$),
+        filter(() => !!this.menus),
+      )
+      .subscribe(() => this.cd());
   }
 
   ngOnDestroy() {

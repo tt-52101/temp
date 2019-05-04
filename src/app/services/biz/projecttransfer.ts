@@ -12,8 +12,8 @@ export class ProjectTransfer implements BaseEntity {
   EngineeringCSName: string;
   SalesName: string;
   SalesCSName: string;
-  ClentName: string;
-  ServiceName: string[];
+  ClientName: string;
+  ServiceNames: string[];
   Product: string;
   Models: string;
   QuotedFee: number;
