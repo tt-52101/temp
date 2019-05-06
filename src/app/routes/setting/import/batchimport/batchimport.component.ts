@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd';
 import {
   Component,
@@ -8,8 +9,11 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
+
 import { _HttpClient } from '@delon/theme';
 import { ProjectTransfer } from 'app/services/biz/projecttransfer';
+import { zip, forkJoin, Observable, of, from } from 'rxjs';
+import { zipAll, concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-setting-import-batchimport',
@@ -20,9 +24,12 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
   @Input() set inputValue(value: string) {
     if (this._inputValue !== value) {
       this._inputValue = value;
-      this.inputObjs = JSON.parse(value);
-      this.pCount = this.inputObjs.length;
-      this.pTime = this.inputObjs.length * 0.2;
+      let c = JSON.parse(value);
+      if (c !== null) {
+        this.inputObjs = JSON.parse(value);
+        this.pCount = this.inputObjs.length;
+        this.pTime = this.inputObjs.length * 0.2;
+      }
     }
   }
   get inputValue() {
@@ -53,23 +60,41 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
       this.message.warning('还没有内容呢！');
       return;
     }
-    setTimeout(() => {}, 1000);
-    this.http
-      .post('home/projects/addandupdatecollection', this.inputObjs)
-      .subscribe(
-        res => {
-          this.message.info(res);
-          console.log(res);
-        },
-        err => {
-          console.log(err);
-          this.disabled = false;
-          this.loading = false;
-        },
-        () => {
-          this.disabled = false;
-          this.loading = false;
-        },
-      );
+    const urlcalls = [];
+    urlcalls.push('person/SimpleCreateByProjects');
+    urlcalls.push('home/Client/addandupdatecollection');
+    urlcalls.push('home/Service/addandupdatecollection');
+
+    zip(
+      this.http.post('person/SimpleCreateByProjects', this.inputObjs),
+      this.http.post('home/Service/addandupdatecollection', this.inputObjs),
+      this.http.post('home/Client/addandupdatecollection', this.inputObjs),
+    ).subscribe(
+      ([serviceRes, clientRes, personRes]) => {
+        console.log(serviceRes);
+        console.log(clientRes);
+        console.log(personRes);
+      },
+      err => {
+        this.loading = false;
+        this.disabled = false;
+      },
+      () => {
+        this.http
+          .post('home/Projects/addandupdatecollection', this.inputObjs)
+          .subscribe(
+            res => console.log(res),
+            err => {
+              this.loading = false;
+              this.disabled = false;
+            },
+            () => {
+              this.loading = false;
+              this.disabled = false;
+              this.message.info('完成了');
+            },
+          );
+      },
+    );
   }
 }
