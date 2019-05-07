@@ -14,6 +14,7 @@ import { _HttpClient } from '@delon/theme';
 import { ProjectTransfer } from 'app/services/biz/projecttransfer';
 import { zip, forkJoin, Observable, of, from } from 'rxjs';
 import { zipAll, concatMap } from 'rxjs/operators';
+import { syntaxError } from '@angular/compiler';
 
 @Component({
   selector: 'app-setting-import-batchimport',
@@ -21,14 +22,18 @@ import { zipAll, concatMap } from 'rxjs/operators';
 })
 export class SettingImportBatchimportComponent implements OnInit, OnChanges {
   private _inputValue: string;
+
   @Input() set inputValue(value: string) {
     if (this._inputValue !== value) {
       this._inputValue = value;
-      let c = JSON.parse(value);
-      if (c !== null) {
+      try {
         this.inputObjs = JSON.parse(value);
         this.pCount = this.inputObjs.length;
         this.pTime = this.inputObjs.length * 0.2;
+      } catch (e) {
+        if (e instanceof syntaxError) {
+        } else {
+        }
       }
     }
   }

@@ -5,7 +5,7 @@
 export const environment = {
   SERVER_URL: `https://www.photonee.com/`,
   production: false,
-  useHash: true,
+  useHash: false,
   hmr: true,
 };
 
