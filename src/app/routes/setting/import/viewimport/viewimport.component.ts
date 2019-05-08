@@ -1,8 +1,11 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { ProjectTransfer } from 'app/services/biz/projecttransfer';
-import { PARAMETERS } from '@angular/core/src/util/decorators';
+import { from, of } from 'rxjs';
+import { SyneltsUser } from 'app/services/biz/SyneltsUser';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-setting-import-viewimport',
@@ -10,50 +13,49 @@ import { PARAMETERS } from '@angular/core/src/util/decorators';
 })
 export class SettingImportViewimportComponent implements OnInit {
   loading = false;
-  checkloading=false;
+  checkloading = false;
   pageSize = 20;
   pageIndex = 1;
   record: any = {};
-  params: any = { 
-    CurrentPage:1,
-    PageSize:20,
-    IsDeleted:false,
-    IsIncludeAll:true,
-    IsFinished:false,
-    EngineerName:'Ryan Rui',
-    EngineeringCSName:'',
-    AssitEngineerName:'',
-    SalesCSName:'',
-    SalesName:'',
-    ServiceName:'',
-    ClientName:'',
-    OpenDateFrom:new Date(2015,1,1),
-    OpenDateTo:Date.now,
-    CompleteDateFrom:new Date(2019,1,1),
-    CompleteDateTo:Date.now
-   };
+  users: any = [];
+  params: any = {
+    CurrentPage: 1,
+    PageSize: 20,
+    IsDeleted: false,
+    IsIncludeAll: true,
+    IsFinished: false,
+    EngineerName: 'Ryan Rui',
+    EngineeringCSName: '',
+    AssitEngineerName: '',
+    SalesCSName: '',
+    SalesName: '',
+    ServiceName: '',
+    ClientName: '',
+    OpenDateFrom: new Date(2015, 1, 1),
+    OpenDateTo: Date.now,
+    CompleteDateFrom: new Date(2019, 1, 1),
+    CompleteDateTo: Date.now,
+  };
   ptsShow = [];
   searchValue = '';
   sortName: string | null = null;
   sortValue: string | null = null;
   status = [
     { index: 0, text: '安规', value: false, checked: false },
-    { index: 1, text: '能效', value: false, checked: false},
+    { index: 1, text: '能效', value: false, checked: false },
     { index: 2, text: '化学', value: false, checked: false },
   ];
-  engineer=[
-    { index: 0, text: 'Patrick Chen', value: false, checked: false },
-    { index: 1, text: 'Jerry Chen', value: false, checked: false},
-    { index: 2, text: 'Meng Wang', value: false, checked: false },
-  ];
-  sales=[
-
-  ];
-  EngCS=[
-
-  ];
-  clients=[];
-  services=[];
+  selectStatus = {};
+  engineer = [];
+  selectEngineer = {};
+  sales = [];
+  selectSales = {};
+  EngCS = [];
+  selectEngCS = {};
+  clients = [];
+  selectClient = {};
+  services = [];
+  selectService = {};
   expandForm = false;
   // @Input() set status(value: string) {
   //   if (this._status !== value) {
@@ -78,7 +80,52 @@ export class SettingImportViewimportComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get(`home/dbstatus`).subscribe(res => (this.record = res));
-    this.getData('joh');
+    this.http.get('person/userAll').subscribe((res: SyneltsUser[]) => {
+      [...res].forEach(item => {
+        this.users.push(item);
+        console.log(item);
+      });
+      console.log(this.users);
+    },err=>{},()=>{
+      [...this.users].forEach(item => {
+        let i = 0;
+        if (item.SyneltsRole.indexOf('0') !== -1) {
+          this.engineer.push({
+            index: i,
+            text: item.Name,
+            value: false,
+            checked: false,
+          });
+          i++;
+        }
+        let j = 0;
+        if (item.SyneltsRole.indexOf('1') !== -1) {
+          this.EngCS.push({
+            index: j,
+            text: item.Name,
+            value: false,
+            checked: false,
+          });
+          j++;
+        }
+        let k = 0;
+        if (item.SyneltsRole.indexOf('2') !== -1) {
+          this.sales.push({
+            index: k,
+            text: item.Name,
+            value: false,
+            checked: false,
+          });
+          k++;
+        }
+        
+      });
+      console.log(this.engineer);
+    });
+    
+    
+
+    // this.getData('joh');
   }
   search(): void {
     const filterFunc = (item: ProjectTransfer) => {

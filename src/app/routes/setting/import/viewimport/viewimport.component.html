@@ -1,40 +1,38 @@
-<div style="background: #ECECEC; padding: 30px;">
+<div style="padding: 20px;">
   <nz-row [nzGutter]="20">
-    <nz-col [nzSpan]="12">
-      <nz-card style="height: 150px;">
+    <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <nz-card style="height: 120px;">
         <nz-statistic [nzValue]="record.TotalCount" [nzTitle]="'Total Project'" [nzPrefix]="prefixTplOne"
           [nzSuffix]="'个'" [nzValueStyle]="{ color: '#3F8600' }">
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
       </nz-card>
-    </nz-col>
-    <nz-col [nzSpan]="12">
-      <nz-card style="height: 150px;">
+    </div>
+    <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <nz-card style="height: 120px;">
         <nz-statistic [nzValue]="record.LiveCount" [nzTitle]="'Live Project'" [nzPrefix]="prefixTplTwo" [nzSuffix]="'个'"
           [nzValueStyle]="{ color: '#CF1322' }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
       </nz-card>
-    </nz-col>
+    </div>
 
-  </nz-row>
-  <nz-row [nzGutter]="20">
-    <nz-col [nzSpan]="12">
-      <nz-card style="height: 150px;">
+    <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <nz-card style="height: 120px;">
         <nz-statistic [nzValue]="record.StartDate|date" [nzTitle]="'从'" [nzPrefix]="prefixTplTwo"
           [nzValueStyle]="{ color: '#CF1322'}">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
       </nz-card>
-    </nz-col>
-    <nz-col [nzSpan]="12">
-      <nz-card style="height: 150px;">
+    </div>
+    <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <nz-card style="height: 120px;">
         <nz-statistic [nzValue]="record.LastUpdateTime|date" [nzTitle]="'到'" [nzPrefix]="prefixTplTwo"
           [nzValueStyle]="{ color: '#CF1322' }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
       </nz-card>
-    </nz-col>
+    </div>
   </nz-row>
 </div>
 <nz-card [nzBordered]="false">
@@ -70,7 +68,7 @@
         <nz-form-item>
           <nz-form-label nzFor="status">项目类型</nz-form-label>
           <nz-form-control>
-            <nz-select [(ngModel)]="status" name="status" id="status" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
+            <nz-select [(ngModel)]="selectStatus" name="status" id="status" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
               <nz-option *ngFor="let i of status; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -80,7 +78,7 @@
         <nz-form-item>
           <nz-form-label nzFor="engineer">工程师</nz-form-label>
           <nz-form-control>
-            <nz-select [(ngModel)]="engineer" name="engineer" id="engineer" [nzPlaceHolder]="'请选择'"
+            <nz-select [(ngModel)]="selectEngineer" name="engineer" id="engineer" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true">
               <nz-option *ngFor="let i of engineer; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
             </nz-select>
@@ -92,7 +90,7 @@
         <nz-form-item>
           <nz-form-label nzFor="sales">销售</nz-form-label>
           <nz-form-control>
-            <nz-select [nzPlaceHolder]="'请选择'" nzId="sales" [nzShowSearch]="true">
+            <nz-select  [(ngModel)]="selectSales" [nzPlaceHolder]="'请选择'" nzId="sales" [nzShowSearch]="true">
               <nz-option *ngFor="let i of sales; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -102,7 +100,7 @@
         <nz-form-item>
           <nz-form-label nzFor="EngCS">工程助理</nz-form-label>
           <nz-form-control>
-            <nz-select [nzPlaceHolder]="'请选择'" nzId="EngCS" [nzShowSearch]="true">
+            <nz-select  [(ngModel)]="selectEngCS" [nzPlaceHolder]="'请选择'" nzId="EngCS" [nzShowSearch]="true">
               <nz-option *ngFor="let i of EngCS; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -112,7 +110,7 @@
           <nz-form-item>
             <nz-form-label nzFor="clients">客户</nz-form-label>
             <nz-form-control>
-              <nz-select [nzPlaceHolder]="'请选择'" nzId="clients" [nzShowSearch]="true">
+              <nz-select  [(ngModel)]="selectClient" [nzPlaceHolder]="'请选择'" nzId="clients" [nzShowSearch]="true">
                 <nz-option *ngFor="let i of clients; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
               </nz-select>
             </nz-form-control>
@@ -122,7 +120,7 @@
             <nz-form-item>
               <nz-form-label nzFor="services">服务</nz-form-label>
               <nz-form-control>
-                <nz-select [nzPlaceHolder]="'请选择'" nzId="services" [nzShowSearch]="true">
+                <nz-select  [(ngModel)]="selectService" [nzPlaceHolder]="'请选择'" nzId="services" [nzShowSearch]="true">
                   <nz-option *ngFor="let i of services; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
                 </nz-select>
               </nz-form-control>
