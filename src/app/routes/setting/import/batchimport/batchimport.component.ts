@@ -22,14 +22,16 @@ import { syntaxError } from '@angular/compiler';
 })
 export class SettingImportBatchimportComponent implements OnInit, OnChanges {
   private _inputValue: string;
-
+  inputJsonObj=[];
   @Input() set inputValue(value: string) {
     if (this._inputValue !== value) {
       this._inputValue = value;
       try {
-        this.inputObjs = JSON.parse(value);
-        this.pCount = this.inputObjs.length;
-        this.pTime = this.inputObjs.length * 0.2;
+        this.inputJsonObj = JSON.parse(value);
+        this.pCount = this.inputJsonObj.length;
+        this.pTime = this.inputJsonObj.length * 0.2;
+        this._inputValue=JSON.stringify(this.inputJsonObj,undefined,'\t');
+        
       } catch (e) {
         if (e instanceof syntaxError) {
         } else {
@@ -58,11 +60,13 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
     this.loading = true;
     this.disabled = true;
     if (
-      this.inputObjs === undefined ||
-      this.inputObjs.length === 0 ||
-      this.inputObjs === null
+      this.inputJsonObj === undefined ||
+      this.inputJsonObj.length === 0 ||
+      this.inputJsonObj === null
     ) {
       this.message.warning('还没有内容呢！');
+      this.loading=false;
+      this.disabled=false;
       return;
     }
     const urlcalls = [];
@@ -71,9 +75,9 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
     urlcalls.push('home/Service/addandupdatecollection');
 
     zip(
-      this.http.post('person/SimpleCreateByProjects', this.inputObjs),
-      this.http.post('home/Service/addandupdatecollection', this.inputObjs),
-      this.http.post('home/Client/addandupdatecollection', this.inputObjs),
+      this.http.post('person/SimpleCreateByProjects', this.inputJsonObj),
+      this.http.post('home/Service/addandupdatecollection', this.inputJsonObj),
+      this.http.post('home/Client/addandupdatecollection', this.inputJsonObj),
     ).subscribe(
       ([serviceRes, clientRes, personRes]) => {
         console.log(serviceRes);
@@ -86,7 +90,7 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
       },
       () => {
         this.http
-          .post('home/Projects/addandupdatecollection', this.inputObjs)
+          .post('home/Projects/addandupdatecollection', this.inputJsonObj)
           .subscribe(
             res => console.log(res),
             err => {
