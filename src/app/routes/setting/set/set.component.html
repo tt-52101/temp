@@ -1,9 +1,19 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
+<page-header>
+
+  <nz-tabset>
+    <nz-tab nzTitle="客户设置">
+      <ng-template nz-tab>
+        <app-setting-set-clientset></app-setting-set-clientset>
+      </ng-template>
+    </nz-tab>
+    <nz-tab nzTitle="服务设置">
+      <ng-template nz-tab>
+        <app-setting-set-serviceset></app-setting-set-serviceset>
+      </ng-template>
+
+    </nz-tab>
+    
+
+  </nz-tabset>
 </page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
-</nz-card>
+

@@ -2,7 +2,7 @@
   <nz-row [nzGutter]="20">
     <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <nz-card style="height: 120px;">
-        <nz-statistic [nzValue]="record.TotalCount" [nzTitle]="'Total Project'" [nzPrefix]="prefixTplOne"
+        <nz-statistic [nzValue]="record.TotalCount||0" [nzTitle]="'Total Project'" [nzPrefix]="prefixTplOne"
           [nzSuffix]="'个'" [nzValueStyle]="{ color: '#3F8600' }">
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
@@ -10,7 +10,7 @@
     </div>
     <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <nz-card style="height: 120px;">
-        <nz-statistic [nzValue]="record.LiveCount" [nzTitle]="'Live Project'" [nzPrefix]="prefixTplTwo" [nzSuffix]="'个'"
+        <nz-statistic [nzValue]="record.LiveCount||0" [nzTitle]="'Live Project'" [nzPrefix]="prefixTplTwo" [nzSuffix]="'个'"
           [nzValueStyle]="{ color: '#CF1322' }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
@@ -19,7 +19,7 @@
 
     <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <nz-card style="height: 120px;">
-        <nz-statistic [nzValue]="record.StartDate|date" [nzTitle]="'从'" [nzPrefix]="prefixTplTwo"
+        <nz-statistic [nzValue]="record.StartDate||0|date" [nzTitle]="'从'" [nzPrefix]="prefixTplTwo"
           [nzValueStyle]="{ color: '#CF1322'}">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
@@ -27,7 +27,7 @@
     </div>
     <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <nz-card style="height: 120px;">
-        <nz-statistic [nzValue]="record.LastUpdateTime|date" [nzTitle]="'到'" [nzPrefix]="prefixTplTwo"
+        <nz-statistic [nzValue]="record.LastUpdateTime||0|date" [nzTitle]="'到'" [nzPrefix]="prefixTplTwo"
           [nzValueStyle]="{ color: '#CF1322' }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
@@ -64,63 +64,28 @@
 
   <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
     <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 24, xxl: 24 }">
-        <div nz-col [nzSpan]="expandForm ? 24 : 16" >
-            <nz-form-item>
-              <nz-form-label nzFor="jobno">项目号</nz-form-label>
-              <nz-form-control>
-                <nz-input-group [nzSuffix]="suffixTemplate">
-                  <input type="text" name="jobno" nz-input [disabled]="expandForm" [(ngModel)]="inputJobno" placeholder="input client name" />
-                </nz-input-group>
-                
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-          
-          <ng-template #suffixTemplate>
-            <i nz-icon
-                    nz-tooltip
-                    class="ant-input-clear-icon"
-                    nzTheme="fill"
-                    nzType="close-circle"
-                    *ngIf="inputJobno"
-                    (click)="inputJobno = null"
-                  ></i
-                ></ng-template>
-            
-    
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+      <div nz-col [nzSpan]="expandForm ? 24 : 16" *ngIf="!expandForm">
         <nz-form-item>
-          <nz-form-label nzFor="category">项目类型</nz-form-label>
+          <nz-form-label nzFor="jobno">项目号</nz-form-label>
           <nz-form-control>
-            <nz-select [(ngModel)]="selectCategory" [nzDisabled]="true" name="category" id="category" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
-              <nz-option *ngFor="let i of category; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
-            </nz-select>
+            <nz-input-group [nzSuffix]="suffixTemplate">
+              <input type="text" name="jobno" nz-input [disabled]="expandForm" [(ngModel)]="inputJobno"
+                placeholder="input client name" />
+            </nz-input-group>
+
           </nz-form-control>
         </nz-form-item>
       </div>
+
+      <ng-template #suffixTemplate>
+        <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="inputJobno"
+          (click)="inputJobno = null"></i></ng-template>
+
+
+
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
-          <nz-form-label nzFor="clientType">客户类型</nz-form-label>
-          <nz-form-control>
-            <nz-select [(ngModel)]="selectClientType" [nzDisabled]="true" name="clientType" id="clientType" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
-              <nz-option *ngFor="let i of clientType; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="regionType">Region类型</nz-form-label>
-          <nz-form-control>
-            <nz-select [(ngModel)]="selectRegionType" [nzDisabled]="true" name="regionType" id="regionType" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
-              <nz-option *ngFor="let i of regionType; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="engineer">工  程  师</nz-form-label>
+          <nz-form-label nzFor="engineer">工 程 师</nz-form-label>
           <nz-form-control>
             <nz-select [(ngModel)]="params.EngineerName" name="engineer" id="engineer" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true">
@@ -129,12 +94,13 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      
+
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
-          <nz-form-label nzFor="sales">销    售</nz-form-label>
+          <nz-form-label nzFor="sales">销 售</nz-form-label>
           <nz-form-control>
-            <nz-select  [(ngModel)]="params.SalesName" name="sales" [nzPlaceHolder]="'请选择'" nzId="sales" [nzShowSearch]="true">
+            <nz-select [(ngModel)]="params.SalesName" name="sales" [nzPlaceHolder]="'请选择'" nzId="sales"
+              [nzShowSearch]="true">
               <nz-option *ngFor="let i of sales; let idx = index" [nzLabel]="i.text" [nzValue]="i.text"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -144,76 +110,126 @@
         <nz-form-item>
           <nz-form-label nzFor="EngCS">工程助理</nz-form-label>
           <nz-form-control>
-            <nz-select  [(ngModel)]="params.EngineeringCSName" name="eng" [nzPlaceHolder]="'请选择'" nzId="EngCS" [nzShowSearch]="true">
+            <nz-select [(ngModel)]="params.EngineeringCSName" name="eng" [nzPlaceHolder]="'请选择'" nzId="EngCS"
+              [nzShowSearch]="true">
               <nz-option *ngFor="let i of EngCS; let idx = index" [nzLabel]="i.text" [nzValue]="i.text"></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>
-    
-        <div nz-col nzMd="12" nzSm="24" *ngIf="expandForm">
-            <nz-form-item>
-              <nz-form-label nzFor="OpenDate">开案日期</nz-form-label>
-              <nz-form-control>
-                  <range-picker [(ngModel)]="params.OpenDateFrom" name="OpenDateFrom" [(ngModelEnd)]="params.OpenDateTo"></range-picker>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-          <div nz-col nzMd="12" nzSm="24" *ngIf="expandForm">
-            <nz-form-item>
-              <nz-form-label nzFor="CompleteDate">结案日期</nz-form-label>
-              <nz-form-control>
-                  <range-picker [(ngModel)]="params.CompleteDateFrom" name="CompleteDateFrom" [(ngModelEnd)]="params.CompleteDateTo"></range-picker>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-    
-   
+
+      <div nz-col nzMd="10" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="OpenDate">开案日期</nz-form-label>
+          <nz-form-control>
+            <range-picker [(ngModel)]="OpenDateFrom" name="OpenDateFrom" [(ngModelEnd)]="OpenDateTo"></range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="10" nzSm="16" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="CompleteDate">结案日期</nz-form-label>
+          <nz-form-control>
+            <range-picker [(ngModel)]="CompleteDateFrom" [nzDisabled]="!IsFinished" name="CompleteDateFrom"
+              [(ngModelEnd)]="CompleteDateTo"></range-picker>
+          </nz-form-control>
+        </nz-form-item>
+
+      </div>
+      <div nz-col nzMd="4" nzSm="8" *ngIf="expandForm" style="height:56px;   
+      line-height:35px;">
+        <nz-form-item>
+          <nz-form-label nzFor="isFinish">状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="IsFinished" name="isFinish" [nzPlaceHolder]="'请选择'" nzId="isFinish"
+              [nzShowSearch]="true">
+              <nz-option *ngFor="let i of jobProgressType; let idx = index" [nzLabel]="i.text" [nzValue]="idx">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
       <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
-          <nz-form-item>
-            <nz-form-label nzFor="clients">客户</nz-form-label>
-            <nz-form-control>
-              <nz-input-group [nzSuffix]="suffixTemplate">
-                <input type="text" name="client" nz-input [(ngModel)]="params.ClientName" placeholder="input client name" />
-              </nz-input-group>
-              
-            </nz-form-control>
-          </nz-form-item>
-        </div>
-        <ng-template #suffixTemplate
-                ><i
-                  nz-icon
-                  nz-tooltip
-                  class="ant-input-clear-icon"
-                  nzTheme="fill"
-                  nzType="close-circle"
-                  *ngIf="selectClient"
-                  (click)="selectClient = null"
-                ></i
-              ></ng-template>
-        <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-            <nz-form-item>
-              <nz-form-label nzFor="services">服务</nz-form-label>
-              <nz-form-control>
-                <nz-select  [(ngModel)]="selectService" name="service" [nzPlaceHolder]="'请选择'" nzId="services" [nzShowSearch]="true">
-                  <nz-option *ngFor="let i of services; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-          <div nz-col [nzSpan]="expandForm ? 24 : 8" [class.text-right]="expandForm">
-              <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="checkloading">查询</button>
-              <button nz-button type="reset" (click)="reset()" class="mx-sm">重置</button>
-              <a (click)="expandForm=!expandForm">
-                {{expandForm ? '收起' : '展开'}}
-                <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
-              </a>
-            </div>
-      
-        </div>
+        <nz-form-item>
+          <nz-form-label nzFor="clients">客户</nz-form-label>
+          <nz-form-control>
+            <nz-input-group [nzSuffix]="suffixTemplate">
+              <input type="text" name="client" nz-input [(ngModel)]="params.ClientName"
+                placeholder="input client name" />
+            </nz-input-group>
+
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <ng-template #suffixTemplate><i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill"
+          nzType="close-circle" *ngIf="selectClient" (click)="selectClient = null"></i></ng-template>
+      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="services">服务</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="selectService" name="service" [nzPlaceHolder]="'请选择'" nzId="services"
+              [nzShowSearch]="true">
+              <nz-option *ngFor="let i of services; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="expandForm ? 24 : 8" [class.text-right]="expandForm">
+        <button nz-button type="submit" [nzType]="'primary'" [disabled]="checkloading" [nzLoading]="checkloading">查询</button>
+        <button nz-button type="reset" (click)="reset()" class="mx-sm">重置</button>
+        <a (click)="expandForm=!expandForm">
+          {{expandForm ? '简单搜索' : '高级搜索'}}
+          <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
+        </a>
+        <a (click)="filterOpen=!filterOpen" *ngIf="ptsShow.length>1">
+          {{filterOpen ? '关闭筛选' : '打开筛选'}}
+          <i class="anticon" [class.anticon-down]="!filterOpen" [class.anticon-up]="filterOpen"></i>
+        </a>
+      </div>
+
+    </div>
   </form>
-  <nz-table #nzTable [nzData]="ptsShow" [(nzPageSize)]="params.PageSize" [(nzPageIndex)]="params.CurrentPage"
-    [nzShowQuickJumper]="'true'">
+
+  <nz-divider></nz-divider>
+  <form nz-form [nzLayout]="'inline'" *ngIf="filterOpen" (ngSubmit)="filterData()" class="search__form">
+    <div nz-col nzMd="8" nzSm="24">
+      <nz-form-item>
+        <nz-form-label nzFor="category">项目类型</nz-form-label>
+        <nz-form-control>
+          <nz-select [(ngModel)]="selectCategory" [nzDisabled]="true" name="category" id="category"
+            [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
+            <nz-option *ngFor="let i of category; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzMd="8" nzSm="24">
+      <nz-form-item>
+        <nz-form-label nzFor="clientType">客户类型</nz-form-label>
+        <nz-form-control>
+          <nz-select [(ngModel)]="selectClientType" [nzDisabled]="true" name="clientType" id="clientType"
+            [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
+            <nz-option *ngFor="let i of clientType; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzMd="8" nzSm="24">
+      <nz-form-item>
+        <nz-form-label nzFor="regionType">Region类型</nz-form-label>
+        <nz-form-control>
+          <nz-select [(ngModel)]="selectRegionType" [nzDisabled]="true" name="regionType" id="regionType"
+            [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
+            <nz-option *ngFor="let i of regionType; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </form>
+  <st #st [data]="ptsShow" [columns]="columns" [(loading)]="loading" [page]="pageInfo"></st>`
+  <!-- <nz-table #nzTable [nzData]="ptsShow" nzPageSize="20" nzPageIndex="1"
+    [(nzTotal)]="totalCount" [nzShowQuickJumper]="'true'">
     <thead (nzSortChange)="sort($event)" nzSingleSort>
       <tr>
         <th nzSortKey="ProjectNo" nzShowSort>
@@ -245,6 +261,6 @@
         <td>{{ data.QuotedFee|currency }}</td>
       </tr>
     </tbody>
-  </nz-table>
+  </nz-table> -->
 
 </nz-card>

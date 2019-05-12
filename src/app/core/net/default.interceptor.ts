@@ -127,7 +127,7 @@ export class DefaultInterceptor implements HttpInterceptor {
     // add access token
 
     newReq = req.clone({ url });
-
+    console.log(newReq);
     return next.handle(newReq).pipe(
       mergeMap((event: any) => {
         // 允许统一对请求错误处理

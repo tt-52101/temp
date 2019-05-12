@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { SettingSetEditComponent } from './edit.component';
+import { SettingSetClientsetComponent } from './clientset.component';
 
-describe('SettingSetEditComponent', () => {
-  let component: SettingSetEditComponent;
-  let fixture: ComponentFixture<SettingSetEditComponent>;
+describe('SettingSetClientsetComponent', () => {
+  let component: SettingSetClientsetComponent;
+  let fixture: ComponentFixture<SettingSetClientsetComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingSetEditComponent ]
+      declarations: [ SettingSetClientsetComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SettingSetEditComponent);
+    fixture = TestBed.createComponent(SettingSetClientsetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
