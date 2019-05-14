@@ -10,6 +10,7 @@ import { SettingImportViewimportComponent } from './import/viewimport/viewimport
 import { SettingSetClientsetComponent } from './set/clientset/clientset.component';
 import { SettingSetServicesetComponent } from './set/serviceset/serviceset.component';
 import { SettingSetEditClienteditComponent } from './set/edit/clientedit/clientedit.component';
+import { SettingSetEditServiceeditComponent } from './set/edit/serviceedit/serviceedit.component';
 
 const COMPONENTS = [
   SettingImportComponent,
@@ -18,7 +19,8 @@ const COMPONENTS = [
   SettingImportSingleimportComponent,
   SettingSetClientsetComponent,
   SettingSetServicesetComponent,
-  SettingSetEditClienteditComponent];
+  SettingSetEditClienteditComponent,
+  SettingSetEditServiceeditComponent];
 const COMPONENTS_NOROUNT = [
   SettingSetViewComponent,
   SettingImportViewimportComponent,

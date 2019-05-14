@@ -25,6 +25,11 @@ export class SettingSetEditClienteditComponent implements OnInit {
           { value: 'Agent', label: 'Agent' },
         ],
       },
+      Contact:{
+        type:'string',
+        title:'联系人',
+        maxLength:10
+      },
       
     },
     required: ['Name', 'ClientType'],
@@ -41,6 +46,7 @@ export class SettingSetEditClienteditComponent implements OnInit {
     
   }
   save(value: any) {
+    console.log(value);
     this.msg.success('保存成功');
     this.modal.close(value);
   }

@@ -16,6 +16,7 @@ export class ProjectTransfer implements BaseEntity {
   ServiceNames: string[];
   Product: string;
   Models: string;
+  ActualProjectWorkingDays:number;
   QuotedFee: number;
   CurrencyInUSD: boolean;
   InvoicedFee?: number;

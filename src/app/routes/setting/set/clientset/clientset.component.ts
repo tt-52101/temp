@@ -1,16 +1,18 @@
 import { STColumn, STChange,STData, STComponent } from '@delon/abc';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
 import { SettingSetEditClienteditComponent } from '../edit/clientedit/clientedit.component';
-import { fromEvent } from 'rxjs';
+
 
 @Component({
   selector: 'app-setting-set-clientset',
   templateUrl: './clientset.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingSetClientsetComponent implements OnInit {
   constructor(private http: _HttpClient,
+    private cdr:ChangeDetectorRef,
     private msg:NzMessageService,
     private modal:ModalHelper) {}
     @ViewChild('st')
@@ -21,7 +23,7 @@ export class SettingSetClientsetComponent implements OnInit {
   inputclientName='';
   selectStatus=0;
   params={
-    ClientType:'',
+    ClientType:'Normal',
     EntryDate:new Date(2006,2,1).toLocaleDateString(),
     Name:''
   };
@@ -34,7 +36,8 @@ export class SettingSetClientsetComponent implements OnInit {
   ];
   startDate:Date=new Date();
   clients=[];
-  selectClients=[];
+  selectRows:STData[]=[];
+  selectClients:STData[]=[];
   columns:STColumn[]=[
     {
       title:'序号',
@@ -84,10 +87,13 @@ export class SettingSetClientsetComponent implements OnInit {
   ];
   ngOnInit() {}
   change(e:STChange){
-    
-     this.selectClients=e.checkbox;
-     console.log(this.selectClients)
-  }
+    if(e.checkbox){
+      this.selectClients=e.checkbox;
+      this.cdr.detectChanges();
+      console.log(this.selectClients)
+    }
+     
+       }
   getData(){
     this.checkloading=true;
     this.loading=true;
@@ -98,6 +104,7 @@ export class SettingSetClientsetComponent implements OnInit {
       this.params.EntryDate=this.startDate.toLocaleDateString();
       this.http.get('client/collectionByFilter',this.params).subscribe(res=>{
         this.clients=[...res];
+        this.cdr.detectChanges();
       },
       err=>{
         this.checkloading=false;
@@ -119,6 +126,7 @@ export class SettingSetClientsetComponent implements OnInit {
           
           this.clients=res;
           console.log(this.clients);
+          this.cdr.detectChanges();
         },
         err=>{
           this.checkloading=false;
@@ -136,14 +144,58 @@ export class SettingSetClientsetComponent implements OnInit {
   }
   
   setNormal(){
-    this.selectClients.map(c=>c.ClientType='Normal');
-    console.log(this.selectClients);
+    if(this.selectClients.length>0){
+      this.selectClients.map(c=>c.ClientType='Normal');
+      this.http.put('client/updatecollection',this.selectClients).subscribe(res=>{
+        console.log(res);
+        if(res.message==='OK'){
+          this.msg.info('done');
+        }
+      },
+      err=>{
+        this.msg.error(JSON.stringify(err));
+      },
+      ()=>{
+        this.getData();
+        
+      });
+    }
   }
   setVIP(){
-
+    if(this.selectClients.length>0){
+      this.selectClients.map(c=>c.ClientType='VIP');
+      this.http.put('client/updatecollection',this.selectClients).subscribe(res=>{
+        console.log(res);
+        if(res.message==='OK'){
+          this.msg.info('done');
+        }
+      },
+      err=>{
+        this.msg.error(JSON.stringify(err));
+      },
+      ()=>{
+        this.getData();
+        
+      });
   }
+}
   setAgent(){
-
+    if(this.selectClients.length>0){
+      this.selectClients.map(c=>c.ClientType='Agent');
+      this.http.put('client/updatecollection',this.selectClients).subscribe(res=>{
+        console.log(res);
+        if(res.message==='OK'){
+          this.msg.info('done');
+        }
+      },
+      err=>{
+        this.msg.error(JSON.stringify(err));
+      },
+      ()=>{
+        this.getData();
+        
+      });
+  }
   }
   createClient(){
     this.modal.createStatic(SettingSetEditClienteditComponent,{},{size:'lg'})
@@ -151,4 +203,12 @@ export class SettingSetClientsetComponent implements OnInit {
       ()=>this.st.reload()
     );
   }
+  reset(){
+    this.inputclientName='';
+    this.startDate=new Date();
+    this.params.ClientType='';
+    this.selectStatus=-1;
+    this.selectClients=[];
+  }
+ 
 }

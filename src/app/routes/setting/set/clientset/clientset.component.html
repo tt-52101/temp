@@ -32,7 +32,7 @@
         <nz-form-item>
           <nz-form-label nzFor="clientTypes">类型</nz-form-label>
           <nz-form-control>
-            <nz-select [(ngModel)]="params.clientType" name="clientTypes" id="clientTypes" [nzPlaceHolder]="'请选择'"
+            <nz-select [(ngModel)]="params.ClientType" name="clientTypes" id="clientTypes" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true">
               <nz-option *ngFor="let i of clientTypes; let idx = index" [nzLabel]="i.text" [nzValue]="i.value">
               </nz-option>
@@ -44,7 +44,7 @@
           <nz-form-item>
             <nz-form-label nzFor="startDate">合作起始</nz-form-label>
             <nz-form-control>
-                <nz-date-picker [(ngModel)]="startDate" (ngModelChange)="onChange($event)" name="startDate"></nz-date-picker>
+                <nz-date-picker [(ngModel)]="startDate"  name="startDate"></nz-date-picker>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -69,7 +69,7 @@
       <span>新建</span>
     </button>
 
-    <ng-container *ngIf="selectClients.length > 0">
+    <ng-container *ngIf="selectClients.length>0">
       
       <nz-dropdown [nzPlacement]="'bottomLeft'">
         <button nz-button nz-dropdown>

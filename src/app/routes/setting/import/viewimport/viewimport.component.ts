@@ -153,6 +153,14 @@ pageInfo={
         compare:(a:ProjectTransfer,b:ProjectTransfer)=>a.QuotedFee-b.QuotedFee
       }
     },
+    {
+      title: 'TAT',
+      index: 'ActualProjectWorkingDays',
+      type:'number',
+      sort:{
+        compare:(a:ProjectTransfer,b:ProjectTransfer)=>a.ActualProjectWorkingDays-b.ActualProjectWorkingDays
+      }
+    },
   ];
 
   ngOnInit(): void {
