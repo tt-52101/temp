@@ -86,7 +86,7 @@ export class SettingSetServicesetComponent implements OnInit {
           type: 'static',
           modal: {
             component: SettingSetEditServiceeditComponent,
-            size: 'lg',
+            size: 'md',
             paramsName: 'i',
           },
           click: 'load',

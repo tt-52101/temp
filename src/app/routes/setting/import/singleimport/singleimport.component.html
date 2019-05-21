@@ -1,1 +1,13 @@
-<page-header></page-header>
+<nz-card>
+  <nz-steps [(nzCurrent)]="currentStep" [(nzStatus)]="status">
+    <nz-step nzTitle="检查项目增减"></nz-step>
+    <nz-step nzTitle="检查项目增减"></nz-step>
+    <nz-step nzTitle="检查项目增减"></nz-step>
+  </nz-steps>
+  <div style="margin-top: 25px;">
+  <button nz-button [nzSize]="'large'" nzBlock nzType="primary">{{stepText}}</button>
+</div>
+  <nz-card style="margin-top: 20px;">
+    <div class="steps-content">{{context}}</div>
+  </nz-card>
+</nz-card>

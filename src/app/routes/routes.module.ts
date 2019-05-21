@@ -1,3 +1,5 @@
+
+
 import { NgModule } from '@angular/core';
 
 import { SharedModule } from '@shared';
@@ -9,11 +11,7 @@ import { UserRegisterResultComponent } from './passport/register-result/register
 import { UserLockComponent } from './passport/lock/lock.component';
 // single pages
 import { CallbackComponent } from './callback/callback.component';
-import { RoutesHomeTeamComponent } from './home/team/team.component';
-import { RoutesHomeDashboardsComponent } from './home/dashboards/dashboards.component';
-import { RoutesHomePersonelComponent } from './home/personel/personel.component';
-import { RoutesHomeDashboardsEditComponent } from './home/dashboards/edit/edit.component';
-
+import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
 const COMPONENTS = [
   // passport pages
   UserLoginComponent,
@@ -22,13 +20,8 @@ const COMPONENTS = [
   UserLockComponent,
   // single pages
   CallbackComponent,
-
-  RoutesHomeTeamComponent,
   RoutesHomeDashboardsComponent,
-  RoutesHomePersonelComponent,
-
-  RoutesHomeDashboardsEditComponent,
-];
+  ];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({

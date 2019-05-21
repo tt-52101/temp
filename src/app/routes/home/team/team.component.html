@@ -1,1 +1,125 @@
-<page-header></page-header>
+<page-header>
+  <!-- process项目数量，金额，含pie of business -->
+  <!-- 本月 vs target  curve -->
+  <!-- target 1-n月revenue 柱形图 -->
+  <div nz-row [nzGutter]="24">
+    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="8">
+      <g2-card id="card1" [title]="'年度完成'" contentHeight="144px" [action]="action1" [footer]="footer1">
+        <ng-template #action1>
+          <nz-tooltip [nzTitle]="'Whole Year'">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentRevenue" [height]="121">
+        </g2-water-wave>
+        <ng-template #footer1>
+          <p class="text-truncate mb0">
+            Total
+            <span class="ml-sm">{{totalQuantity}}</span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="8">
+      <g2-card id="card2" [title]="'月度完成'" contentHeight="144px" [action]="action2" [footer]="footer2">
+        <ng-template #action2>
+          <nz-tooltip [nzTitle]="'月完成情况'">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="34" [height]="121"></g2-water-wave>
+        <ng-template #footer2>
+          <p class="text-truncate mb0">
+            Finished Amount
+            <span class="ml-sm">{{finishedAmountMonth}}</span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+
+    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="8">
+      <g2-card id="card3" [title]="'本年度趋势'" contentHeight="144px" [action]="action3" [footer]="footer3">
+        <ng-template #action3>
+          <nz-tooltip [nzTitle]="'Trends this year'">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <g2-mini-bar height="120" style="margin-top:10px;" [data]="monthData" yTooltipSuffix="%"></g2-mini-bar>
+        <ng-template #footer3>
+          <p class="text-truncate mb0">
+            Year to Day Revenue
+            <span class="ml-sm">￥12,423</span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+
+  </div>
+  <!-- 细节数据tabset-revenue&job in -->
+  <div nz-row [nzGutter]="24">
+    <nz-tabset (nzSelectedIndexChange)="selectedIndexChange($event)">
+      <nz-tab nzTitle="Revenue Output">
+        <div nz-row>
+          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
+            <div class="bar">
+              <g2-bar *ngIf="!show" id="revenue" height="295" [title]="RevenueTitle" [data]="monthData"></g2-bar>
+            </div>
+          </div>
+          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
+            <div class="rank">
+              <h4 class="ranking-title">list</h4>
+              <ul class="rank-list">
+                <li *ngFor="let i of monthData">
+                  <span class="title">{{i.x}}</span>:
+                  <span class="value">{{i.y|_currency}}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="Job    In">
+        <div nz-row>
+          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
+            <div class="bar">
+              <g2-bar *ngIf="show" id="revenue" height="295" [title]="RevenueTitle" [data]="jobinData"></g2-bar>
+            </div>
+          </div>
+          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
+            <div class="rank">
+              <h4 class="ranking-title">list</h4>
+              <ul class="rank-list">
+                <li *ngFor="let i of jobinData">
+                  <span class="title">{{i.x}}</span>:
+                  <span class="value">{{i.y|_currency}}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+
+    </nz-tabset>
+  </div>
+  <!-- engineer blocks -->
+  <div style="height: 20px"></div>
+    <nz-tabset style="width: 900px" nzTabPosition="top" [(nzSelectedIndex)]="engIdx"
+      (nzSelectedIndexChange)="engChange($event)">
+      <nz-tab *ngFor="let tab of engineerTabs; let i = index;" [nzTitle]="chartTitle">
+        {{tab.name}}
+        <ng-template #chartTitle>
+          <div nz-row [nzGutter]="8" style="width: 138px; margin: 8px 0;">
+            <div nz-col [nzSpan]="12">
+              <number-info [title]="tab.name" [subTitle]="'record'" gap="2" [total]="'89%'"></number-info>
+            </div>
+            <div nz-col [nzSpan]="12" style="padding-top: 36px;">
+              <g2-pie [animate]="false" [inner]="0.55" [tooltip]="false" [padding]="[0, 0, 0, 0]" [percent]="90"
+                [height]="64"></g2-pie>
+            </div>
+          </div>
+        </ng-template>
+      </nz-tab>
+
+    </nz-tabset>
+
+</page-header>

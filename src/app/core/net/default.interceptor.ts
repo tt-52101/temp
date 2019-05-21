@@ -123,10 +123,10 @@ export class DefaultInterceptor implements HttpInterceptor {
       }
     }
 
-    let newReq: HttpRequest<any>;
+    
     // add access token
 
-    newReq = req.clone({ url });
+    const newReq = req.clone({ url });
     console.log(newReq);
     return next.handle(newReq).pipe(
       mergeMap((event: any) => {

@@ -11,11 +11,8 @@ import { UserRegisterResultComponent } from './passport/register-result/register
 import { UserLockComponent } from './passport/lock/lock.component';
 // single pages
 import { CallbackComponent } from './callback/callback.component';
-import { SimpleGuard, JWTGuard } from '@delon/auth';
-import { RoutesHomeTeamComponent } from './home/team/team.component';
-import { RoutesHomeDashboardsComponent } from './home/dashboards/dashboards.component';
-import { RoutesHomePersonelComponent } from './home/personel/personel.component';
-import { RoutesHomeDashboardsEditComponent } from './home/dashboards/edit/edit.component';
+import { JWTGuard } from '@delon/auth';
+import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
 
 const routes: Routes = [
   {
@@ -23,11 +20,12 @@ const routes: Routes = [
     component: LayoutProComponent,
     canActivateChild: [JWTGuard],
     children: [
-      { path: '', redirectTo: 'home/dashboards', pathMatch: 'full' },
-      { path: 'home', redirectTo: 'home/dashboards', pathMatch: 'full' },
-      { path: 'home/team', component: RoutesHomeTeamComponent },
-      { path: 'home/dashboards', component: RoutesHomeDashboardsComponent },
-      { path: 'home/personel', component: RoutesHomePersonelComponent },
+      { path: 'dashboard', component: RoutesHomeDashboardsComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'home',
+        loadChildren: './home/home.module#HomeModule',
+      },
       {
         path: 'settings',
         loadChildren: './setting/setting.module#SettingModule',

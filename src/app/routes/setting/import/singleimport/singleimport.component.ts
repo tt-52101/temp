@@ -8,7 +8,11 @@ import { _HttpClient } from '@delon/theme';
 export class SettingImportSingleimportComponent implements OnInit {
 
   constructor(private http: _HttpClient) { }
-
+  stepText='执行';
+  context='';
   ngOnInit() { }
+  currentStep=1;
+  status='process';
+  
 
 }
