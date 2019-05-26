@@ -22,22 +22,27 @@ export class SettingSetServicesetComponent implements OnInit {
   checkloading = false;
   inputServiceName = '';
   selectStatus = 0;
+  selectBusinessType;
+  selectRegionType;
   params = {
     BusinessType: 'Safety',
     RegionType: 'US',
     Name: '',
+    SetAlready:false
   };
   status = [{ index: 0, text: '未设置' }, { index: 1, text: '已设置' }];
 
   BusinessTypes = [
-    { index: 0, text: '普通客户', value: 'Normal' },
-    { index: 1, text: 'VIP', value: 'VIP' },
-    { index: 2, text: 'Agent', value: 'Agent' },
+    { index: 0, text: '安规', value: 'Safety' },
+    { index: 1, text: '能效', value: 'Energy Efficency' },
+    { index: 2, text: '化学', value: 'Chemical' },
+    { index: 3, text: '其他', value: '' },
   ];
   RegionTypes = [
-    { index: 0, text: '普通客户', value: 'Normal' },
-    { index: 1, text: 'VIP', value: 'VIP' },
-    { index: 2, text: 'Agent', value: 'Agent' },
+    { index: 0, text: '欧线', value: 'IEC' },
+    { index: 1, text: '美线', value: 'US' },
+    { index: 2, text: 'GMAP', value: 'GMAP' },
+    { index: 4, text: '其他', value: '' },
   ];
   startDate: Date = new Date();
   services = [];
@@ -72,8 +77,8 @@ export class SettingSetServicesetComponent implements OnInit {
     {
       title: '预设项目周期',
       index: 'DefaultRequiredWorkingDays',
-      type:'number',
-      className:'text-center',
+      type: 'number',
+      className: 'text-center',
       sort: {
         compare: (a: any, b: any) => a - b,
       },
@@ -95,10 +100,17 @@ export class SettingSetServicesetComponent implements OnInit {
           icon: 'delete',
           type: 'del',
           click: (i, m, c) => {
-            // this.http.delete(`${this.url}`, { id: i.id }).subscribe(() => {
-            //   this.msg.success('Success');
-            //   c.removeRow(i);
-            // });
+            this.http.delete(`service/singlebyid/${i.Id}`).subscribe(
+              res=>{
+                if(res==="Deleted"){
+                  this.msg.success(res);
+                }
+              },
+              err=>{},
+              () => {
+              this.msg.success('Success');
+              c.removeRow(i);
+            });
           },
         },
       ],
@@ -119,6 +131,11 @@ export class SettingSetServicesetComponent implements OnInit {
       if (this.selectStatus === 0) {
         this.params.BusinessType = '';
         this.params.RegionType = '';
+        this.params.SetAlready=false;
+      }else{
+        this.params.SetAlready=true;
+        this.params.BusinessType=this.selectBusinessType;
+        this.params.RegionType=this.selectRegionType;
       }
 
       this.http.get('service/collectionByFilter', this.params).subscribe(
@@ -138,86 +155,116 @@ export class SettingSetServicesetComponent implements OnInit {
         },
       );
     } else {
-      this.params.Name = this.inputServiceName;
-      this.params.BusinessType = '';
-      this.params.RegionType = '';
-      console.log(this.params);
-      this.http.get('service/collectionByFilter', this.params).subscribe(
-        res => {
-          this.services = res;
-          console.log(this.services);
-          this.cdr.detectChanges();
-        },
-        err => {
-          this.checkloading = false;
-          this.loading = false;
-          this.msg.error('服务器出错！');
-        },
-        () => {
-          this.checkloading = false;
-          this.loading = false;
-          this.msg.success('数据获取成功！');
-        },
-      );
+      if(this.inputServiceName===''){
+        this.msg.warning('输入为空！');
+        this.checkloading = false;
+            this.loading = false;
+        return;
+      }else{
+        this.params.Name = this.inputServiceName;
+        this.params.BusinessType = '';
+        this.params.RegionType = '';
+        console.log(this.params);
+        this.http.get('service/collectionByFilter', this.params).subscribe(
+          res => {
+            this.services = res;
+            console.log(this.services);
+            this.cdr.detectChanges();
+          },
+          err => {
+            this.checkloading = false;
+            this.loading = false;
+            this.msg.error('服务器出错！');
+          },
+          () => {
+            this.checkloading = false;
+            this.loading = false;
+            this.msg.success('数据获取成功！');
+          },
+        );
+      }
+      
     }
   }
 
-  setNormal() {
-    // if(this.selectServices.length>0){
-    //   this.selectServices.map(c=>c.bu='Normal');
-    //   this.http.put('service/updatecollection',this.selectServices).subscribe(res=>{
-    //     console.log(res);
-    //     if(res.message==='OK'){
-    //       this.msg.info('done');
-    //     }
-    //   },
-    //   err=>{
-    //     this.msg.error(JSON.stringify(err));
-    //   },
-    //   ()=>{
-    //     this.getData();
-    //   });
+  setService(type: string) {
+    switch(type){
+      case 'Safety':
+        this.selectServices.map(c=>{
+          c.BusinessType='Safety';
+        });
+        break;
+      case 'SafetyUS':
+        this.selectServices.map(c=>{
+          c.BusinessType='Safety';
+          c.RegionType='US';
+        });
+        break;
+        case 'SafetyIEC':
+        this.selectServices.map(c=>{
+          c.BusinessType='Safety';
+          c.RegionType='IEC';
+        });
+        break;
+        case 'SafetyGMAP':
+        this.selectServices.map(c=>{
+          c.BusinessType='Safety';
+          c.RegionType='GMAP';
+        });
+        break;
+        case 'Chemical':
+        this.selectServices.map(c=>{
+          c.BusinessType='Chemical';
+        });
+        break;
+        case 'EE':
+        this.selectServices.map(c=>{
+          c.BusinessType='Energy Efficiency';
+        });
+        break;
+        case 'EEUS':
+        this.selectServices.map(c=>{
+          c.BusinessType='Energy Efficiency';
+          c.RegionType='US';
+        });
+        break;
+        case 'EEIEC':
+        this.selectServices.map(c=>{
+          c.BusinessType='Energy Efficiency';
+          c.RegionType='IEC';
+        });
+        break;
+        case 'EEGMAP':
+        this.selectServices.map(c=>{
+          c.BusinessType='Energy Efficiency';
+          c.RegionType='GMAP';
+        });
+        break;
+
+    }
+    // if (type === 'US' || type === 'IEC') {
+    //   this.selectServices.map(c => (c.RegionType = type));
+    // } else {
+    //   this.selectServices.map(c => (c.BusinessType = type));
     // }
+
+    this.http.put('service/updatecollection', this.selectServices).subscribe(
+      res => {
+        console.log(res);
+        if (res.message === 'OK') {
+          this.msg.info('done');
+        }
+      },
+      err => {
+        this.msg.error(JSON.stringify(err));
+      },
+      () => {
+        this.getData();
+      },
+    );
   }
-  setVIP() {
-    if (this.selectServices.length > 0) {
-      this.selectServices.map(c => (c.ClientType = 'VIP'));
-      this.http.put('client/updatecollection', this.selectServices).subscribe(
-        res => {
-          console.log(res);
-          if (res.message === 'OK') {
-            this.msg.info('done');
-          }
-        },
-        err => {
-          this.msg.error(JSON.stringify(err));
-        },
-        () => {
-          this.getData();
-        },
-      );
-    }
-  }
-  setAgent() {
-    if (this.selectServices.length > 0) {
-      this.selectServices.map(c => (c.ClientType = 'Agent'));
-      this.http.put('client/updatecollection', this.selectServices).subscribe(
-        res => {
-          console.log(res);
-          if (res.message === 'OK') {
-            this.msg.info('done');
-          }
-        },
-        err => {
-          this.msg.error(JSON.stringify(err));
-        },
-        () => {
-          this.getData();
-        },
-      );
-    }
-  }
-  createClient() {
+
+  createService() {
     this.modal
       .createStatic(SettingSetServicesetComponent, {}, { size: 'lg' })
       .subscribe(() => this.st.reload());

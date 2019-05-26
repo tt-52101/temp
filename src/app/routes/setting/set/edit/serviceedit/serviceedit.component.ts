@@ -8,13 +8,12 @@ import { SFSchema } from '@delon/form';
   templateUrl: './serviceedit.component.html',
 })
 export class SettingSetEditServiceeditComponent implements OnInit {
-
   submitting = false;
-  i:any={};
-  schema:SFSchema={
+  i: any = {};
+  schema: SFSchema = {
     properties: {
       Name: { type: 'string', title: '服务名称', maxLength: 100 },
-      
+
       BusinessType: {
         type: 'string',
         title: '业务类型',
@@ -33,32 +32,30 @@ export class SettingSetEditServiceeditComponent implements OnInit {
           { value: 'GMAP', label: '多国' },
         ],
       },
-      Description:{
-        type:'string',
-        title:'描述',
-        maxLength:100
+      Description: {
+        type: 'string',
+        title: '描述',
+        maxLength: 100,
       },
-      DefaultRequiredWorkingDays:{
-        type:'number',
-        title:'预设周期（工作日）',
-        
-      }
-      
+      DefaultRequiredWorkingDays: {
+        type: 'number',
+        title: '预设周期（工作日）',
+      },
     },
-    required: ['Name', 'BusinessType','RegionType'],
-    
+    required: ['Name', 'BusinessType', 'RegionType'],
   };
   constructor(
     private http: _HttpClient,
     private msg: NzMessageService,
-    private modal:NzModalRef
+    private modal: NzModalRef,
   ) {}
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() {}
   save(value: any) {
     console.log(value);
+    this.http
+      .put('service/updatesingle', value)
+      .subscribe(res => {}, err => {}, () => {});
     this.msg.success('保存成功');
     this.modal.close(value);
   }
@@ -66,5 +63,4 @@ export class SettingSetEditServiceeditComponent implements OnInit {
   close() {
     this.modal.destroy();
   }
-
 }

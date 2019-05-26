@@ -22,12 +22,14 @@ export class SettingSetClientsetComponent implements OnInit {
   checkloading = false;
   inputclientName='';
   selectStatus=0;
+  selectClientType:string;
   params={
     ClientType:'Normal',
     EntryDate:new Date(2006,2,1).toLocaleDateString(),
-    Name:''
+    Name:'',
+    SetAlready:false
   };
-  status = [{ index: 0, text: '未设置' }, { index: 1, text: '已设置' }];
+  status = [{ index: 0, text: '未设置',value:0 }, { index: 1, text: '已设置',value:1 }];
   
   clientTypes = [
     { index: 0, text: '普通客户',value:'Normal' },
@@ -75,10 +77,15 @@ export class SettingSetClientsetComponent implements OnInit {
           icon: 'delete',
           type: 'del',
           click: (i, m, c) => {
-            // this.http.delete(`${this.url}`, { id: i.id }).subscribe(() => {
-            //   this.msg.success('Success');
-            //   c.removeRow(i);
-            // });
+            this.http.delete(`client/singlebyid/${i.Id}`).subscribe(
+              res=>{
+                this.msg.success(res);
+              },
+              err=>{},
+              () => {
+              this.msg.success('Success');
+              c.removeRow(i);
+            });
           },
         },
       ],
@@ -98,10 +105,15 @@ export class SettingSetClientsetComponent implements OnInit {
     this.checkloading=true;
     this.loading=true;
     if(this.expandForm){
-      if(this.selectStatus=0){
+      if(this.selectStatus===0){
         this.params.ClientType='';
+        this.params.EntryDate=this.startDate.toLocaleDateString();
+      }else{
+        this.params.ClientType=this.selectClientType;
+        this.params.EntryDate=this.startDate.toLocaleDateString();
+        this.params.SetAlready=true;
       }
-      this.params.EntryDate=this.startDate.toLocaleDateString();
+      
       this.http.get('client/collectionByFilter',this.params).subscribe(res=>{
         this.clients=[...res];
         this.cdr.detectChanges();
@@ -117,7 +129,13 @@ export class SettingSetClientsetComponent implements OnInit {
         this.msg.success('数据获取成功！');
       });
     }else{
-      this.params.Name=this.inputclientName;
+      if(this.inputclientName===''){
+        this.msg.warning('输入为空！');
+        this.checkloading=false;
+        this.loading=false;
+        return;
+      }else{
+        this.params.Name=this.inputclientName;
       this.params.ClientType='';
       this.params.EntryDate='';
       console.log(this.params);
@@ -139,6 +157,8 @@ export class SettingSetClientsetComponent implements OnInit {
         this.msg.success('数据获取成功！');
         }
       );
+      }
+      
     }
     
   }

@@ -47,6 +47,9 @@ export class SettingSetEditClienteditComponent implements OnInit {
   }
   save(value: any) {
     console.log(value);
+    this.http
+      .put('client/updatesingle', value)
+      .subscribe(res => {}, err => {}, () => {});
     this.msg.success('保存成功');
     this.modal.close(value);
   }

@@ -32,8 +32,8 @@
         <nz-form-item>
           <nz-form-label nzFor="clientTypes">类型</nz-form-label>
           <nz-form-control>
-            <nz-select [(ngModel)]="params.ClientType" name="clientTypes" id="clientTypes" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true">
+            <nz-select [nzDisabled]="selectStatus===0" [(ngModel)]="selectClientType" name="clientTypes"
+              id="clientTypes" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
               <nz-option *ngFor="let i of clientTypes; let idx = index" [nzLabel]="i.text" [nzValue]="i.value">
               </nz-option>
             </nz-select>
@@ -41,13 +41,13 @@
         </nz-form-item>
       </div>
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-          <nz-form-item>
-            <nz-form-label nzFor="startDate">合作起始</nz-form-label>
-            <nz-form-control>
-                <nz-date-picker [(ngModel)]="startDate"  name="startDate"></nz-date-picker>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
+        <nz-form-item>
+          <nz-form-label nzFor="startDate">合作早于</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker [(ngModel)]="startDate" name="startDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
       <div nz-col [nzSpan]="expandForm ? 24 : 12" [class.text-right]="expandForm">
         <button nz-button type="submit" [nzType]="'primary'" [disabled]="checkloading"
           [nzLoading]="checkloading">查询</button>
@@ -65,23 +65,23 @@
     </div>
   </form>
   <button nz-button (click)="createClient()" [nzType]="'primary'">
-      <i nz-icon type="plus"></i>
-      <span>新建</span>
-    </button>
+    <i nz-icon type="plus"></i>
+    <span>新建</span>
+  </button>
 
-    <ng-container *ngIf="selectClients.length>0">
-      
-      <nz-dropdown [nzPlacement]="'bottomLeft'">
-        <button nz-button nz-dropdown>
-          批量操作
-          <i nz-icon type="down"></i>
-        </button>
-        <ul nz-menu>
-          <li nz-menu-item (click)="setNormal()">设定为普通客户</li>
-          <li nz-menu-item (click)="setVIP()">设定为VIP客户</li>
-          <li nz-menu-item (click)="setAgent()">设定为Agent客户</li>
-        </ul>
-      </nz-dropdown>
-    </ng-container>
+  <ng-container *ngIf="selectClients.length>0">
+
+    <nz-dropdown [nzPlacement]="'bottomLeft'">
+      <button nz-button nz-dropdown>
+        批量操作
+        <i nz-icon type="down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item (click)="setNormal()">设定为普通客户</li>
+        <li nz-menu-item (click)="setVIP()">设定为VIP客户</li>
+        <li nz-menu-item (click)="setAgent()">设定为Agent客户</li>
+      </ul>
+    </nz-dropdown>
+  </ng-container>
   <st #st [data]="clients" [columns]="columns" (change)="change($event)"></st>
 </nz-card>
