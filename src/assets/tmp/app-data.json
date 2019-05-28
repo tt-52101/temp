@@ -8,22 +8,20 @@
       "i18n": "menu.main",
       "group": true,
       "hideInBreadcrumb": true,
-      "children": [
-        {
-          "text": "工作台",
-          "i18n": "menu.workspace",
+      "children": [{
+          "text": "工作入口",
+          "i18n": "menu.dashboard",
           "icon": "anticon anticon-dashboard",
-          "acl": ["General Staff","Admin"],
-          "link":"/dashboard",
-          "shortcut":true
+          "acl": ["General Staff", "Admin"],
+          "link": "/dashboard",
+          "shortcut": true
         },
         {
           "text": "数据分析",
           "i18n": "menu.workspace",
           "icon": "anticon anticon-dashboard",
           "acl": ["General Staff"],
-          "children": [
-            {
+          "children": [{
               "text": "数据窗口——个人",
               "i18n": "menu.workspace.personeldataservice",
               "icon": "anticon anticon-dashboard",
@@ -56,6 +54,13 @@
               "icon": "anticon anticon-dashboard",
               "acl": ["General Staff"],
               "link": "/settings/set"
+            },
+            {
+              "text": "团队设置",
+              "i18n": "menu.settings.teamset",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["General Staff"],
+              "link": "/settings/teamset"
             }
           ]
         }

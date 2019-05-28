@@ -6,6 +6,7 @@
   "menu.lang": "Language",
   "menu.main": "Main Navigation",
   "menu.workspace": "Work Space",
+  "menu.dashboard":"Work Portal",
   "menu.workspace.dashboards": "Working Desk",
   "menu.workspace.personeldataservice": "Data Analysis-Personal",
   "menu.workspace.teamdataservice": "Data Analysis-Team",
@@ -13,7 +14,7 @@
   "menu.setting": "Settings",
   "menu.settings.import": "Data Import",
   "menu.settings.set": "Rule Setting",
-
+  "menu.settings.teamset":"Team Setting",
 
   "menu.shortcut": "Shortcut",
   "menu.widgets": "Widgets",

@@ -11,6 +11,10 @@ import { SettingSetClientsetComponent } from './set/clientset/clientset.componen
 import { SettingSetServicesetComponent } from './set/serviceset/serviceset.component';
 import { SettingSetEditClienteditComponent } from './set/edit/clientedit/clientedit.component';
 import { SettingSetEditServiceeditComponent } from './set/edit/serviceedit/serviceedit.component';
+import { SettingTeamsetComponent } from './teamset/teamset.component';
+import { SettingTeamsetEditMonthlyDataEditComponent } from './teamset/edit/monthly-data-edit/monthly-data-edit.component';
+import { SettingTeamsetTargetComponent } from './teamset/target/target.component';
+import { SettingTeamsetMembersComponent } from './teamset/members/members.component';
 
 const COMPONENTS = [
   SettingImportComponent,
@@ -20,7 +24,11 @@ const COMPONENTS = [
   SettingSetClientsetComponent,
   SettingSetServicesetComponent,
   SettingSetEditClienteditComponent,
-  SettingSetEditServiceeditComponent];
+  SettingSetEditServiceeditComponent,
+  SettingTeamsetComponent,
+  SettingTeamsetEditMonthlyDataEditComponent,
+  SettingTeamsetTargetComponent,
+  SettingTeamsetMembersComponent];
 const COMPONENTS_NOROUNT = [
   SettingSetViewComponent,
   SettingImportViewimportComponent,
