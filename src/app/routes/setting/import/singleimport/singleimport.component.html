@@ -1,15 +1,101 @@
-<nz-card>
+<nz-card nzTitle="自动导入">
   <nz-steps [(nzCurrent)]="currentStep" [(nzStatus)]="status">
     <nz-step nzTitle="检查项目增减"></nz-step>
     <nz-step nzTitle="检查项目增减"></nz-step>
     <nz-step nzTitle="检查项目增减"></nz-step>
   </nz-steps>
   <div style="margin-top: 25px;">
-  <button nz-button [nzSize]="'large'" nzBlock nzType="primary">{{stepText}}</button>
-</div>
+    <button nz-button [nzSize]="'large'" nzBlock nzType="primary">{{stepText}}</button>
+  </div>
   <nz-card style="margin-top: 20px;">
     <div class="steps-content">{{context}}</div>
   </nz-card>
 
-  <input />
+</nz-card>
+<nz-card nzTitle="手动请求">
+  <form nz-form [formGroup]="requestForm" (ngSubmit)="submit()">
+ <div nz-row>
+   <div nz-col nzSm="24" nzMd="8" nzLg="8">
+    <nz-form-item>
+        <nz-form-control>
+          <nz-form-label nzFor="requestType">请求类型</nz-form-label>
+          <nz-select style="width: 120px;" formControlName="requestType" nzAllowClear nzPlaceHolder="Choose">
+            <nz-option nzValue="GET" nzLabel="GET"></nz-option>
+            <nz-option nzValue="POST" nzLabel="POST"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSm="24" nzMd="8" nzLg="8">
+      <nz-form-item nzFlex>
+        <nz-form-label class="text-left" nzFor="baseUrl">请求网址</nz-form-label>
+        <nz-form-control>
+          <input type="text" style="Width:280px" nz-input formControlName="baseUrl" placeholder="please input base url" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSm="24" nzMd="8" nzLg="8">
+        <nz-form-item nzFlex="true">
+            <nz-form-label nzFor="url">请求api地址</nz-form-label>
+            <nz-form-control>
+              <input type="text" style="Width:280px" nz-input formControlName="requestUrl" placeholder="please input url" />
+            </nz-form-control>
+          </nz-form-item>
+    </div>
+ </div>
+    <nz-card nzTitle="Url参数">
+   
+    <nz-form-item *ngFor="let control of controlArray; let i = index">
+      <nz-form-label [nzSpan]="2" class="text-left">参数{{i+1}}</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <label style="width: 5%;margin-right: 3%">key</label>
+        <input style="width: 25%;margin-right: 3%" nz-input placeholder="placeholder" [attr.id]="control.id"
+          [formControlName]="control.controlInstance1" />
+        <label style="width: 5%;margin-right: 3%">value</label>
+        <input nz-input style="width: 25%;margin-right: 3%" placeholder="placeholder" [attr.id]="control.id"
+          [formControlName]="control.controlInstance2" />
+        <i nz-icon type="minus-circle-o" class="dynamic-delete-button" (click)="removeParamField(control, $event)"></i>
+
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-control>
+        <button nz-button nzType="dashed" style="width:100%" (click)="addParamField($event)">
+          <i nz-icon type="plus"></i> Add Paramater field
+        </button>
+      </nz-form-control>
+    </nz-form-item>
+    </nz-card>
+    <nz-card nzTitle="完整Url">
+      <p>{{requestForm.value.baseUrl}}<span *ngIf="requestForm.value.baseUrl.length>0">/</span>{{requestForm.value.requestUrl}}
+        <span *ngIf="requestForm.value.param0key">?</span>
+      </p>
+    </nz-card>
+    <nz-card nzTitle="Body参数">
+   
+        <nz-form-item *ngFor="let control of bodyArray; let i = index">
+          <nz-form-label [nzSpan]="2" class="text-left">参数{{i+1}}</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <label style="width: 5%;margin-right: 3%">key</label>
+            <input style="width: 25%;margin-right: 3%" nz-input placeholder="placeholder" [attr.id]="control.id"
+              [formControlName]="control.controlInstance1" />
+            <label style="width: 5%;margin-right: 3%">value</label>
+            <input nz-input style="width: 25%;margin-right: 3%" placeholder="placeholder" [attr.id]="control.id"
+              [formControlName]="control.controlInstance2" />
+            <i nz-icon type="minus-circle-o" class="dynamic-delete-button" (click)="removeBodyField(control, $event)"></i>
+    
+          </nz-form-control>
+        </nz-form-item>
+    
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button nzType="dashed" style="width:100%" (click)="addBodyField($event)">
+              <i nz-icon type="plus"></i> Add Body field
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+  </nz-card>
+    <button nz-button nzBlock="true" nzType="primary" type="submit">发送请求</button>
+  </form>
 </nz-card>

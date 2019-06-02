@@ -1,3 +1,4 @@
+import { ActionRecord } from './ActionRecord';
 import { BaseEntity } from './baseEnitty';
 
 export class ProjectTransfer implements BaseEntity {
@@ -13,13 +14,20 @@ export class ProjectTransfer implements BaseEntity {
   SalesName: string;
   SalesCSName: string;
   ClientName: string;
+  CType:string;
+  Records:ActionRecord[];
   ServiceNames: string[];
+  BType:string;
+  RType:string;
+  Team:string;
+  ProductLineFrom:string;
   Product: string;
   Models: string;
   ActualProjectWorkingDays:number;
   QuotedFee: number;
   CurrencyInUSD: boolean;
   InvoicedFee?: number;
+  TobeFinishFlag:boolean;
   CreatedOn: Date;
   DeletedOn?: Date;
   LastModifiedOn?: Date;

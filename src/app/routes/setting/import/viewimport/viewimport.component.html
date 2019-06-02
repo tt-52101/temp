@@ -1,4 +1,40 @@
-<div style="padding: 20px;">
+<nz-card>
+  <form *ngIf="!expandForm" nz-form [nzLayout]="'inline'" (ngSubmit)="simpleGetData()" class="search__form">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 24, xxl: 24 }">
+      <div nz-col nzSpan="16">
+        <nz-form-item>
+          <nz-form-label nzFor="jobno">项目号</nz-form-label>
+          <nz-form-control>
+            <nz-input-group [nzSuffix]="suffixTemplate">
+              <input type="text" name="jobno" nz-input [(ngModel)]="inputJobno" placeholder="input job no" />
+            </nz-input-group>
+
+          </nz-form-control>
+        </nz-form-item>
+
+      </div>
+      <div nz-col nzSpan="8" [class.text-right]="!expandForm">
+        <button nz-button style="width: 180px" type="submit" [nzType]="'primary'">查询</button>
+
+      </div>
+      <ng-template #suffixTemplate>
+        <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="inputJobno"
+          (click)="inputJobno = null"></i></ng-template>
+
+
+    </div>
+
+  </form>
+  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="load($event)"
+    (formReset)="load()" class="sf__no-error"></sf>
+  <a (click)="expandForm=!expandForm">
+    {{expandForm ? '简单搜索' : '高级搜索'}}
+    <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
+  </a>
+
+  <st #st [columns]="ptColumns" [data]="pts" [loading]="loading" (change)="stChange($event)"></st>
+</nz-card>
+<!-- <div style="padding: 20px;">
   <nz-row [nzGutter]="20">
     <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <nz-card style="height: 120px;">
@@ -34,9 +70,9 @@
       </nz-card>
     </div>
   </nz-row>
-</div>
-<nz-card [nzBordered]="false">
-  <!-- <div class="d-flex align-items-center mb-lg">
+</div> -->
+<!-- <nz-card> -->
+<!-- <div class="d-flex align-items-center mb-lg">
     <h3 class="flex-1 text-lg">项目列表</h3>
     <div>
       <range-picker [(ngModel)]="params.OpenDateFrom" [(ngModelEnd)]="params.OpenDateTo"></range-picker>
@@ -62,7 +98,7 @@
     </nz-input-group>
   </div> -->
 
-  <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
+<!-- <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
     <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 24, xxl: 24 }">
       <div nz-col [nzSpan]="expandForm ? 24 : 16" *ngIf="!expandForm">
         <nz-form-item>
@@ -83,7 +119,7 @@
 
 
 
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+      <div nz-col nzMd="12" nzLg="8"  nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="engineer">工 程 师</nz-form-label>
           <nz-form-control>
@@ -95,7 +131,7 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+      <div nz-col nzMd="12" nzLg="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="sales">销 售</nz-form-label>
           <nz-form-control>
@@ -106,7 +142,7 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+      <div nz-col nzMd="12" nzLg="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="EngCS">工程助理</nz-form-label>
           <nz-form-control>
@@ -118,7 +154,7 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="10" nzSm="24" *ngIf="expandForm">
+      <div nz-col nzMd="10" nzLg="10" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="OpenDate">开案日期</nz-form-label>
           <nz-form-control>
@@ -126,7 +162,7 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="10" nzSm="16" *ngIf="expandForm">
+      <div nz-col nzMd="10" nzLg="10" nzSm="16" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="CompleteDate">结案日期</nz-form-label>
           <nz-form-control>
@@ -136,7 +172,7 @@
         </nz-form-item>
 
       </div>
-      <div nz-col nzMd="4" nzSm="8" *ngIf="expandForm" style="height:56px;   
+      <div nz-col nzMd="12" nzLg="8" nzSm="8" *ngIf="expandForm" style="height:56px;   
       line-height:35px;">
         <nz-form-item>
           <nz-form-label nzFor="isFinish">状态</nz-form-label>
@@ -150,7 +186,7 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
+      <div nz-col nzMd="16" nzLg="12" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="clients">客户</nz-form-label>
           <nz-form-control>
@@ -191,9 +227,8 @@
     </div>
   </form>
 
-  <nz-divider></nz-divider>
   <form nz-form [nzLayout]="'inline'" *ngIf="filterOpen" (ngSubmit)="filterData()" class="search__form">
-    <div nz-col nzMd="8" nzSm="24">
+    <div nz-col nzMd="12" nzLg="8" nzSm="24">
       <nz-form-item>
         <nz-form-label nzFor="category">项目类型</nz-form-label>
         <nz-form-control>
@@ -204,7 +239,7 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-    <div nz-col nzMd="8" nzSm="24">
+    <div nz-col nzMd="12" nzLg="8" nzSm="24">
       <nz-form-item>
         <nz-form-label nzFor="clientType">客户类型</nz-form-label>
         <nz-form-control>
@@ -215,7 +250,7 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-    <div nz-col nzMd="8" nzSm="24">
+    <div nz-col nzMd="12" nzLg="8" nzSm="24">
       <nz-form-item>
         <nz-form-label nzFor="regionType">Region类型</nz-form-label>
         <nz-form-control>
@@ -226,9 +261,11 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-  </form>
-  <st #st [data]="ptsShow" [columns]="columns" [(loading)]="loading" [page]="pageInfo"></st>`
-  <!-- <nz-table #nzTable [nzData]="ptsShow" nzPageSize="20" nzPageIndex="1"
+  </form> -->
+<!-- <nz-card>
+  <st #st [data]="ptsShow" [columns]="columns" [scroll]="{x:'800px'}" responsive [(loading)]="loading" [page]="pageInfo"></st>
+</nz-card> -->
+<!-- <nz-table #nzTable [nzData]="ptsShow" nzPageSize="20" nzPageIndex="1"
     [(nzTotal)]="totalCount" [nzShowQuickJumper]="'true'">
     <thead (nzSortChange)="sort($event)" nzSingleSort>
       <tr>
@@ -263,4 +300,4 @@
     </tbody>
   </nz-table> -->
 
-</nz-card>
+<!-- </nz-card> -->

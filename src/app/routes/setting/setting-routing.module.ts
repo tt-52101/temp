@@ -10,14 +10,20 @@ import { SettingTeamsetComponent } from './teamset/teamset.component';
 import { SettingTeamsetEditMonthlyDataEditComponent } from './teamset/edit/monthly-data-edit/monthly-data-edit.component';
 import { SettingTeamsetTargetComponent } from './teamset/target/target.component';
 import { SettingTeamsetMembersComponent } from './teamset/members/members.component';
+import { SettingImportEditProjectComponent } from './import/edit/project/project.component';
+import { SettingImportEditRecordsComponent } from './import/edit/records/records.component';
 
 const routes: Routes = [
   { path: 'import', component: SettingImportComponent },
   { path: 'set', component: SettingSetComponent },
+  {path:'clientedit',component:SettingSetEditClienteditComponent},
+  {path:'serviceedit',component:SettingSetEditServiceeditComponent},
   { path: 'teamset', component: SettingTeamsetComponent },
   { path: 'monthlyDataEdit', component: SettingTeamsetEditMonthlyDataEditComponent },
   { path: 'target', component: SettingTeamsetTargetComponent },
-  { path: 'members', component: SettingTeamsetMembersComponent }];
+  { path: 'members', component: SettingTeamsetMembersComponent },
+  { path: 'project', component: SettingImportEditProjectComponent },
+  { path: 'records', component: SettingImportEditRecordsComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
