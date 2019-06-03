@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { NzModalRef, NzMessageService, isTemplateRef } from 'ng-zorro-antd';
-import { _HttpClient, DrawerHelper } from '@delon/theme';
+import { _HttpClient, DrawerHelper, ModalHelper } from '@delon/theme';
 import { ProjectTransfer } from 'app/services/biz/projecttransfer';
 import { from, of } from 'rxjs';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
@@ -21,8 +21,11 @@ export class SettingImportViewimportComponent implements OnInit {
     public msg: NzMessageService,
     public http: _HttpClient,
     private cdr: ChangeDetectorRef,
+    private modal:ModalHelper,
+    private drawer:DrawerHelper
   ) {}
   // forms
+  users=[];
   engineers = [];
   engineeringCSs = [];
   sales = [];
@@ -183,7 +186,8 @@ export class SettingImportViewimportComponent implements OnInit {
       buttons: [
         {
           icon: 'edit',
-          type: 'static',
+          
+          type: 'modal',
           modal: {
             component: SettingImportEditProjectComponent,
             size: 'lg',
@@ -193,14 +197,15 @@ export class SettingImportViewimportComponent implements OnInit {
         },
         {
           icon: 'ordered-list',
-          type: 'static',
+          type: 'none',
           
-          modal: {
-            component: SettingImportEditRecordsComponent,
-            size: 'lg',
-            paramsName: 'i',
-          },
-          click: 'reload',
+          click:(i,m,c)=>{
+            this.drawer
+      .create(`Job No ${i.ProjectNo}`, SettingImportEditRecordsComponent,{i},{size:500})
+      .subscribe((res: any) => {
+        i.Records=res.Records;
+      });
+          }
         },
         {
           icon: 'delete',
@@ -225,51 +230,46 @@ export class SettingImportViewimportComponent implements OnInit {
   loading = false;
   ngOnInit(): void {
     // this.http.get(`home/dbstatus`).subscribe(res => (this.record = res));
-    // this.http.get('person/userAll').subscribe(
-    //   (res: SyneltsUser[]) => {
-    //     [...res].forEach(item => {
-    //       this.users.push(item);
-    //       console.log(item);
-    //     });
-    //     console.log(this.users);
-    //   },
-    //   err => {},
-    //   () => {
-    //     [...this.users].forEach(item => {
-    //       let i = 0;
-    //       if (item.SyneltsRole.indexOf('0') !== -1) {
-    //         this.engineer.push({
-    //           index: i,
-    //           text: item.Name,
-    //           value: false,
-    //           checked: false,
-    //         });
-    //         i++;
-    //       }
-    //       let j = 0;
-    //       if (item.SyneltsRole.indexOf('1') !== -1) {
-    //         this.EngCS.push({
-    //           index: j,
-    //           text: item.Name,
-    //           value: false,
-    //           checked: false,
-    //         });
-    //         j++;
-    //       }
-    //       let k = 0;
-    //       if (item.SyneltsRole.indexOf('2') !== -1) {
-    //         this.sales.push({
-    //           index: k,
-    //           text: item.Name,
-    //           value: false,
-    //           checked: false,
-    //         });
-    //         k++;
-    //       }
-    //     });
-    //     console.log(this.engineer);
-    //   },
-    // );
+    this.http.get('person/userAll').subscribe(
+      (res: SyneltsUser[]) => {
+        [...res].forEach(item => {
+          this.users.push(item);
+        });
+        console.log(this.users);
+      },
+      err => {},
+      () => {
+        [...this.users].forEach(item => {
+          let i = 0;
+          if (item.SyneltsRole.indexOf('0') !== -1) {
+            this.engineers.push({
+              index: i,
+              label:item.Name,
+              value: item.Name
+            });
+            i++;
+          }
+          let j = 0;
+          if (item.SyneltsRole.indexOf('1') !== -1) {
+            this.engineeringCSs.push({
+              index: j,
+              label:item.Name,
+              value: item.Name
+            });
+            j++;
+          }
+          let k = 0;
+          if (item.SyneltsRole.indexOf('2') !== -1) {
+            this.sales.push({
+              index: k,
+              label:item.Name,
+              value: item.Name
+            });
+            k++;
+          }
+        });
+      },
+    );
     // this.getData('joh');
   }
   simpleGetData() {

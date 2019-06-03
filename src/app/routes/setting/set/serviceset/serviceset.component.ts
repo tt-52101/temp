@@ -22,13 +22,13 @@ export class SettingSetServicesetComponent implements OnInit {
   checkloading = false;
   inputServiceName = '';
   selectStatus = 0;
-  selectBusinessType;
-  selectRegionType;
+  selectBusinessType = 'Safety';
+  selectRegionType = 'IEC';
   params = {
     BusinessType: 'Safety',
     RegionType: 'US',
     Name: '',
-    SetAlready:false
+    SetAlready: false,
   };
   status = [{ index: 0, text: '未设置' }, { index: 1, text: '已设置' }];
 
@@ -99,18 +99,20 @@ export class SettingSetServicesetComponent implements OnInit {
         {
           icon: 'delete',
           type: 'del',
+          popTitle:'删除请慎重！',
           click: (i, m, c) => {
             this.http.delete(`service/singlebyid/${i.Id}`).subscribe(
-              res=>{
-                if(res==="Deleted"){
+              res => {
+                if (res === 'Deleted') {
                   this.msg.success(res);
                 }
               },
-              err=>{},
+              err => {},
               () => {
-              this.msg.success('Success');
-              c.removeRow(i);
-            });
+                this.msg.success('Success');
+                c.removeRow(i);
+              },
+            );
           },
         },
       ],
@@ -131,11 +133,13 @@ export class SettingSetServicesetComponent implements OnInit {
       if (this.selectStatus === 0) {
         this.params.BusinessType = '';
         this.params.RegionType = '';
-        this.params.SetAlready=false;
-      }else{
-        this.params.SetAlready=true;
-        this.params.BusinessType=this.selectBusinessType;
-        this.params.RegionType=this.selectRegionType;
+        this.params.SetAlready = false;
+        this.params.Name = '';
+      } else {
+        this.params.Name = '';
+        this.params.SetAlready = true;
+        this.params.BusinessType = this.selectBusinessType;
+        this.params.RegionType = this.selectRegionType;
       }
 
       this.http.get('service/collectionByFilter', this.params).subscribe(
@@ -155,12 +159,12 @@ export class SettingSetServicesetComponent implements OnInit {
         },
       );
     } else {
-      if(this.inputServiceName===''){
+      if (this.inputServiceName === '') {
         this.msg.warning('输入为空！');
         this.checkloading = false;
-            this.loading = false;
+        this.loading = false;
         return;
-      }else{
+      } else {
         this.params.Name = this.inputServiceName;
         this.params.BusinessType = '';
         this.params.RegionType = '';
@@ -183,64 +187,62 @@ export class SettingSetServicesetComponent implements OnInit {
           },
         );
       }
-      
     }
   }
 
   setService(type: string) {
-    switch(type){
+    switch (type) {
       case 'Safety':
-        this.selectServices.map(c=>{
-          c.BusinessType='Safety';
+        this.selectServices.map(c => {
+          c.BusinessType = 'Safety';
         });
         break;
       case 'SafetyUS':
-        this.selectServices.map(c=>{
-          c.BusinessType='Safety';
-          c.RegionType='US';
+        this.selectServices.map(c => {
+          c.BusinessType = 'Safety';
+          c.RegionType = 'US';
         });
         break;
-        case 'SafetyIEC':
-        this.selectServices.map(c=>{
-          c.BusinessType='Safety';
-          c.RegionType='IEC';
+      case 'SafetyIEC':
+        this.selectServices.map(c => {
+          c.BusinessType = 'Safety';
+          c.RegionType = 'IEC';
         });
         break;
-        case 'SafetyGMAP':
-        this.selectServices.map(c=>{
-          c.BusinessType='Safety';
-          c.RegionType='GMAP';
+      case 'SafetyGMAP':
+        this.selectServices.map(c => {
+          c.BusinessType = 'Safety';
+          c.RegionType = 'GMAP';
         });
         break;
-        case 'Chemical':
-        this.selectServices.map(c=>{
-          c.BusinessType='Chemical';
+      case 'Chemical':
+        this.selectServices.map(c => {
+          c.BusinessType = 'Chemical';
         });
         break;
-        case 'EE':
-        this.selectServices.map(c=>{
-          c.BusinessType='Energy Efficiency';
+      case 'EE':
+        this.selectServices.map(c => {
+          c.BusinessType = 'Energy Efficiency';
         });
         break;
-        case 'EEUS':
-        this.selectServices.map(c=>{
-          c.BusinessType='Energy Efficiency';
-          c.RegionType='US';
+      case 'EEUS':
+        this.selectServices.map(c => {
+          c.BusinessType = 'Energy Efficiency';
+          c.RegionType = 'US';
         });
         break;
-        case 'EEIEC':
-        this.selectServices.map(c=>{
-          c.BusinessType='Energy Efficiency';
-          c.RegionType='IEC';
+      case 'EEIEC':
+        this.selectServices.map(c => {
+          c.BusinessType = 'Energy Efficiency';
+          c.RegionType = 'IEC';
         });
         break;
-        case 'EEGMAP':
-        this.selectServices.map(c=>{
-          c.BusinessType='Energy Efficiency';
-          c.RegionType='GMAP';
+      case 'EEGMAP':
+        this.selectServices.map(c => {
+          c.BusinessType = 'Energy Efficiency';
+          c.RegionType = 'GMAP';
         });
         break;
-
     }
     // if (type === 'US' || type === 'IEC') {
     //   this.selectServices.map(c => (c.RegionType = type));

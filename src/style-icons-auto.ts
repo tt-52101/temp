@@ -57,6 +57,7 @@ import {
   CrownFill,
   CrownTwoTone,
   CrownOutline,
+  OrderedListOutline
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS_AUTO = [
@@ -113,4 +114,5 @@ export const ICONS_AUTO = [
   CrownFill,
   CrownTwoTone,
   CrownOutline,
+  OrderedListOutline
 ];

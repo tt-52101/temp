@@ -1,11 +1,11 @@
-<nz-card nzTitle="{{i.ProjectNo}}">
+<nz-card>
   <nz-timeline nzMode="alternate">
-
     <nz-timeline-item nzColor="green" [nzDot]="dotTemplate" *ngFor="let item of i.Records">
-      {{item.Title}}:{{item.Description}}\n{{item.CreatedOn|_date:'YYYY-MM-DD'}}\n<a nz-popconfirm nzTitle="Are you sure?" (nzOnConfirm)="delete(i.Records,item)" [nzIcon]="iconTpl" >Deleted</a>
+      {{item.Title}}:{{item.Description}}\n{{item.CreatedOn|_date:'YYYY-MM-DD'}}\n<a nz-popconfirm
+        nzTitle="Are you sure?" (nzOnConfirm)="delete(i.Records,item)" [nzIcon]="iconTpl">Deleted</a>
       <ng-template #iconTpl>
-          <i nz-icon nzType="question-circle-o"  style="color: red;"></i>
-        </ng-template>
+        <i nz-icon nzType="question-circle-o" style="color: red;"></i>
+      </ng-template>
     </nz-timeline-item>
   </nz-timeline>
   <ng-template #dotTemplate>

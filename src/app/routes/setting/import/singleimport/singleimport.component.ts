@@ -134,49 +134,94 @@ export class SettingImportSingleimportComponent implements OnInit {
       requestUrl: ['', [Validators.required]],
     });
   }
-  paramArray=[];
-  createParamString(){
-    const data=this.requestForm.value;
-    const param= Object.keys(data)
-    .filter(f=>f.includes('key'))
-    .reduce((obj,f,cur,arr)=>{
-      const key=data[f];
-      const vkey=f.substring(0,6)+'value';
-      const value=data[vkey]
-      obj[key]=value;
-      return obj;
-    },{});
+  paramArray = [];
+  createParamString() {
+    const data = this.requestForm.value;
+    const param = Object.keys(data)
+      .filter(f => f.startsWith('param'))
+      .filter(f => f.endsWith('key'))
+      .reduce((obj, f, cur, arr) => {
+        const key = data[f];
+        const vkey = f.substring(0, 6) + 'value';
+        const value = data[vkey];
+        obj[key] = value;
+        return obj;
+      }, {});
     console.log(param);
-    let st=''
-    for(let key in param){
-      st+=key+'='+param[key]+'&';
-    }
-    if(st.lastIndexOf('&')===st.length-1){
-      st=st.substring(0,st.length-2);
-    }
-    console.log(st);
-    return st;
+    return param;
+    // let st=''
+    // for(let key in param){
+    //   st+=key+'='+param[key]+'&';
+    // }
+    // if(st.lastIndexOf('&')===st.length-1){
+    //   st=st.substring(0,st.length-2);
+    // }
+    // console.log(st);
+    // return st;
+  }
+  createBodyString() {
+    const data = this.requestForm.value;
+    const param = Object.keys(data)
+      .filter(f => f.startsWith('body'))
+      .filter(f => f.endsWith('key'))
+      .reduce((obj, f, cur, arr) => {
+        const key = data[f];
+        const vkey = f.substring(0, 5) + 'value';
+        const value = data[vkey];
+        obj[key] = value;
+        return obj;
+      }, {});
+    console.log(param);
+    return param;
+    // let st=''
+    // for(let key in param){
+    //   st+=key+'='+param[key]+'&';
+    // }
+    // if(st.lastIndexOf('&')===st.length-1){
+    //   st=st.substring(0,st.length-2);
+    // }
+    // console.log(st);
+    // return st;
   }
   submit() {
-    const qString:string=this.createParamString();
-    let url='';
-    const mode=this.requestForm.value.requestType
-    switch(mode){
+    const params = this.createParamString();
+    const body = this.createBodyString();
+    console.log(params);
+    console.log(body);
+    let url = '';
+    const mode = this.requestForm.value.requestType;
+    switch (mode) {
       case 'GET':
         {
-          url=qString?
-          this.requestForm.value.baseUrl+'/'+this.requestForm.value.requestUrl+'?'+qString
-          :this.requestForm.value.baseUrl+'/'+this.requestForm.value.requestUrl;
-          this.http.get(url,)
+          url =
+            this.requestForm.value.baseUrl +
+            '/' +
+            this.requestForm.value.requestUrl;
+          console.log(url);
+          this.http
+            .get(url, params)
+            .subscribe(
+              res => console.log(res),
+              err => console.log(err),
+              () => console.log('request finished'),
+            );
         }
         break;
-        case 'POST':
-          {
-            url=this.requestForm.value.baseUrl+'/'+this.requestForm.value.requestUrl
-          }
+      case 'POST': {
+        url =
+          this.requestForm.value.baseUrl +
+          '/' +
+          this.requestForm.value.requestUrl;
+        console.log(url);
+        this.http
+          .post(url, body)
+          .subscribe(
+            res => console.log(res),
+            err => console.log(err),
+            () => console.log('request finished'),
+          );
+      }
     }
-    
-    
 
     // this.httpclient.get<any>('url',this.creds,{headers:this.headers}).subscribe(
     //   res=>{
