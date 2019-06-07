@@ -78,15 +78,13 @@ export class SettingTeamsetMembersComponent implements OnInit {
             paramsName: 'i',
             size: 'md',
           },
-          click: (i, m, c) => {
-            this._submitForm();
-          },
+          click: 'reload',
         },
         {
           icon: 'delete',
           type: 'del',
           click: (i, m, c) => {
-            this.http.delete(`home/project/${i.Id}`).subscribe(
+            this.http.delete(`person/user/${i.Id}`).subscribe(
               res => {
                 this.msg.success(res);
               },
@@ -168,8 +166,8 @@ export class SettingTeamsetMembersComponent implements OnInit {
   }
   create(){
     this.modal.create(SettingTeamsetEditStaffComponent,{},{size:'md'})
-    .subscribe(()=>{
-      this.st.load();
+    .subscribe(res=>console.log(res),err=>{},()=>{
+     
     });
   }
 }
