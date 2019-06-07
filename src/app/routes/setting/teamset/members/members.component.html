@@ -1,1 +1,55 @@
-<page-header></page-header>
+<nz-card>
+  <form nz-form [formGroup]="form" [nzLayout]="'inline'" (ngSubmit)="_submitForm()" [nzLayout]="'vertical'">
+
+    <nz-row nzGutter="16">
+      <nz-col nzLg="6" nzMd="12" nzSm="24">
+        <nz-form-item>
+          <nz-form-control>
+            
+            <input nz-input formControlName="Name" id="name" placeholder="请输入姓名"  >
+          </nz-form-control>
+        </nz-form-item>
+        
+      </nz-col>
+      
+      
+      <nz-col nzLg="6" nzMd="12" nzSm="24">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-select nzPlaceHolder="请选择角色" formControlName="SyneltsRole" nzAllowClear="true" style="width: 180px">
+              <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg="6" nzMd="12" nzSm="24">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-radio-group formControlName="IsCurrentOnJob" id="OnJob">
+              <label nz-radio nzValue=true>在岗</label>
+              <label nz-radio nzValue=false>离岗</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col  nzLg="6" nzMd="12" nzSm="24">
+        
+        </nz-col>
+      <nz-col nzLg="6" nzMd="12" nzSm="24">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button nzType="primary" type="submit">Search</button>
+            <button nz-button type="reset">Reset</button>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+
+  </form>
+  <button style="margin-top: 20px" (click)="create()" nz-button  nzType="primary">
+        <i nz-icon type="plus"></i>
+        新建
+      </button>
+  <st style="margin-top: 20px" #st [data]="staffs" [columns]="staffColumns" [loading]="loading"></st>
+</nz-card>

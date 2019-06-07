@@ -2,7 +2,9 @@ export class SyneltsUser {
   Id: string;
   Name: string;
   Email: string;
-  SyneltsRole: string;
+  SyneltsRole: number;
+  SyneltsRoles: string[];
+  IsCurrentOnJob: boolean;
   IsDeleted: boolean;
   CreatedOn: Date;
   CreatedBy: string;

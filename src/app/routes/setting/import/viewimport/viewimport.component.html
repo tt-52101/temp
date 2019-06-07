@@ -25,7 +25,7 @@
     </div>
 
   </form>
-  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="load($event)"
+  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="AdvancedGetData()"
     (formReset)="load()" class="sf__no-error"></sf>
   <a (click)="expandForm=!expandForm">
     {{expandForm ? '简单搜索' : '高级搜索'}}

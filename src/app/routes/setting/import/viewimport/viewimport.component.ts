@@ -1,14 +1,22 @@
 import { filter } from 'rxjs/operators';
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { NzModalRef, NzMessageService, isTemplateRef } from 'ng-zorro-antd';
 import { _HttpClient, DrawerHelper, ModalHelper } from '@delon/theme';
 import { ProjectTransfer } from 'app/services/biz/projecttransfer';
 import { from, of } from 'rxjs';
+import { CacheService } from '@delon/cache';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
-import { STColumn, STChange } from '@delon/abc';
-import { SFButton, SFSchema } from '@delon/form';
+import { STColumn, STChange, STComponent } from '@delon/abc';
+import { SFButton, SFSchema, SFComponent } from '@delon/form';
 import { SettingImportEditProjectComponent } from '../edit/project/project.component';
 import { SettingImportEditRecordsComponent } from '../edit/records/records.component';
+import { ReloadOutline } from '@ant-design/icons-angular/icons/public_api';
 
 @Component({
   selector: 'app-setting-import-viewimport',
@@ -17,15 +25,16 @@ import { SettingImportEditRecordsComponent } from '../edit/records/records.compo
 export class SettingImportViewimportComponent implements OnInit {
   expandForm = false;
   inputJobno = '';
+  @ViewChild('st') st: STComponent;
+  @ViewChild('sf') sf:SFComponent;
   constructor(
     public msg: NzMessageService,
     public http: _HttpClient,
-    private cdr: ChangeDetectorRef,
-    private modal:ModalHelper,
-    private drawer:DrawerHelper
+    private drawer: DrawerHelper,
+    public cache: CacheService,
   ) {}
   // forms
-  users=[];
+  users = [];
   engineers = [];
   engineeringCSs = [];
   sales = [];
@@ -35,24 +44,27 @@ export class SettingImportViewimportComponent implements OnInit {
     { label: 'ETL', value: 'ETL' },
   ];
   progressTypes = [
-    { label: '未完成', value: 'Unfinished' },
-    { label: '已完成', value: 'Finished' },
-    { label: '全部', value: 'All' },
+    { label: '未完成', value: false },
+    { label: '已完成', value: true },
+    { label: '全部', value: '' },
   ];
   BusinessType = [
     { label: '安规', value: 'Safety' },
     { label: '能效', value: 'Energy Efficiency' },
     { label: '化学', value: 'Chemical' },
+    {label:'未知',value:''}
   ];
   RegionType = [
     { label: 'IEC体系', value: 'IEC' },
     { label: 'US体系', value: 'US' },
     { label: 'GMAP体系', value: 'GMAP' },
+    {label:'未知',value:''}
   ];
   ClientType = [
     { label: '普通客户', value: 'Normal' },
     { label: 'VIP客户', value: 'VIP' },
     { label: 'Agent客户', value: 'Agent' },
+    {label:'未知',value:''}
   ];
   qSchema: SFSchema = {
     properties: {
@@ -81,34 +93,34 @@ export class SettingImportViewimportComponent implements OnInit {
         ui: { widget: 'autocomplete' },
       },
       QuotationNo: { type: 'string', title: '报价单号' },
-      OpenDate: { type: 'string', ui: { widget: 'date', mode: 'range' } },
-      CompleteDate: { type: 'string', ui: { widget: 'date', mode: 'range' } },
+      OpenDateFromTo: { type: 'string',title:'开案时间', ui: { widget: 'date', mode: 'range' } },
+      CompleteDateFromTo: { type: 'string',title:'结案时间', ui: { widget: 'date', mode: 'range' } },
       Progress: {
-        type: 'string',
+        type: 'boolean',
         title: '完成度',
         enum: this.progressTypes,
-        default: 'All',
+        default: '',
         ui: { widget: 'select' },
       },
       BType: {
         type: 'string',
         title: '业务类型',
         enum: this.BusinessType,
-        default: 'All',
+        default: '',
         ui: { widget: 'select' },
       },
       RType: {
         type: 'string',
         title: '区域类型',
         enum: this.RegionType,
-        default: 'All',
+        default: '',
         ui: { widget: 'select' },
       },
       CType: {
         type: 'string',
         title: '客户类型',
         enum: this.ClientType,
-        default: 'All',
+        default: '',
         ui: { widget: 'select' },
       },
     },
@@ -186,26 +198,30 @@ export class SettingImportViewimportComponent implements OnInit {
       buttons: [
         {
           icon: 'edit',
-          
-          type: 'modal',
+          type: 'static',
           modal: {
             component: SettingImportEditProjectComponent,
-            size: 'lg',
             paramsName: 'i',
+            size: 'lg',
           },
-          click: 'reload',
+          click: (i, m, c) => {
+            if(!this.expandForm){
+              this.simpleGetData();
+            }else{
+
+            }
+            
+          },
         },
         {
           icon: 'ordered-list',
-          type: 'none',
-          
-          click:(i,m,c)=>{
-            this.drawer
-      .create(`Job No ${i.ProjectNo}`, SettingImportEditRecordsComponent,{i},{size:500})
-      .subscribe((res: any) => {
-        i.Records=res.Records;
-      });
-          }
+          type: 'modal',
+          modal: {
+            component: SettingImportEditRecordsComponent,
+            paramsName: 'i',
+            size: 'lg',
+          },
+          click: 'reload',
         },
         {
           icon: 'delete',
@@ -230,62 +246,116 @@ export class SettingImportViewimportComponent implements OnInit {
   loading = false;
   ngOnInit(): void {
     // this.http.get(`home/dbstatus`).subscribe(res => (this.record = res));
-    this.http.get('person/userAll').subscribe(
-      (res: SyneltsUser[]) => {
-        [...res].forEach(item => {
-          this.users.push(item);
-        });
-        console.log(this.users);
-      },
-      err => {},
-      () => {
-        [...this.users].forEach(item => {
-          let i = 0;
-          if (item.SyneltsRole.indexOf('0') !== -1) {
-            this.engineers.push({
-              index: i,
-              label:item.Name,
-              value: item.Name
-            });
-            i++;
-          }
-          let j = 0;
-          if (item.SyneltsRole.indexOf('1') !== -1) {
-            this.engineeringCSs.push({
-              index: j,
-              label:item.Name,
-              value: item.Name
-            });
-            j++;
-          }
-          let k = 0;
-          if (item.SyneltsRole.indexOf('2') !== -1) {
-            this.sales.push({
-              index: k,
-              label:item.Name,
-              value: item.Name
-            });
-            k++;
-          }
-        });
-      },
-    );
+    if (!this.cache.getNone('sales')) {
+      this.http.get('person/userAll').subscribe(
+        (res: SyneltsUser[]) => {
+          [...res].forEach(item => {
+            this.users.push(item);
+          });
+          console.log(this.users);
+        },
+        err => {},
+        () => {
+          [...this.users].forEach(item => {
+            let i = 0;
+            if (item.SyneltsRole.indexOf('0') !== -1) {
+              this.engineers.push({
+                index: i,
+                label: item.Name,
+                value: item.Name,
+              });
+              i++;
+            }
+            let j = 0;
+            if (item.SyneltsRole.indexOf('1') !== -1) {
+              this.engineeringCSs.push({
+                index: j,
+                label: item.Name,
+                value: item.Name,
+              });
+              j++;
+            }
+            let k = 0;
+            if (item.SyneltsRole.indexOf('2') !== -1) {
+              this.sales.push({
+                index: k,
+                label: item.Name,
+                value: item.Name,
+              });
+              k++;
+            }
+          });
+          this.cache.set('engineers', this.engineers, {
+            type: 's',
+            expire: 300,
+          });
+          this.cache.set('engineeringCss', this.engineeringCSs, {
+            type: 's',
+            expire: 300,
+          });
+          this.cache.set('sales', this.sales, { type: 's', expire: 300 });
+        },
+      );
+    }else{
+      this.cache.get<any>('engineeringCss').subscribe(
+        res=>{
+          res.forEach(element => {
+            this.engineeringCSs.push(element);
+          });
+        }
+      );
+      this.cache.get<any>('engineers').subscribe(
+        res=>{
+          res.forEach(element => {
+            this.engineers.push(element);
+          });
+        }
+      );
+      this.cache.get<any>('sales').subscribe(
+        res=>{
+          res.forEach(element => {
+            this.sales.push(element);
+          });
+        }
+      );
+
+    }
+
     // this.getData('joh');
   }
   simpleGetData() {
-    this.http.get(`home/ProjectSearchByProjectNo`,{projectNo:this.inputJobno.trim()}).subscribe(
-      res=>{
-        if(res.Message==="OK"){
-          this.pts=res.Items;
-        }else{
+    this.http
+      .get(`home/ProjectSearchByProjectNo`, {
+        projectNo: this.inputJobno.trim(),
+      })
+      .subscribe(res => {
+        if (res.Message === 'OK') {
+          this.pts = res.Items;
+        } else {
           this.msg.error(res.Message);
         }
-      }
+      });
+  }
+
+  AdvancedGetData(){
+    console.log(this.sf.value);
+    const sfv=this.sf.value;
+    if(sfv.OpenDateFromTo){
+      sfv.OpenDateFrom=this.sf.value.OpenDateFromTo[0];
+      sfv.OpenDateTo=this.sf.value.OpenDateFromTo[1];
+    }
+    if(sfv.CompleteDateFromTo){
+      sfv.CompleteDateFrom=this.sf.value.CompleteDateFromTo[0];
+      sfv.CompleteDateTo=this.sf.value.CompleteDateFromTo[1];
+    }
+   
+    
+    console.log(sfv);
+    this.http.get('home/projectsbyfilter',sfv).subscribe(
+      res=>this.pts=res
     );
   }
-  load(param: any = null) {
-    console.log(param);
-  }
+  
   stChange(e: STChange) {}
   filterData() {}
   // search(): void {

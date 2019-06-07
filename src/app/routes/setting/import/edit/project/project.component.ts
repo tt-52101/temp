@@ -16,11 +16,11 @@ export class SettingImportEditProjectComponent implements OnInit {
   i: any = {};
   schema: SFSchema = {
     properties: {
-      ProjectNo: { type: 'string', title: 'Job No', maxLength: 12 },
-      QuotationNo: { type: 'string', title: 'Quotation No', maxLength: 13 },
-      ClientName: { type: 'string', title: 'Client', maxLength: 100 },
-      Product: { type: 'string', title: 'Product' },
-      ServiceNames: { type: 'string', title: 'Services' },
+      ProjectNo: { type: 'string', title: 'Job No', maxLength: 12,readOnly:true },
+      QuotationNo: { type: 'string', title: 'Quotation No', maxLength: 13,readOnly:true },
+      ClientName: { type: 'string', title: 'Client', maxLength: 100,readOnly:true },
+      Product: { type: 'string', title: 'Product',readOnly:true },
+      ServiceNames: { type: 'string', title: 'Services',readOnly:true },
       QuotedFee: { type: 'number', title: 'Fee', ui: { prefix: '￥' } },
       CType: {
         type: 'string',
@@ -61,7 +61,7 @@ export class SettingImportEditProjectComponent implements OnInit {
           widget: 'radio',
           asyncData: () =>
             of([
-              { label: '欧洲', value: 'EU' },
+              { label: '欧洲', value: 'IEC' },
               { label: '北美', value: 'US' },
               { label: 'GMAP', value: 'GMAP' },
               { label: '未知', value: '' },
@@ -83,10 +83,22 @@ export class SettingImportEditProjectComponent implements OnInit {
   save(value: any) {
     console.log(value);
     this.http
-      .put('client/updatesingle', value)
-      .subscribe(res => {}, err => {}, () => {});
-    this.msg.success('保存成功');
-    this.modal.close(value);
+      .put('home/project', value)
+      .subscribe(
+        res => {
+          if(res.Message==='OK'){
+            this.msg.success('保存成功');
+            
+          }else{
+            this.msg.warning('出了点问题');
+          }
+        }, 
+        err => {}, 
+        () => {
+          this.modal.close(value);
+        });
+    
+    
   }
 
   close() {

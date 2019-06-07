@@ -1,5 +1,40 @@
-<nz-card [nzBordered]="false" nzTitle="成员管理">
-    <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()" [nzLayout]="'vertical'">
+<nz-card>
+    <form nz-form [formGroup]="selectform" [nzLayout]="'inline'" (ngSubmit)="show()" [nzLayout]="'vertical'" >
+    
+        <nz-row nzGutter="16">
+           
+            <nz-col nzLg="6" nzMd="12" nzSm="24">
+                <nz-form-item>
+                 
+                  <nz-form-control>
+                      <nz-select
+                      nzPlaceHolder="请选择年份"
+                      formControlName="year"
+                      style="width: 180px"
+                    >
+                      <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col  nzLg="6" nzMd="12" nzSm="24">
+
+                </nz-col>
+                <nz-col  nzLg="6" nzMd="12" nzSm="24">
+
+                  </nz-col>
+                <nz-col nzLg="6" nzMd="12" nzSm="24">
+                    <nz-form-item>
+                      <nz-form-control>
+                          <button nz-button nzType="primary" type="submit">Search</button>
+          <button nz-button type="reset">Reset</button>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-col>
+            </nz-row>
+
+  </form>
+    <form style="margin-top: 20px" nz-form [formGroup]="form" (ngSubmit)="_submitForm()" [nzLayout]="'vertical'">
   <nz-table formArrayName="items" [nzData]="items.value" [nzShowPagination]="false">
     <thead>
       <tr>
