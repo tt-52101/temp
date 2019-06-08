@@ -13,6 +13,7 @@ import { SettingTeamsetMembersComponent } from './teamset/members/members.compon
 import { SettingImportEditProjectComponent } from './import/edit/project/project.component';
 import { SettingImportEditRecordsComponent } from './import/edit/records/records.component';
 import { SettingTeamsetEditStaffComponent } from './teamset/edit/staff/staff.component';
+import { SettingTeamsetRoutingComponent } from './teamset/routing/routing.component';
 
 const routes: Routes = [
   { path: 'import', component: SettingImportComponent },
@@ -25,7 +26,8 @@ const routes: Routes = [
   { path: 'members', component: SettingTeamsetMembersComponent },
   { path: 'project', component: SettingImportEditProjectComponent },
   { path: 'records', component: SettingImportEditRecordsComponent },
-  { path: 'staff', component: SettingTeamsetEditStaffComponent }];
+  { path: 'staff', component: SettingTeamsetEditStaffComponent },
+  { path: 'routing', component: SettingTeamsetRoutingComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

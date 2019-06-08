@@ -18,6 +18,7 @@ import { SettingTeamsetMembersComponent } from './teamset/members/members.compon
 import { SettingImportEditProjectComponent } from './import/edit/project/project.component';
 import { SettingImportEditRecordsComponent } from './import/edit/records/records.component';
 import { SettingTeamsetEditStaffComponent } from './teamset/edit/staff/staff.component';
+import { SettingTeamsetRoutingComponent } from './teamset/routing/routing.component';
 
 const COMPONENTS = [
   SettingImportComponent,
@@ -34,7 +35,8 @@ const COMPONENTS = [
   SettingTeamsetMembersComponent,
   SettingImportEditProjectComponent,
   SettingImportEditRecordsComponent,
-  SettingTeamsetEditStaffComponent];
+  SettingTeamsetEditStaffComponent,
+  SettingTeamsetRoutingComponent];
 const COMPONENTS_NOROUNT = [
   SettingSetViewComponent,
   SettingImportViewimportComponent,

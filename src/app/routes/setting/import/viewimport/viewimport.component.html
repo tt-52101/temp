@@ -1,40 +1,4 @@
-<nz-card>
-  <form *ngIf="!expandForm" nz-form [nzLayout]="'inline'" (ngSubmit)="simpleGetData()" class="search__form">
-    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 24, xxl: 24 }">
-      <div nz-col nzSpan="16">
-        <nz-form-item>
-          <nz-form-label nzFor="jobno">项目号</nz-form-label>
-          <nz-form-control>
-            <nz-input-group [nzSuffix]="suffixTemplate">
-              <input type="text" name="jobno" nz-input [(ngModel)]="inputJobno" placeholder="input job no" />
-            </nz-input-group>
-
-          </nz-form-control>
-        </nz-form-item>
-
-      </div>
-      <div nz-col nzSpan="8" [class.text-right]="!expandForm">
-        <button nz-button style="width: 180px" type="submit" [nzType]="'primary'">查询</button>
-
-      </div>
-      <ng-template #suffixTemplate>
-        <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="inputJobno"
-          (click)="inputJobno = null"></i></ng-template>
-
-
-    </div>
-
-  </form>
-  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="AdvancedGetData()"
-    (formReset)="load()" class="sf__no-error"></sf>
-  <a (click)="expandForm=!expandForm">
-    {{expandForm ? '简单搜索' : '高级搜索'}}
-    <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
-  </a>
-
-  <st #st [columns]="ptColumns" [data]="pts" [loading]="loading" (change)="stChange($event)"></st>
-</nz-card>
-<!-- <div style="padding: 20px;">
+<div style="padding: 20px;">
   <nz-row [nzGutter]="20">
     <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <nz-card style="height: 120px;">
@@ -46,8 +10,8 @@
     </div>
     <div nz-col [nzSpan]="6" nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <nz-card style="height: 120px;">
-        <nz-statistic [nzValue]="record.LiveCount||0" [nzTitle]="'Live Project'" [nzPrefix]="prefixTplTwo" [nzSuffix]="'个'"
-          [nzValueStyle]="{ color: '#CF1322' }">
+        <nz-statistic [nzValue]="record.LiveCount||0" [nzTitle]="'Live Project'" [nzPrefix]="prefixTplTwo"
+          [nzSuffix]="'个'" [nzValueStyle]="{ color: '#CF1322' }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
       </nz-card>
@@ -70,8 +34,8 @@
       </nz-card>
     </div>
   </nz-row>
-</div> -->
-<!-- <nz-card> -->
+</div>
+
 <!-- <div class="d-flex align-items-center mb-lg">
     <h3 class="flex-1 text-lg">项目列表</h3>
     <div>

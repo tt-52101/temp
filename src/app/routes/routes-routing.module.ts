@@ -31,6 +31,10 @@ const routes: Routes = [
         loadChildren: './setting/setting.module#SettingModule',
       },
       {
+        path:'user',
+        loadChildren:'./user/user.module#UserModule',
+      },
+      {
         path: 'tools',
         loadChildren: './tools/tools.module#ToolsModule',
       },
