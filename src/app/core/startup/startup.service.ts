@@ -15,6 +15,7 @@ import { I18NService } from '../i18n/i18n.service';
 import { NzIconService } from 'ng-zorro-antd';
 import { ICONS_AUTO } from '../../../style-icons-auto';
 import { ICONS } from '../../../style-icons';
+import { ITokenService, DA_SERVICE_TOKEN } from '@delon/auth';
 
 /**
  * 用于应用启动时
@@ -31,6 +32,7 @@ export class StartupService {
     private aclService: ACLService,
     private titleService: TitleService,
     private httpClient: HttpClient,
+    @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
   ) {
     iconSrv.addIcon(...ICONS_AUTO, ...ICONS);
   }
@@ -38,8 +40,11 @@ export class StartupService {
   load(): Promise<any> {
     // only works with promises
     // https://github.com/angular/angular/issues/15088
-    return new Promise((resolve) => {
+
+    return new Promise(resolve => {
       zip(
+        // this.httpClient.get(`http://localhost:4200//${this.i18n.defaultLang}`),
+        // this.httpClient.get('app/main'),
         this.httpClient.get(`assets/tmp/i18n/${this.i18n.defaultLang}.json`),
         this.httpClient.get('assets/tmp/app-data.json'),
       )
@@ -60,12 +65,20 @@ export class StartupService {
             const res: any = appData;
             // 应用信息：包括站点名、描述、年份
             this.settingService.setApp(res.app);
-            // 用户信息：包括姓名、头像、邮箱地址
-            this.settingService.setUser(res.user);
-            // ACL：设置权限为全量
-            this.aclService.setFull(true);
+            // // 用户信息：包括姓名、头像、邮箱地址
+            // this.settingService.setUser(userData);
             // 初始化菜单
+
+            let d = this.aclService.data;
+            const st = localStorage.getItem('user');
+            const localUser = JSON.parse(st);
+            const cc = this.settingService.user;
+            if (st) {
+              const ss = localUser['Roles'];
+              this.aclService.setRole(ss);
+            }
             this.menuService.add(res.menu);
+            console.log(this.i18n.defaultLang);
             // 设置页面标题的后缀
             this.titleService.default = '';
             this.titleService.suffix = res.app.name;

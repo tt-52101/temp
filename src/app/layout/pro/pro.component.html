@@ -1,7 +1,7 @@
 <ng-template #sideTpl>
   <nz-sider [nzTrigger]="null" [nzCollapsible]="true" [nzCollapsed]="isMobile ? false : pro.collapsed"
-    [nzWidth]="pro.width" [nzCollapsedWidth]="pro.widthInCollapsed"
-    class="alain-pro__sider" [ngClass]="{ 'alain-pro__sider-fixed': pro.fixSiderbar }">
+    [nzWidth]="pro.width" [nzCollapsedWidth]="pro.widthInCollapsed" class="alain-pro__sider"
+    [ngClass]="{ 'alain-pro__sider-fixed': pro.fixSiderbar }">
     <layout-pro-logo class="alain-pro__sider-logo"></layout-pro-logo>
     <div class="alain-pro__side-nav" style="padding: 16px 0; width: 100%;">
       <div class="alain-pro__side-nav-wrap" layout-pro-menu></div>
@@ -39,4 +39,4 @@
   </div>
 </div>
 <ng-template #settingHost></ng-template>
-<quick-chat></quick-chat>
+<!-- <quick-chat></quick-chat> -->

@@ -1,4 +1,9 @@
-import { NgModule, Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
+import {
+  NgModule,
+  Optional,
+  SkipSelf,
+  ModuleWithProviders,
+} from '@angular/core';
 import { throwIfAlreadyLoaded } from '@core/module-import-guard';
 
 import { AlainThemeModule } from '@delon/theme';
@@ -17,7 +22,11 @@ const MOCK_MODULES = !environment.production
  * Pls refer to [reuse-tab](https://ng-alain.com/components/reuse-tab).
  */
 import { RouteReuseStrategy } from '@angular/router';
-import { ReuseTabService, ReuseTabStrategy, ReuseTabMatchMode } from '@delon/abc/reuse-tab';
+import {
+  ReuseTabService,
+  ReuseTabStrategy,
+  ReuseTabMatchMode,
+} from '@delon/abc/reuse-tab';
 const REUSETAB_PROVIDES = [
   {
     provide: RouteReuseStrategy,
@@ -31,13 +40,23 @@ const REUSETAB_PROVIDES = [
 
 import { PageHeaderConfig } from '@delon/abc';
 export function fnPageHeaderConfig(): PageHeaderConfig {
-  return Object.assign(new PageHeaderConfig(), { homeI18n: 'home', recursiveBreadcrumb: true });
+  return Object.assign(new PageHeaderConfig(), {
+    homeI18n: 'home',
+    recursiveBreadcrumb: true,
+  });
 }
 
-import { DelonAuthConfig } from '@delon/auth';
+import {
+  DelonAuthConfig,
+  DA_STORE_TOKEN,
+  LocalStorageStore,
+} from '@delon/auth';
 export function fnDelonAuthConfig(): DelonAuthConfig {
   return Object.assign(new DelonAuthConfig(), <DelonAuthConfig>{
     login_url: '/passport/login',
+    token_send_key: 'Authorization',
+    token_send_place: 'header',
+    token_send_template: 'Bearer ${token}',
   });
 }
 
@@ -46,8 +65,8 @@ export function fnSTConfig(): STConfig {
   return {
     ...new STConfig(),
     ...{
-      modal: { size: 'lg' }
-    }
+      modal: { size: 'lg' },
+    },
   };
 }
 
@@ -70,7 +89,7 @@ const GLOBAL_CONFIG_PROVIDES = [
 export class DelonModule {
   constructor(
     @Optional() @SkipSelf() parentModule: DelonModule,
-    reuseTabService: ReuseTabService
+    reuseTabService: ReuseTabService,
   ) {
     throwIfAlreadyLoaded(parentModule, 'DelonModule');
     // NOTICE: Only valid for menus with reuse property
@@ -83,7 +102,11 @@ export class DelonModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: DelonModule,
-      providers: [...REUSETAB_PROVIDES, ...GLOBAL_CONFIG_PROVIDES],
+      providers: [
+        ...REUSETAB_PROVIDES,
+        ...GLOBAL_CONFIG_PROVIDES,
+        { provide: DA_STORE_TOKEN, useClass: LocalStorageStore },
+      ],
     };
   }
 }
