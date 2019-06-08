@@ -1,0 +1,62 @@
+<page-header>
+  <div class="d-flex align-items-center mb-lg">
+    <h3 class="flex-1 text-lg">项目列表</h3>
+    <div>
+
+      <nz-radio-group [(ngModel)]="status" nzButtonStyle="solid" class="mr-md">
+        <label nz-radio-button [nzValue]="'joh'">
+          <span>进行中</span>
+        </label>
+        <label nz-radio-button [nzValue]="'jfm'">
+          <span>本月完成</span>
+        </label>
+        <label nz-radio-button [nzValue]="'jfy'">
+          <span>本年完成</span>
+        </label>
+        <label nz-radio-button [nzValue]="'jfe'">
+          <span>历史完成</span>
+        </label>
+      </nz-radio-group>
+      <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
+        <input type="text" nz-input placeholder="请输入">
+      </nz-input-group>
+    </div>
+  </div>
+
+
+
+  <nz-table #nzTable [nzData]="ptsShow" [(nzPageSize)]="pageSize" [(nzPageIndex)]="pageIndex"
+    [nzShowQuickJumper]="'true'">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+      <tr>
+        <th nzSortKey="ProjectNo" nzShowSort>
+          Job No
+          <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" #dropdown>
+            <i nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+              <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+                Search
+              </button>
+              <button nz-button nzSize="small" (click)="reset()">Reset</button>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzShowSort nzSortKey="OpenDate">Open Date</th>
+        <th nzShowSort nzSortKey="ClientName">Client</th>
+        <th nzShowSort nzSortKey="ServiceNames">Services</th>
+        <th nzShowSort nzSortKey="QuotedFee">Fee</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of ptsShow">
+        <td>{{ data.ProjectNo }}</td>
+        <td>{{ data.OpenDate|date }}</td>
+        <td>{{ data.ClientName }}</td>
+        <td>{{ data.ServiceNames }}</td>
+        <td>{{ data.QuotedFee|currency }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</page-header>

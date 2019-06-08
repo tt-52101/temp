@@ -1,0 +1,102 @@
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 24, xxl: 24 }">
+      <div nz-col nzMd="12" nzSm="24" *ngIf="!expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="serviceName">服务名称</nz-form-label>
+          <nz-form-control>
+            <nz-input-group [nzSuffix]="suffixTemplate">
+              <input type="text" name="serviceName" nz-input [disabled]="expandForm" [(ngModel)]="inputServiceName"
+                placeholder="input service name" />
+            </nz-input-group>
+
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <ng-template #suffixTemplate>
+        <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="inputclientName"
+          (click)="inputServiceName = null"></i></ng-template>
+
+      <div nz-col nzMd="6" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="status">状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="selectStatus" name="serviceStatus" id="status" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true">
+              <nz-option *ngFor="let i of status; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="6" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="BusinessType">服务类型</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="selectBusinessType" [nzDisabled]="selectStatus===0" name="BusinessType" id="BusinessType" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true">
+              <nz-option *ngFor="let i of BusinessTypes; let idx = index" [nzLabel]="i.text" [nzValue]="i.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="6" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="RegionType">区域类型</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="selectRegionType" [nzDisabled]="selectStatus===0" name="RegionType" id="RegionType" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true">
+              <nz-option *ngFor="let i of RegionTypes; let idx = index" [nzLabel]="i.text" [nzValue]="i.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="expandForm ? 24 : 12" [class.text-right]="expandForm">
+        <button nz-button type="submit" [nzType]="'primary'" [disabled]="checkloading"
+          [nzLoading]="checkloading">查询</button>
+        <button nz-button type="reset" (click)="reset()" class="mx-sm">重置</button>
+        <a (click)="expandForm=!expandForm">
+          {{expandForm ? '简单搜索' : '高级搜索'}}
+          <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
+        </a>
+        <!-- <a (click)="filterOpen=!filterOpen" *ngIf="ptsShow.length>1">
+          {{filterOpen ? '关闭筛选' : '打开筛选'}}
+          <i class="anticon" [class.anticon-down]="!filterOpen" [class.anticon-up]="filterOpen"></i>
+        </a> -->
+      </div>
+
+    </div>
+  </form>
+  <button nz-button (click)="createService()" [nzType]="'primary'">
+    <i nz-icon type="plus"></i>
+    <span>新建</span>
+  </button>
+
+  <ng-container *ngIf="selectServices.length>0">
+
+    <nz-dropdown [nzPlacement]="'bottomLeft'">
+      <button nz-button nz-dropdown>
+        批量操作
+        <i nz-icon type="down"></i>
+      </button>
+      <ul nz-menu>
+          <li nz-menu-item (click)="setService('Safety')">设定为安规业务</li>
+          <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setService('SafetyIEC')">设定为欧洲安规业务</li>
+        <li nz-menu-item (click)="setService('SafetyUS')">设定为北美安规业务</li>
+        <li nz-menu-item (click)="setService('SafetyGMAP')">设定为GMAP安规业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setService('EE')">设定为能效业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setService('EEIEC')">设定为欧洲能效业务</li>
+        <li nz-menu-item (click)="setService('EEUS')">设定为北美能效业务</li>
+        <li nz-menu-item (click)="setService('EEGMAP')">设定为GMAP能效业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setService('Chemical')">设定为化学业务</li>
+      </ul>
+    </nz-dropdown>
+  </ng-container>
+  <st #st [data]="services" [columns]="columns" (change)="change($event)"></st>
+</nz-card>

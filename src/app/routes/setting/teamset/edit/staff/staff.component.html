@@ -1,0 +1,4 @@
+<div class="modal-header">
+  <div class="modal-title">{{'Edit #' + i.Name }}</div>
+</div>
+<sf #sf [schema]="pSchema"  [formData]="i" (formSubmit)="formSubmit($event)">

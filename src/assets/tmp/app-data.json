@@ -1,35 +1,107 @@
 {
-    "app": {
-      "name": "Ng Alain Pro",
-      "description": "Ng-zorro admin panel front-end framework"
+  "app": {
+    "name": "Lum Hangzhou",
+    "description": "Work Space for fun and easy"
+  },
+  "menu": [{
+      "text": "主导航",
+      "i18n": "menu.main",
+      "group": true,
+      "hideInBreadcrumb": true,
+      "children": [{
+          "text": "工作入口",
+          "i18n": "menu.dashboard",
+          "icon": "anticon anticon-dashboard",
+          "acl": ["General Staff", "Admin"],
+          "link": "/dashboard",
+          "shortcut": true
+        },
+        {
+          "text": "数据分析",
+          "i18n": "menu.workspace",
+          "icon": "anticon anticon-dashboard",
+          "acl": ["General Staff"],
+          "children": [{
+              "text": "数据窗口——个人",
+              "i18n": "menu.workspace.personeldataservice",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["General Staff", "Admin"],
+              "link": "/home/personel"
+            },
+            {
+              "text": "数据窗口——团队",
+              "i18n": "menu.workspace.teamdataservice",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["Admin"],
+              "link": "/home/team"
+            }
+          ]
+        },
+        {
+          "text": "设置",
+          "i18n": "menu.setting",
+          "icon": "anticon anticon-rocket",
+          "children": [{
+              "text": "数据导入",
+              "i18n": "menu.settings.import",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["General Staff"],
+              "link": "/settings/import"
+            },
+            {
+              "text": "数据设置",
+              "i18n": "menu.settings.set",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["General Staff"],
+              "link": "/settings/set"
+            },
+            {
+              "text": "团队设置",
+              "i18n": "menu.settings.teamset",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["General Staff"],
+              "link": "/settings/teamset"
+            }
+          ]
+        }
+      ]
     },
-    "user": {
-      "name": "Admin",
-      "avatar": "./assets/tmp/img/avatar.jpg",
-      "email": "cipchk@qq.com"
-    },
-    "menu": [
-      {
-        "text": "主导航",
-        "i18n": "menu.main",
-        "group": true,
-        "hideInBreadcrumb": true,
-        "children": [
-          {
-            "text": "仪表盘",
-            "i18n": "menu.dashboard",
-            "icon": "anticon anticon-dashboard",
-            "link": "/dashboard"
+    {
+      "text": "工具",
+      "i18n": "menu.tools",
+      "group": true,
+      "hideInBreadcrumb": true,
+      "children": [{
+        "text": "工具",
+        "i18n": "menu.tools",
+        "icon": "anticon anticon-dashboard",
+        "children": [{
+            "text": "照片处理",
+            "i18N": "menu.tools.safety.phototool",
+            "acl": ["General Staff"],
+            "link": "/tools/phototool"
           },
           {
-            "text": "快捷菜单",
-            "i18n": "menu.shortcut",
-            "icon": "anticon anticon-rocket",
-            "shortcutRoot": true,
-            "children": []
+            "text": "温度计算",
+            "i18N": "menu.tools.safety.thermal",
+            "acl": ["General Staff"],
+            "link": "/tools/thermal"
+          },
+          {
+            "text": "光效计算",
+            "i18N": "menu.tools.performance.photometric",
+            "acl": ["General Staff"],
+            "link": "/tools/photometric"
+          },
+          {
+            "text": "色度计算",
+            "i18N": "menu.tools.performance.colormetric",
+            "acl": ["General Staff"],
+            "link": "/tools/colormetric"
           }
         ]
-      }
-    ]
-  }
-  
+      }]
+
+    }
+  ]
+}

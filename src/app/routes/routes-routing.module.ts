@@ -4,8 +4,6 @@ import { environment } from '@env/environment';
 // layout
 import { LayoutProComponent } from '@brand';
 import { LayoutPassportComponent } from '../layout/passport/passport.component';
-// dashboard pages
-import { DashboardComponent } from './dashboard/dashboard.component';
 // passport pages
 import { UserLoginComponent } from './passport/login/login.component';
 import { UserRegisterComponent } from './passport/register/register.component';
@@ -13,14 +11,33 @@ import { UserRegisterResultComponent } from './passport/register-result/register
 import { UserLockComponent } from './passport/lock/lock.component';
 // single pages
 import { CallbackComponent } from './callback/callback.component';
+import { JWTGuard } from '@delon/auth';
+import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutProComponent,
+    canActivateChild: [JWTGuard],
     children: [
+      { path: 'dashboard', component: RoutesHomeDashboardsComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
+      {
+        path: 'home',
+        loadChildren: './home/home.module#HomeModule',
+      },
+      {
+        path: 'settings',
+        loadChildren: './setting/setting.module#SettingModule',
+      },
+      {
+        path:'user',
+        loadChildren:'./user/user.module#UserModule',
+      },
+      {
+        path: 'tools',
+        loadChildren: './tools/tools.module#ToolsModule',
+      },
       // Exception
       {
         path: 'exception',

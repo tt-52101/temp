@@ -1,0 +1,35 @@
+<nz-spin [nzSpinning]="userLoading">
+  <div class="main" *ngIf="user">
+    <div class="left">
+      <form nz-form nzLayout="vertical" #f="ngForm" (submit)="save()" se-container="1">
+          <se label="用户名" >
+              <input nz-input [(ngModel)]="user.Name" name="name" disabled=true>
+            </se>
+        <se label="邮箱" error="请输入您的邮箱!">
+          <input nz-input type="email" [(ngModel)]="user.Email" name="email" required >
+        </se>
+        <se label="昵称" error="请输入您的昵称!">
+          <input nz-input [(ngModel)]="user.NickName" name="nickname" required>
+        </se>
+        <se label="Synelts用户名">
+          <input nz-input [(ngModel)]="user.SyneltsName" name="syneltsName" required  >
+        </se>
+        
+        
+        <se>
+          <button nz-button nzType="primary" [disabled]="f.invalid">更新基本信息</button>
+        </se>
+      </form>
+    </div>
+    <div class="right">
+      <div class="avatar_title">Avatar</div>
+      <div class="avatar"><img src="{{user.avatar}}" alt="Avatar"></div>
+      <nz-upload nzAction="/user/avatar" [nzShowUploadList]="false">
+        <button nz-button class="button_view">
+          <i nz-icon type="upload"></i>
+          <span>更换头像</span>
+        </button>
+      </nz-upload>
+    </div>
+  </div>
+</nz-spin>

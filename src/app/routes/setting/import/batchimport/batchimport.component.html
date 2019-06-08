@@ -1,0 +1,24 @@
+<form nz-form [nzLayout]="layout">
+  <nz-form-item>
+
+    <nz-form-control [nzSpan]="24">
+      <textarea [nzAutosize]="inputSetting" placeholder="Please paste Json string from Convertor here!" nz-input
+        [(ngModel)]="inputValue" [ngModelOptions]="{standalone: true}"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-row [nzGutter]="20">
+    <nz-col [nzSpan]="10" nzOffset="2">
+      <nz-statistic [nzValue]="pCount" nzSuffix="个" [nzTitle]="'Input Projects Number'"></nz-statistic>
+    </nz-col>
+    <nz-col [nzSpan]="10">
+      <nz-statistic [nzValue]="pTime" nzSuffix="秒" [nzTitle]="'Estimate Import Time'"></nz-statistic>
+    </nz-col>
+  </nz-row>
+  <nz-form-item>
+    <nz-form-control [nzSpan]="20" [nzOffset]="2">
+      <button nz-button nzType="primary" (click)="import()" [nzLoading]="loading" [disabled]="disabled"
+        nzBlock>Submit</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>
