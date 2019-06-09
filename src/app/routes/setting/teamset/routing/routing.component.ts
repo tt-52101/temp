@@ -379,7 +379,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   cancelTarget() {}
   listTarget() {}
 
-  setRows(params: { property: string; type: string }[]) {
+  setRows(params: { property: string; type: any }[]) {
     this.loading = true;
     params.forEach(para => {
       this.selectRows.map(c => Reflect.set(c, para.property, para.type));
