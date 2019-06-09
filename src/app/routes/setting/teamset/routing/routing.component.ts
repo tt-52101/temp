@@ -1,13 +1,14 @@
 import { ProjectTransfer } from './../../../../services/biz/projecttransfer';
 import { CacheService } from '@delon/cache';
 import { SFComponent, SFButton, SFSchema } from '@delon/form';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { _HttpClient, DrawerHelper } from '@delon/theme';
-import { STComponent, STColumn, STChange } from '@delon/abc';
-import { NzMessageService } from 'ng-zorro-antd';
+import { STComponent, STColumn, STChange, STData } from '@delon/abc';
+import { NzMessageService, isTemplateRef } from 'ng-zorro-antd';
 import { SettingImportEditProjectComponent } from '../../import/edit/project/project.component';
 import { SettingImportEditRecordsComponent } from '../../import/edit/records/records.component';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
+import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-setting-teamset-routing',
@@ -17,17 +18,19 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   expandForm = false;
   inputJobno = '';
   @ViewChild('st') st: STComponent;
-  @ViewChild('sf') sf:SFComponent;
+  @ViewChild('sf') sf: SFComponent;
   constructor(
     public msg: NzMessageService,
     public http: _HttpClient,
     private drawer: DrawerHelper,
     public cache: CacheService,
+    private cdr: ChangeDetectorRef,
   ) {}
   // forms
   users = [];
   engineers = [];
   engineeringCSs = [];
+  selectRows: STData[] = [];
   sales = [];
   Services = [
     { label: 'CE-LVD', value: 'CE-LVD' },
@@ -43,19 +46,19 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     { label: '安规', value: 'Safety' },
     { label: '能效', value: 'Energy Efficiency' },
     { label: '化学', value: 'Chemical' },
-    {label:'未知',value:''}
+    { label: '未知', value: '' },
   ];
   RegionType = [
     { label: 'IEC体系', value: 'IEC' },
     { label: 'US体系', value: 'US' },
     { label: 'GMAP体系', value: 'GMAP' },
-    {label:'未知',value:''}
+    { label: '未知', value: '' },
   ];
   ClientType = [
     { label: '普通客户', value: 'Normal' },
     { label: 'VIP客户', value: 'VIP' },
     { label: 'Agent客户', value: 'Agent' },
-    {label:'未知',value:''}
+    { label: '未知', value: '' },
   ];
   qSchema: SFSchema = {
     properties: {
@@ -84,8 +87,16 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         ui: { widget: 'autocomplete' },
       },
       QuotationNo: { type: 'string', title: '报价单号' },
-      OpenDateFromTo: { type: 'string',title:'开案时间', ui: { widget: 'date', mode: 'range' } },
-      CompleteDateFromTo: { type: 'string',title:'结案时间', ui: { widget: 'date', mode: 'range' } },
+      OpenDateFromTo: {
+        type: 'string',
+        title: '开案时间',
+        ui: { widget: 'date', mode: 'range' },
+      },
+      CompleteDateFromTo: {
+        type: 'string',
+        title: '结案时间',
+        ui: { widget: 'date', mode: 'range' },
+      },
       Progress: {
         type: 'boolean',
         title: '完成度',
@@ -133,6 +144,11 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     showSize: true,
   };
   ptColumns: STColumn[] = [
+    {
+      title: '序号',
+      index: 'Id',
+      type: 'checkbox',
+    },
     {
       title: 'Job No',
       index: 'ProjectNo',
@@ -196,12 +212,10 @@ export class SettingTeamsetRoutingComponent implements OnInit {
             size: 'lg',
           },
           click: (i, m, c) => {
-            if(!this.expandForm){
+            if (!this.expandForm) {
               this.simpleGetData();
-            }else{
-
+            } else {
             }
-            
           },
         },
         {
@@ -287,29 +301,22 @@ export class SettingTeamsetRoutingComponent implements OnInit {
           this.cache.set('sales', this.sales, { type: 's', expire: 300 });
         },
       );
-    }else{
-      this.cache.get<any>('engineeringCss').subscribe(
-        res=>{
-          res.forEach(element => {
-            this.engineeringCSs.push(element);
-          });
-        }
-      );
-      this.cache.get<any>('engineers').subscribe(
-        res=>{
-          res.forEach(element => {
-            this.engineers.push(element);
-          });
-        }
-      );
-      this.cache.get<any>('sales').subscribe(
-        res=>{
-          res.forEach(element => {
-            this.sales.push(element);
-          });
-        }
-      );
-
+    } else {
+      this.cache.get<any>('engineeringCss').subscribe(res => {
+        res.forEach(element => {
+          this.engineeringCSs.push(element);
+        });
+      });
+      this.cache.get<any>('engineers').subscribe(res => {
+        res.forEach(element => {
+          this.engineers.push(element);
+        });
+      });
+      this.cache.get<any>('sales').subscribe(res => {
+        res.forEach(element => {
+          this.sales.push(element);
+        });
+      });
     }
 
     // this.getData('joh');
@@ -328,32 +335,74 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       });
   }
 
-  AdvancedGetData(){
-    this.loading=true;
+  AdvancedGetData() {
+    this.loading = true;
     console.log(this.sf.value);
-    const sfv=this.sf.value;
-    if(sfv.OpenDateFromTo){
-      sfv.OpenDateFrom=this.sf.value.OpenDateFromTo[0];
-      sfv.OpenDateTo=this.sf.value.OpenDateFromTo[1];
+    const sfv = this.sf.value;
+    if (sfv.OpenDateFromTo) {
+      sfv.OpenDateFrom = this.sf.value.OpenDateFromTo[0];
+      sfv.OpenDateTo = this.sf.value.OpenDateFromTo[1];
     }
-    if(sfv.CompleteDateFromTo){
-      sfv.CompleteDateFrom=this.sf.value.CompleteDateFromTo[0];
-      sfv.CompleteDateTo=this.sf.value.CompleteDateFromTo[1];
+    if (sfv.CompleteDateFromTo) {
+      sfv.CompleteDateFrom = this.sf.value.CompleteDateFromTo[0];
+      sfv.CompleteDateTo = this.sf.value.CompleteDateFromTo[1];
     }
-   
-    
+
     console.log(sfv);
-    this.http.get('home/projectsbyfilter',sfv).subscribe(
-      res=>this.pts=res,
-      err=>{
+    this.http.get('home/projectsbyfilter', sfv).subscribe(
+      res => (this.pts = res),
+      err => {
         this.msg.error('出错了');
-        this.loading=false;
+        this.loading = false;
       },
-      ()=>{this.loading=false;}
+      () => {
+        this.loading = false;
+      },
     );
   }
-  
-  stChange(e: STChange) {}
+  getData() {
+    if (!this.expandForm) {
+      this.simpleGetData();
+    } else {
+      this.AdvancedGetData();
+    }
+  }
+  stChange(e: STChange) {
+    if (e.checkbox) {
+      this.selectRows = e.checkbox;
+      this.cdr.detectChanges();
+      console.log(this.selectRows);
+    }
+  }
   filterData() {}
+  setTarget() {}
+  cancelTarget() {}
+  listTarget() {}
 
+  setRows(params: { property: string; type: string }[]) {
+    this.loading = true;
+    params.forEach(para => {
+      this.selectRows.map(c => Reflect.set(c, para.property, para.type));
+    });
+
+    console.log(this.selectRows);
+    this.http.put('home/projects/updatecollection', this.selectRows).subscribe(
+      res => {
+        console.log(res);
+        if (res.Message === 'OK') {
+          this.msg.success('成功！');
+          this.loading = false;
+
+          this.getData();
+          this.cdr.detectChanges();
+          console.log(res.Items);
+        } else {
+          this.msg.success('失败！');
+          this.loading = false;
+        }
+      },
+      err => {},
+      () => {},
+    );
+  }
 }

@@ -34,27 +34,39 @@
   <div nz-row>
     <button nz-button nzType="primary">新建</button>
     <nz-dropdown [nzPlacement]="'bottomLeft'">
-        <button nz-button nz-dropdown>
-          批量操作
-          <i nz-icon type="down"></i>
-        </button>
-        <ul nz-menu>
-          <li nz-menu-item (click)="setNormal()">设定为普通客户</li>
-          <li nz-menu-item (click)="setVIP()">设定为VIP客户</li>
-          <li nz-menu-item (click)="setAgent()">设定为Agent客户</li>
-        </ul>
-      </nz-dropdown>
-      <nz-dropdown [nzPlacement]="'bottomLeft'">
-          <button nz-button nz-dropdown>
-            批量操作
-            <i nz-icon type="down"></i>
-          </button>
-          <ul nz-menu>
-            <li nz-menu-item (click)="setNormal()">设定为普通客户</li>
-            <li nz-menu-item (click)="setVIP()">设定为VIP客户</li>
-            <li nz-menu-item (click)="setAgent()">设定为Agent客户</li>
-          </ul>
-        </nz-dropdown>
+      <button nz-button nz-dropdown>
+        产出操作
+        <i nz-icon type="down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item (click)="setRows([{property:'TobeFinishFlag',type:true}])">设定为本月预计产出</li>
+        <li nz-menu-item (click)="setRows([{property:'TobeFinishFlag',type:false}])">取消设定为本月预计产出</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="listTarget()">列出本月预计产出</li>
+      </ul>
+    </nz-dropdown>
+    
+    <nz-dropdown [nzPlacement]="'bottomLeft'">
+      <button nz-button nz-dropdown>
+        批量操作
+        <i nz-icon type="down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:''}])">设定为安规业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:'IEC'}])">设定为欧洲安规业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:'US'}])">设定为北美安规业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:'GMAP'}])">设定为GMAP安规业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Energy Efficiency'},{property:'RType',type:''}])">设定为能效业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Energy Efficiency'},{property:'RType',type:'IEC'}])">设定为欧洲能效业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Energy Efficiency'},{property:'RType',type:'US'}])">设定为北美能效业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Energy Efficiency'},{property:'RType',type:'GMAP'}])">设定为GMAP能效业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Chemical'},{property:'RType','type':''}])">设定为化学业务</li>
+      </ul>
+    </nz-dropdown>
   </div>
   <st #st [columns]="ptColumns" [data]="pts" [loading]="loading" (change)="stChange($event)"></st>
 

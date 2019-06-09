@@ -16,7 +16,7 @@ import { zip } from 'rxjs';
 })
 export class UserUsersettingBasicComponent implements OnInit {
   avatar = '';
-  userLoading = true;
+  loading = false;
   user: any;
 
   constructor(
@@ -26,20 +26,45 @@ export class UserUsersettingBasicComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    zip(
-      this.http.get('/user/current'),
-    ).subscribe(([user, province]: any) => {
-      this.userLoading = false;
-      this.user = user;
-     
-      this.cdr.detectChanges();
-    });
+    
+    this.http.get('auth/currentuser').subscribe(
+      res=>{
+          this.user=res.Items[0];
+          this.cdr.detectChanges();
+        
+        
+      },err=>{
+        
+      },
+      ()=>{
+         }
+
+    )
+   
+    // this.userLoading = false;
+    // const st = localStorage.getItem('user');
+    // const localUser = JSON.parse(st);
+
+    // this.user = localUser;
+
+    
   }
 
- 
-
   save() {
-    this.msg.success(JSON.stringify(this.user));
-    return false;
+    this.loading=false;
+    this.http.put('auth/currentuser',this.user).subscribe(
+      res=>{
+        if(res.Message==='OK'){
+          this.msg.success('成功！');
+        }
+        this.loading=true;
+      },
+      err=>{
+        this.loading=true;
+      },
+      ()=>{
+        
+      }
+    )
   }
 }
