@@ -1,14 +1,37 @@
+import { async } from '@angular/core/testing';
+import { debounceTime } from 'rxjs/operators';
 import { ProjectTransfer } from './../../../../services/biz/projecttransfer';
 import { CacheService } from '@delon/cache';
-import { SFComponent, SFButton, SFSchema } from '@delon/form';
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {
+  SFComponent,
+  SFButton,
+  SFSchema,
+  SFSchemaEnum,
+  SFSchemaEnumType,
+} from '@delon/form';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  Input,
+} from '@angular/core';
 import { _HttpClient, DrawerHelper } from '@delon/theme';
-import { STComponent, STColumn, STChange, STData } from '@delon/abc';
+import {
+  STComponent,
+  STColumn,
+  STChange,
+  STData,
+  STColumnTag,
+  TagSelectComponent,
+} from '@delon/abc';
 import { NzMessageService, isTemplateRef } from 'ng-zorro-antd';
 import { SettingImportEditProjectComponent } from '../../import/edit/project/project.component';
 import { SettingImportEditRecordsComponent } from '../../import/edit/records/records.component';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
 import { ConstantPool } from '@angular/compiler';
+import { of } from 'rxjs';
+import { __getInputValues } from '@angularclass/hmr';
 
 @Component({
   selector: 'app-setting-teamset-routing',
@@ -32,33 +55,25 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   engineeringCSs = [];
   selectRows: STData[] = [];
   sales = [];
-  Services = [
-    { label: 'CE-LVD', value: 'CE-LVD' },
-    { label: 'GS', value: 'GS' },
-    { label: 'ETL', value: 'ETL' },
-  ];
+  Services = [];
   progressTypes = [
     { label: '未完成', value: false },
     { label: '已完成', value: true },
-    { label: '全部', value: '' },
   ];
   BusinessType = [
     { label: '安规', value: 'Safety' },
     { label: '能效', value: 'Energy Efficiency' },
     { label: '化学', value: 'Chemical' },
-    { label: '未知', value: '' },
   ];
   RegionType = [
     { label: 'IEC体系', value: 'IEC' },
     { label: 'US体系', value: 'US' },
     { label: 'GMAP体系', value: 'GMAP' },
-    { label: '未知', value: '' },
   ];
   ClientType = [
     { label: '普通客户', value: 'Normal' },
     { label: 'VIP客户', value: 'VIP' },
     { label: 'Agent客户', value: 'Agent' },
-    { label: '未知', value: '' },
   ];
   qSchema: SFSchema = {
     properties: {
@@ -66,27 +81,47 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         type: 'string',
         title: '工程师',
         enum: this.engineers,
-        ui: { widget: 'select' },
+        ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
       EngineeringCSName: {
         type: 'string',
         title: '工程助理',
         enum: this.engineeringCSs,
-        ui: { widget: 'select' },
+        ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
       SalesName: {
         type: 'string',
         title: '销售',
         enum: this.sales,
-        ui: { widget: 'select' },
+        ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
-      ClientName: { type: 'string', title: '客户名称' },
+      ClientName: {
+        type: 'string',
+        title: '客户名称',
+        ui: {
+          placeholder: '输入客户名称',
+        },
+      },
       ServiceName: {
         type: 'string',
         title: '服务名称',
-        ui: { widget: 'autocomplete' },
+        ui: {
+          widget: 'autocomplete',
+          debounceTime: 100,
+          placeholder: '输入Service名称',
+          asyncData: (input: string) =>
+            of(
+              input
+                ? this.Services.filter(c => c.toLowerCase().indexOf(input) > -1)
+                : [],
+            ),
+        },
       },
-      QuotationNo: { type: 'string', title: '报价单号' },
+      QuotationNo: {
+        type: 'string',
+        title: '报价单号',
+        ui: { placeholder: '请输入报价单号' },
+      },
       OpenDateFromTo: {
         type: 'string',
         title: '开案时间',
@@ -101,29 +136,25 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         type: 'boolean',
         title: '完成度',
         enum: this.progressTypes,
-        default: '',
-        ui: { widget: 'select' },
+        ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
       BType: {
         type: 'string',
         title: '业务类型',
         enum: this.BusinessType,
-        default: '',
-        ui: { widget: 'select' },
+        ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
       RType: {
         type: 'string',
         title: '区域类型',
         enum: this.RegionType,
-        default: '',
-        ui: { widget: 'select' },
+        ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
       CType: {
         type: 'string',
         title: '客户类型',
         enum: this.ClientType,
-        default: '',
-        ui: { widget: 'select' },
+        ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
     },
     enum: this.Services,
@@ -142,6 +173,18 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     placement: 'center',
     showQuickJumper: true,
     showSize: true,
+  };
+  tags: STColumnTag = {
+    'Safety': { text: 'Safety', color: 'success' },
+    'Energy Efficiency': { text: 'Energy Efficiency', color: 'red' },
+    'Chemical': { text: 'Chemical', color: 'blue' },
+    'IEC': { text: 'IEC', color: 'blue' },
+    'US': { text: 'US', color: 'purple' },
+    'GMAP': { text: 'GMAP', color: 'orange' },
+    'VIP': { text: 'VIP', color: 'red' },
+    'Normal': { text: 'Normal', color: 'blue' },
+    'Agent': { text: 'Agent', color: 'volcano' },
+    '':{text:'未知',color:'red'}
   };
   ptColumns: STColumn[] = [
     {
@@ -201,6 +244,12 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       },
     },
     {
+      title: 'Type',
+      index: ['BType', 'CType', 'RType'],
+      type: 'tag',
+      tag: this.tags,
+    },
+    {
       title: '',
       buttons: [
         {
@@ -247,10 +296,19 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       ],
     },
   ];
+
   pts: ProjectTransfer[] = [];
   loading = false;
   ngOnInit(): void {
     // this.http.get(`home/dbstatus`).subscribe(res => (this.record = res));
+    this.http.get('service/collectionbyfilter', { Name: '' }).subscribe(res => {
+      console.log(res);
+      res.forEach(element => {
+        this.Services.push(element.Name);
+      });
+      console.log(this.Services);
+    });
+    console.log(this.Services);
     if (!this.cache.getNone('sales')) {
       this.http.get('person/userAll').subscribe(
         (res: SyneltsUser[]) => {
@@ -350,7 +408,13 @@ export class SettingTeamsetRoutingComponent implements OnInit {
 
     console.log(sfv);
     this.http.get('home/projectsbyfilter', sfv).subscribe(
-      res => (this.pts = res),
+      res => {
+        if (res.length > 0) {
+          this.pts = res;
+        } else {
+          this.msg.success('搜索到0个案子！');
+        }
+      },
       err => {
         this.msg.error('出错了');
         this.loading = false;
