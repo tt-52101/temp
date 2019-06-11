@@ -1,7 +1,7 @@
-<nz-card>
+
   <form *ngIf="!expandForm" nz-form [nzLayout]="'inline'" (ngSubmit)="simpleGetData()" class="search__form">
     <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 24, xxl: 24 }">
-      <div nz-col nzSpan="16">
+      <div nz-col nzSpan="12">
         <nz-form-item>
           <nz-form-label nzFor="jobno">项目号</nz-form-label>
           <nz-form-control>
@@ -25,7 +25,7 @@
     </div>
 
   </form>
-  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="AdvancedGetData()"
+  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="AdvancedGetData()" [loading]="loading"
     class="sf__no-error"></sf>
   <a (click)="expandForm=!expandForm">
     {{expandForm ? '简单搜索' : '高级搜索'}}
@@ -68,6 +68,5 @@
       </ul>
     </nz-dropdown>
   </div>
-  <st #st [columns]="ptColumns" [data]="pts" [loading]="loading" (change)="stChange($event)"></st>
+  <st #st [columns]="ptColumns" [widthMode]="widthMode" [data]="pts" [loading]="loading" (change)="stChange($event)" [scroll]="{x: '500px',y:'400px'}"></st>
 
-</nz-card>

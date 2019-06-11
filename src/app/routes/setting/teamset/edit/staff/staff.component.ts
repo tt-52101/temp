@@ -18,8 +18,8 @@ export class SettingTeamsetEditStaffComponent implements OnInit {
   ngOnInit() {}
   pSchema: SFSchema = {
     properties: {
-      Name: { type: 'string', title: 'Name', maxLength: 20 },
-      Email: { type: 'string', title: 'Email', maxLength: 20 },
+      Name: { type: 'string', title: 'Name', maxLength: 40 },
+      Email: { type: 'string', title: 'Email', maxLength: 50 },
       SyneltsRoles: {
         type: 'string',
         title: 'Mulit',
