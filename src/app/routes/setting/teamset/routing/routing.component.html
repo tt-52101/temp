@@ -31,8 +31,8 @@
     {{expandForm ? '简单搜索' : '高级搜索'}}
     <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
   </a>
-  <div nz-row>
-    <button nz-button nzType="primary">新建</button>
+  <div nz-row style="margin-bottom: 15px;margin-top: 15px;">
+    <button nz-button nzType="primary" (click)="msg.warning('暂时不允许自建项目')">新建</button>
     <nz-dropdown [nzPlacement]="'bottomLeft'">
       <button nz-button nz-dropdown>
         产出操作
@@ -48,7 +48,7 @@
     
     <nz-dropdown [nzPlacement]="'bottomLeft'">
       <button nz-button nz-dropdown>
-        批量操作
+        类型设置
         <i nz-icon type="down"></i>
       </button>
       <ul nz-menu>
@@ -67,6 +67,7 @@
         <li nz-menu-item (click)="setRows([{property:'BType',type:'Chemical'},{property:'RType','type':''}])">设定为化学业务</li>
       </ul>
     </nz-dropdown>
+    <button nz-button nzType="danger" class="text-right" (click)="filterNoneSetting()">{{settingChoose}}</button>
   </div>
-  <st #st [columns]="ptColumns" [widthMode]="widthMode" [data]="pts" [loading]="loading" (change)="stChange($event)" [scroll]="{x: '500px',y:'400px'}"></st>
+  <st #st [columns]="ptColumns" [page]="pageInfo"  [data]="pts" [loading]="loading" (change)="stChange($event)" ></st>
 

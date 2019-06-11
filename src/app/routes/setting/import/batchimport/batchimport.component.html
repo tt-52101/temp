@@ -1,24 +1,50 @@
-<form nz-form [nzLayout]="layout">
-  <nz-form-item>
+<nz-row>
+  <nz-col nzMd="8" nzLg="8">
+    <nz-select [(ngModel)]="importOption" (nzOpenChange)="optionChange($event)" style="width: 300px">
+      <nz-option nzLabel="导入全部属性并覆盖已存在项目" nzValue="cover"></nz-option>
+      <nz-option nzLabel="导入全部属性但忽略已存在项目" nzValue="ignore"></nz-option>
+      <nz-option nzLabel="只导入产出相关属性" nzValue="only"></nz-option>
+    </nz-select>
+  </nz-col>
+  <nz-col nzMd="4" nzLg="4">
 
-    <nz-form-control [nzSpan]="24">
-      <textarea [nzAutosize]="inputSetting" placeholder="Please paste Json string from Convertor here!" nz-input
-        [(ngModel)]="inputValue" [ngModelOptions]="{standalone: true}"></textarea>
-    </nz-form-control>
-  </nz-form-item>
+  </nz-col>
 
-  <nz-row [nzGutter]="20">
-    <nz-col [nzSpan]="10" nzOffset="2">
-      <nz-statistic [nzValue]="pCount" nzSuffix="个" [nzTitle]="'Input Projects Number'"></nz-statistic>
-    </nz-col>
-    <nz-col [nzSpan]="10">
-      <nz-statistic [nzValue]="pTime" nzSuffix="秒" [nzTitle]="'Estimate Import Time'"></nz-statistic>
-    </nz-col>
-  </nz-row>
-  <nz-form-item>
-    <nz-form-control [nzSpan]="20" [nzOffset]="2">
-      <button nz-button nzType="primary" (click)="import()" [nzLoading]="loading" [disabled]="disabled"
-        nzBlock>Submit</button>
-    </nz-form-control>
-  </nz-form-item>
-</form>
+  <nz-col nzMd="4" nzLg="4">
+    <nz-select *ngIf="isRevenue" [nzDisabled]="!isRevenue" [(ngModel)]="revenueYear" style="width: 100px">
+      <nz-option nzLabel="2019" nzValue='2019'></nz-option>
+      <nz-option nzLabel="2018" nzValue='2018'></nz-option>
+    </nz-select>
+  </nz-col>
+  <nz-col nzMd="3" nzLg="3">
+    <nz-select [(ngModel)]="revenueMonth" *ngIf="!isRevenue" [nzDisabled]="!isRevenue" style="width: 100px">
+      <nz-option nzLabel="01" nzValue=1></nz-option>
+      <nz-option nzLabel="02" nzValue=2></nz-option>
+      <nz-option nzLabel="03" nzValue=3></nz-option>
+      <nz-option nzLabel="04" nzValue=4></nz-option>
+      <nz-option nzLabel="05" nzValue=5></nz-option>
+      <nz-option nzLabel="06" nzValue=6></nz-option>
+      <nz-option nzLabel="07" nzValue=7></nz-option>
+      <nz-option nzLabel="08" nzValue=8></nz-option>
+      <nz-option nzLabel="09" nzValue=9></nz-option>
+      <nz-option nzLabel="10" nzValue=10></nz-option>
+      <nz-option nzLabel="11" nzValue=11></nz-option>
+      <nz-option nzLabel="12" nzValue=12></nz-option>
+    </nz-select>
+  </nz-col>
+</nz-row>
+<nz-row style="margin-top: 20px">
+  <textarea [nzAutosize]="inputSetting" placeholder="Please paste Json string from Convertor here!" nz-input
+    [(ngModel)]="inputValue" [ngModelOptions]="{standalone: true}"></textarea>
+</nz-row>
+<nz-row [nzGutter]="20">
+  <nz-col [nzSpan]="10" nzOffset="2">
+    <nz-statistic [nzValue]="pCount" nzSuffix="个" [nzTitle]="'Input Projects Number'"></nz-statistic>
+  </nz-col>
+  <nz-col [nzSpan]="10">
+    <nz-statistic [nzValue]="pTime" nzSuffix="秒" [nzTitle]="'Estimate Import Time'"></nz-statistic>
+  </nz-col>
+</nz-row>
+
+<button nz-button nzType="primary" (click)="import()" [nzLoading]="loading" [disabled]="disabled"
+  nzBlock>Submit</button>

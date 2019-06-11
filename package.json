@@ -6,7 +6,8 @@
   "homepage": "https://e.ng-alain.com/theme/pro",
   "scripts": {
     "ng": "ng",
-    "start": "npm run color-less && ng serve --host 0.0.0.0 --port 8080 --disable-host-check",
+    "start": "npm run color-less && ng serve",
+    "cloud": "npm run color-less && ng serve --host 0.0.0.0 --port 8080 --disable-host-check",
     "hmr": "npm run color-less && ng serve -c=hmr",
     "build": "npm run color-less && ng build --prod --build-optimizer",
     "analyze": "ng build --prod --build-optimizer --stats-json",

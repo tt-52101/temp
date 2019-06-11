@@ -40,6 +40,7 @@ import { __getInputValues } from '@angularclass/hmr';
 })
 export class SettingTeamsetRoutingComponent implements OnInit {
   expandForm = false;
+  settingChoose='只显示未设置项目';
   inputJobno = '';
   @ViewChild('st') st: STComponent;
   @ViewChild('sf') sf: SFComponent;
@@ -164,10 +165,10 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       spanLabelFixed: 120,
     },
   };
-  widthMode:STWidthMode={
-    type:'strict',
-    strictBehavior:'wrap',
-  }
+  widthMode: STWidthMode = {
+    type: 'strict',
+    strictBehavior: 'wrap',
+  };
   btn: SFButton = {
     render: { grid: { span: 24 }, class: 'text-right mb0', spanLabelFixed: 0 },
     submit: 'Search',
@@ -180,36 +181,36 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     showSize: true,
   };
   tags: STColumnTag = {
-    'Safety': { text: '安规', color: 'red' },
+    Safety: { text: '安规', color: 'red' },
     'Energy Efficiency': { text: '能效', color: 'red' },
-    'Chemical': { text: '化学', color: 'blue' },
-    'IEC': { text: '欧系', color: 'blue' },
-    'US': { text: '美系', color: 'purple' },
-    'GMAP': { text: '多国', color: 'orange' },
-    'VIP': { text: 'VIP', color: 'red' },
-    'Normal': { text: '普通', color: 'blue' },
-    'Agent': { text: '代理', color: 'volcano' },
-    '':{text:'未知',color:'red'},
+    Chemical: { text: '化学', color: 'blue' },
+    IEC: { text: '欧系', color: 'blue' },
+    US: { text: '美系', color: 'purple' },
+    GMAP: { text: '多国', color: 'orange' },
+    VIP: { text: 'VIP', color: 'red' },
+    Normal: { text: '普通', color: 'blue' },
+    Agent: { text: '代理', color: 'volcano' },
+    '': { text: '未知', color: 'red' },
   };
   ptColumns: STColumn[] = [
     {
       title: '序号',
       index: 'Id',
       type: 'checkbox',
-      fixed:'left',
-      width:'50px',
+      fixed: 'left',
+      width: '50px',
     },
     {
       title: 'Job No',
       index: 'ProjectNo',
-      fixed:'left',
-      width:'120px',
+      fixed: 'left',
+      width: '120px',
       sort: {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.ProjectNo > b.ProjectNo ? 1 : -1,
       },
     },
-   
+
     {
       title: 'Open Date',
       index: 'OpenDate',
@@ -251,13 +252,13 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       type: 'tag',
       tag: this.tags,
     },
-     {
+    {
       title: 'Client Type',
       index: 'CType',
       type: 'tag',
       tag: this.tags,
     },
-     {
+    {
       title: 'Region Type',
       index: 'RType',
       type: 'tag',
@@ -265,8 +266,8 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     },
     {
       title: 'Operation',
-      fixed:'right',
-      width:'120px',
+      fixed: 'right',
+      width: '120px',
       buttons: [
         {
           icon: 'edit',
@@ -296,7 +297,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         {
           icon: 'delete',
           type: 'del',
-          acl:['a'],
+          acl: ['God', 'Super Admin'],
           click: (i, m, c) => {
             this.http.delete(`home/project/${i.Id}`).subscribe(
               res => {
@@ -397,7 +398,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     // this.getData('joh');
   }
   simpleGetData() {
-    this.loading=true;
+    this.loading = true;
     this.http
       .get(`home/ProjectSearchByProjectNo`, {
         projectNo: this.inputJobno.trim(),
@@ -408,7 +409,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         } else {
           this.msg.error(res.Message);
         }
-        this.loading=false;
+        this.loading = false;
       });
   }
 
@@ -443,7 +444,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         this.loading = false;
       },
     );
-    
   }
   getData() {
     if (!this.expandForm) {
@@ -453,41 +453,61 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     }
   }
   stChange(e: STChange) {
+    // console.log(e);
     if (e.checkbox) {
       this.selectRows = e.checkbox;
       this.cdr.detectChanges();
       console.log(this.selectRows);
+    }
+    if (e.type === 'ps') {
+      this.st.reload();
+      console.log('page change');
     }
   }
   filterData() {}
   setTarget() {}
   cancelTarget() {}
   listTarget() {}
-
+  filterNoneSetting(){
+    if(this.settingChoose==='只显示未设置项目'){
+      this.pts=this.pts.filter(c=>c.BType===''||c.CType===''||c.RType==='');
+      this.settingChoose='显示全部项目';
+    }else{
+      this.getData();
+    }
+    
+  }
   setRows(params: { property: string; type: any }[]) {
-    this.loading = true;
-    params.forEach(para => {
-      this.selectRows.map(c => Reflect.set(c, para.property, para.type));
-    });
+    
+    if (this.selectRows.length<1) {
+      this.msg.warning('未选中任何Job！');
+    } else {
+      this.loading = true;
+      params.forEach(para => {
+        this.selectRows.map(c => Reflect.set(c, para.property, para.type));
+      });
 
-    console.log(this.selectRows);
-    this.http.put('home/projects/updatecollection', this.selectRows).subscribe(
-      res => {
-        console.log(res);
-        if (res.Message === 'OK') {
-          this.msg.success('成功！');
-          this.loading = false;
+      console.log(this.selectRows);
+      this.http
+        .put('home/projects/updatecollection', this.selectRows)
+        .subscribe(
+          res => {
+            console.log(res);
+            if (res.Message === 'OK') {
+              this.msg.success('成功！');
+              this.loading = false;
 
-          this.getData();
-          this.cdr.detectChanges();
-          console.log(res.Items);
-        } else {
-          this.msg.success('失败！');
-          this.loading = false;
-        }
-      },
-      err => {},
-      () => {},
-    );
+              this.getData();
+              this.cdr.detectChanges();
+              console.log(res.Items);
+            } else {
+              this.msg.success('失败！');
+              this.loading = false;
+            }
+          },
+          err => {},
+          () => {},
+        );
+    }
   }
 }
