@@ -10,6 +10,7 @@ import { SFSchema } from '@delon/form';
 })
 export class SettingSetEditClienteditComponent implements OnInit {
   form: FormGroup;
+  showInfo=false;
   submitting = false;
   i:any={};
   schema:SFSchema={
@@ -28,9 +29,33 @@ export class SettingSetEditClienteditComponent implements OnInit {
       Contact:{
         type:'string',
         title:'联系人',
-        maxLength:10
+        maxLength:20
       },
-      
+      Address:{
+        type:'string',
+        title:'地址',
+        maxLength:200,
+      },
+      ContactEmail:{
+        type:'string',
+        title:'电子邮箱',
+        maxLength:100,
+      },
+      EntryDate:{
+        type:'string',
+        title:'首次合作时间',
+       format:'date',
+      },
+      Phone:{
+        type:'string',
+        title:'电话',
+        maxLength:100
+      },
+      MobilePhone:{
+        type:'string',
+        title:'手机',
+        maxLength:11
+      }
     },
     required: ['Name', 'ClientType'],
     

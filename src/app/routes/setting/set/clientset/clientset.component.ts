@@ -68,7 +68,7 @@ export class SettingSetClientsetComponent implements OnInit {
           type: 'static',
           modal: {
             component: SettingSetEditClienteditComponent,
-            size: 'lg',
+            size: 'md',
             paramsName: 'i',
           },
           click: 'load',
@@ -126,6 +126,7 @@ export class SettingSetClientsetComponent implements OnInit {
       ()=>{
         this.checkloading=false;
         this.loading=false;
+        console.log(this.clients);
         this.msg.success('数据获取成功！');
       });
     }else{

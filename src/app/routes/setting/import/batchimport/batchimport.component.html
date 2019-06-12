@@ -17,7 +17,7 @@
     </nz-select>
   </nz-col>
   <nz-col nzMd="3" nzLg="3">
-    <nz-select [(ngModel)]="revenueMonth" *ngIf="!isRevenue" [nzDisabled]="!isRevenue" style="width: 100px">
+    <nz-select *ngIf="isRevenue" [(ngModel)]="revenueMonth"  [nzDisabled]="!isRevenue" style="width: 100px">
       <nz-option nzLabel="01" nzValue=1></nz-option>
       <nz-option nzLabel="02" nzValue=2></nz-option>
       <nz-option nzLabel="03" nzValue=3></nz-option>
