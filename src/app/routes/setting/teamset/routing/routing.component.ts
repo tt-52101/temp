@@ -40,7 +40,7 @@ import { __getInputValues } from '@angularclass/hmr';
 })
 export class SettingTeamsetRoutingComponent implements OnInit {
   expandForm = false;
-  settingChoose='只显示未设置项目';
+  settingChoose = '只显示未设置项目';
   inputJobno = '';
   @ViewChild('st') st: STComponent;
   @ViewChild('sf') sf: SFComponent;
@@ -58,7 +58,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   selectRows: STData[] = [];
   sales = [];
   Services = [];
-  progressTypes = [
+  IsFinished = [
     { label: '未完成', value: false },
     { label: '已完成', value: true },
   ];
@@ -114,7 +114,9 @@ export class SettingTeamsetRoutingComponent implements OnInit {
           asyncData: (input: string) =>
             of(
               input
-                ? this.Services.filter(c => c.toLowerCase().indexOf(input) > -1)
+                ? this.Services.filter(
+                    c => c.toLowerCase().indexOf(input.toLowerCase()) > -1,
+                  )
                 : [],
             ),
         },
@@ -134,10 +136,10 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         title: '结案时间',
         ui: { widget: 'date', mode: 'range' },
       },
-      Progress: {
+      IsFinished: {
         type: 'boolean',
         title: '完成度',
-        enum: this.progressTypes,
+        enum: this.IsFinished,
         ui: { widget: 'select', placeholder: '请选择', allowClear: true },
       },
       BType: {
@@ -251,18 +253,30 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       index: 'BType',
       type: 'tag',
       tag: this.tags,
+      sort: {
+        compare: (a: ProjectTransfer, b: ProjectTransfer) =>
+          a.BType > b.BType ? 1 : -1,
+      },
     },
     {
       title: 'Client Type',
       index: 'CType',
       type: 'tag',
       tag: this.tags,
+      sort: {
+        compare: (a: ProjectTransfer, b: ProjectTransfer) =>
+          a.CType > b.CType ? 1 : -1,
+      },
     },
     {
       title: 'Region Type',
       index: 'RType',
       type: 'tag',
       tag: this.tags,
+      sort: {
+        compare: (a: ProjectTransfer, b: ProjectTransfer) =>
+          a.RType > b.RType ? 1 : -1,
+      },
     },
     {
       title: 'Operation',
@@ -278,9 +292,10 @@ export class SettingTeamsetRoutingComponent implements OnInit {
             size: 'lg',
           },
           click: (i, m, c) => {
-            if (!this.expandForm) {
-              this.simpleGetData();
+            if (this.expandForm) {
+              this.AdvancedGetData();
             } else {
+              this.simpleGetData();
             }
           },
         },
@@ -326,7 +341,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       });
       console.log(this.Services);
     });
-    console.log(this.Services);
+    
     if (!this.cache.getNone('sales')) {
       this.http.get('person/userAll').subscribe(
         (res: SyneltsUser[]) => {
@@ -394,8 +409,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         });
       });
     }
-
-    // this.getData('joh');
   }
   simpleGetData() {
     this.loading = true;
@@ -407,6 +420,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         if (res.Message === 'OK') {
           this.pts = res.Items;
         } else {
+          this.pts = [];
           this.msg.error(res.Message);
         }
         this.loading = false;
@@ -429,8 +443,9 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     console.log(sfv);
     this.http.get('home/projectsbyfilter', sfv).subscribe(
       res => {
-        if (res.length > 0) {
-          this.pts = res;
+        if (res.Message === 'OK') {
+          this.pts = res.Items;
+          this.msg.success(`成功搜索到${res.Items.length}个案子！`);
         } else {
           this.msg.success('搜索到0个案子！');
         }
@@ -446,6 +461,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     );
   }
   getData() {
+    this.pts = [];
     if (!this.expandForm) {
       this.simpleGetData();
     } else {
@@ -468,18 +484,19 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   setTarget() {}
   cancelTarget() {}
   listTarget() {}
-  filterNoneSetting(){
-    if(this.settingChoose==='只显示未设置项目'){
-      this.pts=this.pts.filter(c=>c.BType===''||c.CType===''||c.RType==='');
-      this.settingChoose='显示全部项目';
-    }else{
+  filterNoneSetting() {
+    if (this.settingChoose === '只显示未设置项目') {
+      this.pts = this.pts.filter(
+        c => c.BType === '' || c.CType === '' || c.RType === '',
+      );
+      this.settingChoose = '显示全部项目';
+    } else {
       this.getData();
+      this.settingChoose = '只显示未设置项目';
     }
-    
   }
   setRows(params: { property: string; type: any }[]) {
-    
-    if (this.selectRows.length<1) {
+    if (this.selectRows.length < 1) {
       this.msg.warning('未选中任何Job！');
     } else {
       this.loading = true;

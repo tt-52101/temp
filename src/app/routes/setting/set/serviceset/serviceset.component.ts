@@ -94,7 +94,9 @@ export class SettingSetServicesetComponent implements OnInit {
             size: 'md',
             paramsName: 'i',
           },
-          click: 'load',
+          click: (i,m,c)=>{
+            this.getData();
+          },
         },
         {
           icon: 'delete',

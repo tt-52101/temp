@@ -21,6 +21,7 @@ export class SettingSetEditServiceeditComponent implements OnInit {
           { value: 'Safety', label: '安规' },
           { value: 'Energy Efficiency', label: '能效' },
           { value: 'Chemical', label: '化学' },
+          { value: ' ', label: '不确定' },
         ],
       },
       RegionType: {
@@ -30,6 +31,7 @@ export class SettingSetEditServiceeditComponent implements OnInit {
           { value: 'US', label: '北美' },
           { value: 'IEC', label: '欧洲' },
           { value: 'GMAP', label: '多国' },
+          { value: ' ', label: '不确定' },
         ],
       },
       Description: {
@@ -42,7 +44,7 @@ export class SettingSetEditServiceeditComponent implements OnInit {
         title: '预设周期（工作日）',
       },
     },
-    required: ['Name', 'BusinessType', 'RegionType'],
+    required: ['Name'],
   };
   constructor(
     private http: _HttpClient,

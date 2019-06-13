@@ -204,7 +204,7 @@ export class RoutesHomeTeamComponent implements OnInit {
     return this.http.get('home/dbstatus');
   }
   getRevenueJson() {
-    return this.http.get('biz/revenue');
+    return this.http.get('biz/revenue/2019');
   }
   getExistEngineers() {
     return this.http.get('biz/engineers');
