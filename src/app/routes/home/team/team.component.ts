@@ -1,3 +1,5 @@
+import { element } from 'protractor';
+import { StatusLabelComponent } from './../../../shared/components/status-label/status-label.component';
 import { ToolsModule } from './../../tools/tools.module';
 import { map, zip } from 'rxjs/operators';
 import {
@@ -63,7 +65,7 @@ export class RoutesHomeTeamComponent implements OnInit {
   ProjectNos = 'Project Nos';
   loading = false;
   engineersList = [];
-
+  workload=0;
   projectNoPieData = [];
 
   totalTabs: any[] = [
@@ -136,21 +138,12 @@ export class RoutesHomeTeamComponent implements OnInit {
       },
     );
 
-    // fetching existing engineer
-    this.getExistEngineers().subscribe(
-      res => (this.engineersList = res),
-      err => {},
-      () => {
-        for (let i = 0; i < this.engineersList.length; i++) {
-          this.engineerTabs.push({
-            name: this.engineersList[i],
-            content: '',
-          });
-        }
-      },
-    );
-    console.log('after init');
-    console.log(this.show);
+    // fetching existing engineer status
+    this.http.get('home/EngineersStatus').subscribe(
+      res=>{
+        this.engineersList=res.Items;
+      }
+    )
   }
   render(el: ElementRef) {
     // fetch dbstatus

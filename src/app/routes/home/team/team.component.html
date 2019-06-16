@@ -67,7 +67,7 @@
   <div nz-row [nzGutter]="24">
     <nz-tabset (nzSelectedIndexChange)="selectedIndexChange($event)" nzSelectedIndex="chartIndex">
       <nz-tab nzTitle="Revenue Output">
-        <div nz-row >
+        <div nz-row>
           <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
             <div class="bar">
               <g2-custom *ngIf="show" height="280" id="lineChart" (render)="render($event)"></g2-custom>
@@ -110,24 +110,41 @@
     </nz-tabset>
   </div>
   <!-- engineer blocks -->
-  <div style="height: 20px"></div>
-  <nz-tabset style="width: 900px" nzTabPosition="top" [(nzSelectedIndex)]="engIdx"
-    (nzSelectedIndexChange)="engChange($event)">
-    <nz-tab *ngFor="let tab of engineerTabs; let i = index;" [nzTitle]="chartTitle">
-      {{tab.name}}
-      <ng-template #chartTitle>
-        <div nz-row [nzGutter]="8" style="width: 138px; margin: 8px 0;">
-          <div nz-col [nzSpan]="12">
-            <number-info [title]="tab.name" [subTitle]="'record'" gap="2" [total]="'89%'"></number-info>
-          </div>
-          <div nz-col [nzSpan]="12" style="padding-top: 36px;">
-            <g2-pie [animate]="false" [inner]="0.55" [tooltip]="false" [padding]="[0, 0, 0, 0]" [percent]="90"
-              [height]="64"></g2-pie>
-          </div>
-        </div>
-      </ng-template>
-    </nz-tab>
+  <nz-card [nzLoading]="loading" [nzBordered]="false" [nzBodyStyle]="{'padding': '0 0 32px'}" class="offline-card mt-lg">
+      <nz-table [nzData]="engineersList" [nzShowPagination]="false">
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th >名字</th>
+              <th>进展中项目</th>
+              <th>进展中项目金额</th>
+              <th >已完成项目</th>
+              <th >已完成项目金额</th>
+              <th >总Working Day</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i of engineersList; let idx=index">
+              <td>{{idx + 1}}</td>
+              <td>{{i.Name}}</td>
+              <td>
+                  <g2-single-bar height="60" [value]="i.LiveCount" [max]="150"  line></g2-single-bar>
+              </td>
+              <td>
+                  <g2-single-bar height="60" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
+                </td>
+              <td>
+                <g2-single-bar height="60" [value]="i.FinishedCountofThisYear" [max]="400" line></g2-single-bar>
+              </td>
+              <td>
+                  <g2-single-bar height="60" [value]="i.FinishedAmountofThisYear" [max]="4000000" line></g2-single-bar>
+                </td>
+              <td>
+                  <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="5000" line></g2-single-bar>
+                </td>
+            </tr>
+          </tbody>
+        </nz-table>
 
-  </nz-tabset>
-
+</nz-card>
 </page-header>

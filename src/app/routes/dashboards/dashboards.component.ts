@@ -1,3 +1,5 @@
+import { from } from 'rxjs';
+import { WDCalulatorService } from './../../services/common/wdcalulator.service';
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -9,6 +11,16 @@ import { NzMessageService } from 'ng-zorro-antd';
   changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class RoutesHomeDashboardsComponent implements OnInit {
+  i:any={
+    from:Date,
+    to:Date
+  };
+  result:any;
+  cacu(value:any){
+    console.log(this.i.from);
+    console.log(typeof(this.i.from))
+    this.result=this.wdc.fromtoCount(this.i.from,this.i.to,false)
+  }
   q: any = {
     status: 'all',
   };
@@ -20,6 +32,7 @@ export class RoutesHomeDashboardsComponent implements OnInit {
     public msg: NzMessageService,
     private modal: ModalHelper,
     private cdr: ChangeDetectorRef,
+    private wdc:WDCalulatorService
   ) {}
 
   ngOnInit() {
@@ -39,7 +52,7 @@ export class RoutesHomeDashboardsComponent implements OnInit {
     
   }
   getData() {
-    this.http.get('biz/revenue').subscribe(
+    this.http.get('biz/revenue/2019').subscribe(
       res => {
         this.monthData = [];
         this.RevenueTitle = 'Revenue (' + res.unit + ')';

@@ -15,7 +15,6 @@ export class SettingSetEditClienteditComponent implements OnInit {
   i:any={};
   schema:SFSchema={
     properties: {
-      Name: { type: 'string', title: '客户名', maxLength: 100 },
       
       ClientType: {
         type: 'string',
@@ -41,11 +40,7 @@ export class SettingSetEditClienteditComponent implements OnInit {
         title:'电子邮箱',
         maxLength:100,
       },
-      EntryDate:{
-        type:'string',
-        title:'首次合作时间',
-       format:'date',
-      },
+      
       Phone:{
         type:'string',
         title:'电话',

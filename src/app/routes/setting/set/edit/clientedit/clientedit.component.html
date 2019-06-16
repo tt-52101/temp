@@ -2,15 +2,17 @@
   <div class="modal-title">{{i.id !=='' ? 'Edit #' + i.Name : 'New Client'}}</div>
 </div>
 <a (click)="showInfo=!showInfo">
-          {{shownInfo ? '显示基本信息' : '隐藏基本信息'}}
-          <i class="anticon" [class.anticon-down]="!showInfo" [class.anticon-up]="showInfo"></i>
-        </a>
-         <sv-container *ngIf="showInfo" >
-    <sv-title>基本信息</sv-title>
-    <sv label="首次合作时间">{{i.EntryDate|_date:'YYYY-MM-DD'}}</sv>
-    
-  </sv-container>
-<sf #sf layout="vertical" [schema]="schema" [formData]="i" (formSubmit)="save($event)"  >
+  {{showInfo ? '显示基本信息' : '隐藏基本信息'}}
+  <i class="anticon" [class.anticon-down]="!showInfo" [class.anticon-up]="showInfo"></i>
+</a>
+<sv-container *ngIf="showInfo" col="1">
+  <sv-title>基本信息</sv-title>
+  <sv label="客户名称">{{i.Name}}</sv>
+  <sv label="创建时间">{{i.CreatedOn|_date:'YYYY-MM-DD'}}</sv>
+  <sv label="修改时间">{{i.LastModifiedOn|_date:'YYYY-MM-DD'}}</sv>
+  <sv label="首次合作时间">{{i.EntryDate|_date:'YYYY-MM-DD'}}</sv>
+</sv-container>
+<sf #sf style="margin-top: 15px" layout="vertical" [schema]="schema" [formData]="i" (formSubmit)="save($event)">
   <!-- <div class="modal-footer">
       <button nz-button type="button" (click)="close()">关闭</button>
       <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid">保存</button>
