@@ -11,17 +11,16 @@ import {
 import { Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 
-
 @Component({
   selector: 'app-routes-home-team',
   templateUrl: './team.component.html',
-  changeDetection:ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoutesHomeTeamComponent implements OnInit {
-  constructor(private http: _HttpClient,private cdr:ChangeDetectorRef) {
+  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef) {
     this.show = true;
   }
-  
+
   //  revenue Data from json
   budgetTotal = 0;
   actualTotoal = 0;
@@ -33,7 +32,6 @@ export class RoutesHomeTeamComponent implements OnInit {
   percentYearRevenue = 0;
   timeChartData: any = [];
 
-  
   latestUpdateDate: Date;
   totalLiveQuantity = 0;
   totalLiveAmount = 0;
@@ -42,14 +40,14 @@ export class RoutesHomeTeamComponent implements OnInit {
   ProjectNos = 'Project Nos';
   loading = false;
   engineersList = [];
-  workload=0;
+  workload = 0;
   projectNoPieData = [];
 
   totalTabs: any[] = [
     { key: 'Revenue', show: true },
     { key: 'Job in', show: false },
   ];
-  chartIndex=0;
+  chartIndex = 0;
   show = true;
   selectedIndexChange(idx: any) {
     if (idx === 1) {
@@ -61,8 +59,8 @@ export class RoutesHomeTeamComponent implements OnInit {
   engineerTabs: any = [];
 
   ngOnInit() {
-     // fetch dbstatus
-     this.getDbStatus().subscribe(res => {
+    // fetch dbstatus
+    this.getDbStatus().subscribe(res => {
       this.latestUpdateDate = res.LastUpdateTime;
       this.totalLiveQuantity = res.LiveCount;
       this.totalLiveAmount = res.LiveAmount;
@@ -119,59 +117,57 @@ export class RoutesHomeTeamComponent implements OnInit {
       },
       err => {},
       () => {
+        const chart = new G2.Chart({
+          container: 'lineChart',
+          forceFit: true,
+          height: 290,
+          animate: false,
+        });
+        chart.source(this.timeChartData, {
+          month: {
+            range: [0, 1],
+          },
+        });
+        chart.tooltip({
+          crosshairs: {
+            type: 'line',
+          },
+        });
+        chart.axis('value', {
+          label: {
+            formatter: function formatter(val) {
+              return val + '￥';
+            },
+          },
+        });
+        chart
+          .line()
+          .position('month*value')
+          .color('valueType');
+        chart
+          .point()
+          .position('month*value')
+          .color('valueType')
+          .size(4)
+          .shape('circle')
+          .style({
+            stroke: '#fff',
+            lineWidth: 1,
+          });
+        chart.render();
         this.cdr.detectChanges();
+
         console.log(this.timeChartData);
       },
     );
 
     // fetching existing engineer status
-    this.http.get('home/EngineersStatus').subscribe(
-      res=>{
-        this.engineersList=res.Items;
-        this.cdr.detectChanges();
-      }
-    )
+    this.http.get('home/EngineersStatus').subscribe(res => {
+      this.engineersList = res.Items;
+      this.cdr.detectChanges();
+    });
   }
-  render(el: ElementRef) {
-    const chart = new G2.Chart({
-      container: el.nativeElement,
-      forceFit: true,
-      height: 290,
-    });
-    chart.source(this.timeChartData, {
-      month: {
-        range: [0, 1],
-      },
-    });
-    chart.tooltip({
-      crosshairs: {
-        type: 'line',
-      },
-    });
-    chart.axis('value', {
-      label: {
-        formatter: function formatter(val) {
-          return val + '￥';
-        },
-      },
-    });
-    chart
-      .line()
-      .position('month*value')
-      .color('valueType');
-    chart
-      .point()
-      .position('month*value')
-      .color('valueType')
-      .size(4)
-      .shape('circle')
-      .style({
-        stroke: '#fff',
-        lineWidth: 1,
-      });
-    chart.render();
-    this.cdr.detectChanges();
-  }
+  render(el: ElementRef) {}
   getDbStatus() {
     return this.http.get('home/dbstatus');
   }
@@ -181,7 +177,7 @@ export class RoutesHomeTeamComponent implements OnInit {
   getExistEngineers() {
     return this.http.get('biz/engineers');
   }
-  
+
   engIdx = 0;
   selectChange(idx: number) {
     // if (this.totalTabs[idx].show !== true) {
@@ -194,5 +190,4 @@ export class RoutesHomeTeamComponent implements OnInit {
   format(val: number) {
     return `&yen ${val.toFixed(2)}`;
   }
-  
 }
