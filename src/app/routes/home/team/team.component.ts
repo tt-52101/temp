@@ -10,41 +10,18 @@ import {
 } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
-import { format } from 'date-fns';
-import { ProjectTransfer } from 'app/services/biz/projecttransfer';
-import { Observable } from 'rxjs';
-import { LineChartOutline } from '@ant-design/icons-angular/icons/public_api';
-import { G2CustomComponent } from '@delon/chart';
+
 
 @Component({
   selector: 'app-routes-home-team',
   templateUrl: './team.component.html',
+  changeDetection:ChangeDetectionStrategy.OnPush,
 })
 export class RoutesHomeTeamComponent implements OnInit {
-  constructor(private http: _HttpClient) {
+  constructor(private http: _HttpClient,private cdr:ChangeDetectorRef) {
     this.show = true;
-    console.log('constructor');
-    console.log(this.show);
   }
-  // project查询参数
-  params: any = {
-    CurrentPage: 1,
-    PageSize: 20,
-    IsDeleted: false,
-    IsIncludeAll: true,
-    IsFinished: false,
-    EngineerName: '',
-    EngineeringCSName: '',
-    AssistEngineerName: '',
-    SalesCSName: '',
-    SalesName: '',
-    ServiceName: '',
-    ClientName: '',
-    OpenDateFrom: '',
-    OpenDateTo: '',
-    CompleteDateFrom: '',
-    CompleteDateTo: '',
-  };
+  
   //  revenue Data from json
   budgetTotal = 0;
   actualTotoal = 0;
@@ -84,6 +61,13 @@ export class RoutesHomeTeamComponent implements OnInit {
   engineerTabs: any = [];
 
   ngOnInit() {
+     // fetch dbstatus
+     this.getDbStatus().subscribe(res => {
+      this.latestUpdateDate = res.LastUpdateTime;
+      this.totalLiveQuantity = res.LiveCount;
+      this.totalLiveAmount = res.LiveAmount;
+    });
+    this.cdr.detectChanges();
     this.getRevenueJson().subscribe(
       res => {
         this.monthData = [];
@@ -131,9 +115,11 @@ export class RoutesHomeTeamComponent implements OnInit {
             });
           }
         });
+        this.cdr.detectChanges();
       },
       err => {},
       () => {
+        this.cdr.detectChanges();
         console.log(this.timeChartData);
       },
     );
@@ -142,17 +128,11 @@ export class RoutesHomeTeamComponent implements OnInit {
     this.http.get('home/EngineersStatus').subscribe(
       res=>{
         this.engineersList=res.Items;
+        this.cdr.detectChanges();
       }
     )
   }
   render(el: ElementRef) {
-    // fetch dbstatus
-    this.getDBStatus().subscribe(res => {
-      this.latestUpdateDate = res.LastUpdateTime;
-      this.totalLiveQuantity = res.LiveCount;
-      this.totalLiveAmount = res.LiveAmount;
-    });
-    console.log('before render');
     const chart = new G2.Chart({
       container: el.nativeElement,
       forceFit: true,
@@ -171,7 +151,7 @@ export class RoutesHomeTeamComponent implements OnInit {
     chart.axis('value', {
       label: {
         formatter: function formatter(val) {
-          return val + '$';
+          return val + '￥';
         },
       },
     });
@@ -190,8 +170,7 @@ export class RoutesHomeTeamComponent implements OnInit {
         lineWidth: 1,
       });
     chart.render();
-    console.log('after render');
-    console.log(this.show);
+    this.cdr.detectChanges();
   }
   getDbStatus() {
     return this.http.get('home/dbstatus');
@@ -202,9 +181,7 @@ export class RoutesHomeTeamComponent implements OnInit {
   getExistEngineers() {
     return this.http.get('biz/engineers');
   }
-  getDBStatus() {
-    return this.http.get('home/dbstatus');
-  }
+  
   engIdx = 0;
   selectChange(idx: number) {
     // if (this.totalTabs[idx].show !== true) {
@@ -217,4 +194,5 @@ export class RoutesHomeTeamComponent implements OnInit {
   format(val: number) {
     return `&yen ${val.toFixed(2)}`;
   }
+  
 }

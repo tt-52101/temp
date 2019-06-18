@@ -33,7 +33,7 @@
           <nz-form-label nzFor="BusinessType">服务类型</nz-form-label>
           <nz-form-control>
             <nz-select [(ngModel)]="selectBusinessType" [nzDisabled]="selectStatus===0" name="BusinessType" id="BusinessType" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true">
+             [nzShowSearch]="true">
               <nz-option *ngFor="let i of BusinessTypes; let idx = index" [nzLabel]="i.text" [nzValue]="i.value">
               </nz-option>
             </nz-select>
@@ -45,7 +45,7 @@
           <nz-form-label nzFor="RegionType">区域类型</nz-form-label>
           <nz-form-control>
             <nz-select [(ngModel)]="selectRegionType" [nzDisabled]="selectStatus===0" name="RegionType" id="RegionType" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true">
+            [nzShowSearch]="true">
               <nz-option *ngFor="let i of RegionTypes; let idx = index" [nzLabel]="i.text" [nzValue]="i.value">
               </nz-option>
             </nz-select>

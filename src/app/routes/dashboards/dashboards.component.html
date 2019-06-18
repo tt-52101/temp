@@ -12,53 +12,8 @@
     </se>
     <se label="result" col="1">{{result}}</se>
   </form>
-  <div nz-row [nzGutter]="24">
-    <nz-tabset nzType="card" (nzSelectedIndexChange)="selectedIndexChange($event)">
-      <nz-tab nzTitle="Revenue Output">
-        <div nz-row>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
-            <div class="bar">
-              <g2-bar id="revenue" height="295" [title]="RevenueTitle" [data]="monthData"></g2-bar>
-            </div>
-          </div>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-            <div class="rank">
-              <h4 class="ranking-title">list</h4>
-              <ul class="rank-list">
-                <li *ngFor="let i of monthData">
-                  <span class="title">{{i.x}}</span>:
-                  <span class="value">{{i.y|_currency}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </nz-tab>
-      <nz-tab nzTitle="Job        In" nzForceRender="true">
-        <div nz-row>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
-            <div class="bar">
-              <g2-bar *ngIf="show" id="revenue" height="295" [title]="RevenueTitle" [data]="jobinData"></g2-bar>
-            </div>
-          </div>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-            <div class="rank">
-              <h4 class="ranking-title">list</h4>
-              <ul class="rank-list">
-                <li *ngFor="let i of jobinData">
-                  <span class="title">{{i.x}}</span>:
-                  <span class="value">{{i.y|_currency}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </nz-tab>
 
-    </nz-tabset>
-  </div>
-  <div nz-row>
-    <g2-bar id="revenue" height="295" [title]="RevenueTitle" [data]="jobinData"></g2-bar>
-  </div>
+  <g2-custom height="290" (resize)="resize($event)" (render)="render($event)"></g2-custom>
+
 
 </page-header>

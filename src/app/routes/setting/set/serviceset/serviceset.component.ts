@@ -34,15 +34,13 @@ export class SettingSetServicesetComponent implements OnInit {
 
   BusinessTypes = [
     { index: 0, text: '安规', value: 'Safety' },
-    { index: 1, text: '能效', value: 'Energy Efficency' },
+    { index: 1, text: '能效', value: 'EE' },
     { index: 2, text: '化学', value: 'Chemical' },
-    { index: 3, text: '其他', value: '' },
   ];
   RegionTypes = [
     { index: 0, text: '欧线', value: 'IEC' },
     { index: 1, text: '美线', value: 'US' },
     { index: 2, text: 'GMAP', value: 'GMAP' },
-    { index: 4, text: '其他', value: '' },
   ];
   startDate: Date = new Date();
   services = [];
@@ -224,24 +222,24 @@ export class SettingSetServicesetComponent implements OnInit {
         break;
       case 'EE':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
         });
         break;
       case 'EEUS':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
           c.RegionType = 'US';
         });
         break;
       case 'EEIEC':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
           c.RegionType = 'IEC';
         });
         break;
       case 'EEGMAP':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
           c.RegionType = 'GMAP';
         });
         break;

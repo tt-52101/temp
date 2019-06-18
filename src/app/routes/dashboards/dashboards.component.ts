@@ -26,7 +26,10 @@ export class RoutesHomeDashboardsComponent implements OnInit {
   };
   loading = false;
   data: any[] = [];
-
+  timeChartData=[];
+  render(el: ElementRef) {
+    
+  }
   constructor(
     private http: _HttpClient,
     public msg: NzMessageService,
@@ -34,9 +37,36 @@ export class RoutesHomeDashboardsComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private wdc:WDCalulatorService
   ) {}
-
+  getRevenueJson() {
+    return this.http.get('biz/revenue/2019');
+  }
   ngOnInit() {
-    this.getData();
+    this.getRevenueJson().subscribe(
+      res => {
+        [...res.data].forEach(element => {
+          
+          if (this.timeChartData.length !== 24) {
+            this.timeChartData.push({
+              month: element.Month,
+              valueType: 'actual',
+              value: element.Actual,
+            });
+            this.timeChartData.push({
+              month: element.Month,
+              valueType: 'budget',
+              value: element.Budget,
+            });
+          }
+        });
+        this.cdr.detectChanges();
+      },
+      err => {},
+      () => {
+        this.cdr.detectChanges();
+        console.log(this.timeChartData);
+      },
+    );
+    
     this.cdr.detectChanges();
   }
   RevenueTitle = '';
@@ -51,62 +81,9 @@ export class RoutesHomeDashboardsComponent implements OnInit {
     }
     
   }
-  getData() {
-    this.http.get('biz/revenue/2019').subscribe(
-      res => {
-        this.monthData = [];
-        this.RevenueTitle = 'Revenue (' + res.unit + ')';
-
-        [...res.data].forEach(element => {
-          if (this.monthData.length !== 12) {
-            this.monthData.push({
-              x: element.Month,
-              y: element.Actual,
-            });
-          }
-          if (this.jobinData.length !== 12) {
-            this.jobinData.push({
-              x: element.Month,
-              y: element.Budget,
-            });
-          }
-          
-        });
-        this.cdr.detectChanges();
-      },
-      err => {},
-      () => {
-        console.log(this.monthData);
-        console.log(this.jobinData);
-        this.cdr.detectChanges();
-      },
-    );
-  }
-  render(el:ElementRef){
-    const chart = new G2.Chart({
-      container: 'mountNode',
-      forceFit: true,
-      height: window.innerHeight
-    });
-    chart.source(this.jobinData);
-    chart.scale('y', {
-      tickInterval: 20
-    });
-    chart.interval().position('x*y');
-    chart.render();
-    this.cdr.detectChanges();
-  }
-  openEdit(record: any = {}) {
-    // this.modal
-    //   .create(ProBasicListEditComponent, { record }, { size: 'md' })
-    //   .subscribe(res => {
-    //     if (record.id) {
-    //       record = Object.assign(record, { id: 'mock_id', percent: 0 }, res);
-    //     } else {
-    //       this.data.splice(0, 0, res);
-    //       this.data = [...this.data];
-    //     }
-    //     this.cdr.detectChanges();
-    //   });
-  }
+ resize(value){
+   console.log(value);
+ }
+  
+ 
 }

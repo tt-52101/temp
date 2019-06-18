@@ -64,7 +64,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   ];
   BusinessType = [
     { label: '安规', value: 'Safety' },
-    { label: '能效', value: 'Energy Efficiency' },
+    { label: '能效', value: 'EE' },
     { label: '化学', value: 'Chemical' },
   ];
   RegionType = [
@@ -183,16 +183,18 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     showSize: true,
   };
   tags: STColumnTag = {
-    Safety: { text: '安规', color: 'red' },
-    'Energy Efficiency': { text: '能效', color: 'red' },
+    Safety: { text: '安规', color: 'orange' },
+
     Chemical: { text: '化学', color: 'blue' },
+    EE: { text: '能效', color: 'green' },
     IEC: { text: '欧系', color: 'blue' },
     US: { text: '美系', color: 'purple' },
     GMAP: { text: '多国', color: 'orange' },
-    VIP: { text: 'VIP', color: 'red' },
-    Normal: { text: '普通', color: 'blue' },
+    VIP: { text: 'VIP', color: 'gold' },
+    Normal: { text: '普通', color: 'lime' },
     Agent: { text: '代理', color: 'volcano' },
     '': { text: '未知', color: 'red' },
+    ' ': { text: '未知', color: 'red' },
   };
   ptColumns: STColumn[] = [
     {
@@ -210,17 +212,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       sort: {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.ProjectNo > b.ProjectNo ? 1 : -1,
-      },
-    },
-
-    {
-      title: 'Open Date',
-      index: 'OpenDate',
-      type: 'date',
-      dateFormat: 'YYYY-MM-DD',
-      sort: {
-        compare: (a: ProjectTransfer, b: ProjectTransfer) =>
-          a.OpenDate > b.OpenDate ? 1 : -1,
       },
     },
     {
@@ -305,7 +296,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
           modal: {
             component: SettingImportEditRecordsComponent,
             paramsName: 'i',
-            size: 'lg',
+            size: 'md',
           },
           click: 'reload',
         },
@@ -341,7 +332,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       });
       console.log(this.Services);
     });
-    
+
     if (!this.cache.getNone('sales')) {
       this.http.get('person/userAll').subscribe(
         (res: SyneltsUser[]) => {
@@ -416,15 +407,22 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       .get(`home/ProjectSearchByProjectNo`, {
         projectNo: this.inputJobno.trim(),
       })
-      .subscribe(res => {
-        if (res.Message === 'OK') {
-          this.pts = res.Items;
-        } else {
+      .subscribe(
+        res => {
+          if (res.Message === 'OK') {
+            this.pts = res.Items;
+          } else {
+            this.pts = [];
+            this.msg.error(res.Message);
+          }
+          this.loading = false;
+          console.log(this.pts);
+        },
+        err => {
           this.pts = [];
-          this.msg.error(res.Message);
-        }
-        this.loading = false;
-      });
+          this.loading = false;
+        },
+      );
   }
 
   AdvancedGetData() {
@@ -487,7 +485,12 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   filterNoneSetting() {
     if (this.settingChoose === '只显示未设置项目') {
       this.pts = this.pts.filter(
-        c => c.BType === '' || c.CType === '' || c.RType === '',
+        c =>
+          c.BType === '' ||
+          c.CType === '' ||
+          c.RType === '' ||
+          c.BType === ' ' ||
+          c.BType === null,
       );
       this.settingChoose = '显示全部项目';
     } else {
