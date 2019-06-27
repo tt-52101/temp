@@ -1,7 +1,8 @@
 import { element } from 'protractor';
 import { StatusLabelComponent } from './../../../shared/components/status-label/status-label.component';
 import { ToolsModule } from './../../tools/tools.module';
-import { map, zip } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { zip } from 'rxjs';
 import {
   ElementRef,
   ChangeDetectorRef,
@@ -10,18 +11,20 @@ import {
 } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-routes-home-team',
   templateUrl: './team.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoutesHomeTeamComponent implements OnInit {
-  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef) {
+  constructor(private http: _HttpClient) {
     this.show = true;
   }
 
   //  revenue Data from json
+  theMonth = new Date().getMonth();
+  theYear = new Date().getFullYear();
   budgetTotal = 0;
   actualTotoal = 0;
   budgetMonth = 0;
@@ -57,35 +60,72 @@ export class RoutesHomeTeamComponent implements OnInit {
     }
   }
   engineerTabs: any = [];
-
+  trendsData:any[]=[];
+  trendsDataYear: any[] = [];
+  trendsDataMonth:any[]=[];
   ngOnInit() {
-    // fetch dbstatus
-    this.getDbStatus().subscribe(res => {
-      this.latestUpdateDate = res.LastUpdateTime;
-      this.totalLiveQuantity = res.LiveCount;
-      this.totalLiveAmount = res.LiveAmount;
-    });
-    this.cdr.detectChanges();
-    this.getRevenueJson().subscribe(
-      res => {
+    this.loading = true;
+
+    zip(
+      this.http.get('home/revenuestatus'),
+      this.http.get(`biz/revenue/${this.theYear}`),
+      this.http.get('biz/EngineersStatus'),
+      this.http.get('biz/jobtrends/team', {
+        from: '2019-01-01',
+        to: '2019-06-01',
+      }),
+    ).subscribe(
+      ([revenueMonth, revenueYear, engineers, trends]) => {
+        console.log(trends);
+        const temp1: any[] = [];
+        const temp2: any[] = [];
+        trends.Items.forEach(element => {
+          temp1.push({
+            x: format(Date.parse(element.TheDay), 'YYYY-MM-DD'),
+            y: element.JobOpenCount,
+          });
+        });
+        const beginDay = new Date(2019, 0, 1).getTime();
+        const endDay = new Date().getTime();
+        const dayCount = Math.abs(endDay - beginDay) / 1000 / 60 / 60 / 24;
+        for (let i = 0; i < dayCount; i += 1) {
+          let theDay = new Date(beginDay + 1000 * 60 * 60 * 24 * i);
+          let ss = temp1.find(n => n.x === format(theDay, 'YYYY-MM-DD'));
+          if (ss) {
+            temp2.push({
+              x: format(theDay, 'YYYY-MM-DD'),
+              y: ss.y,
+            });
+          } else {
+            temp2.push({
+              x: format(theDay, 'YYYY-MM-DD'),
+              y: 0,
+            });
+          }
+        }
+        this.trendsDataYear = temp2;
+        this.trendsData=this.trendsDataYear;
+        this.actualMonth = revenueMonth.Items[0].amount;
         this.monthData = [];
-        this.RevenueTitle = 'Revenue (' + res.unit + ')';
+        this.RevenueTitle = 'Revenue (' + revenueYear.unit + ')';
         const monthInt = new Date().getMonth();
-        this.budgetMonth = res.data[monthInt].Budget;
-        this.budgetTotal = [...res.data].reduce(
+        this.budgetMonth = revenueYear.data[monthInt].Budget;
+        this.budgetTotal = [...revenueYear.data].reduce(
           (acc, cur) => acc + cur.Budget,
           0,
         );
-        this.actualTotoal = [...res.data].reduce(
+        this.actualTotoal = [...revenueYear.data].reduce(
           (acc, cur) => acc + cur.Actual,
           0,
         );
         this.percentYearRevenue = Math.floor(
           (this.actualTotoal * 100) / this.budgetTotal,
         );
-        this.percentMonthRevenue = Math.floor((134 * 100) / this.budgetMonth);
+        this.percentMonthRevenue = Math.floor(
+          (this.actualMonth * 100) / revenueYear.data[this.theMonth].Budget,
+        );
         // for bar chart of revenue
-        [...res.data].forEach(element => {
+        [...revenueYear.data].forEach(element => {
           if (this.monthData.length !== 12) {
             this.monthData.push({
               x: element.Month,
@@ -96,7 +136,7 @@ export class RoutesHomeTeamComponent implements OnInit {
           if (this.jobinData.length !== 12) {
             this.jobinData.push({
               x: element.Month,
-              y: element.Budget,
+              y: element.JobIn,
             });
           }
           // for timline chart
@@ -113,9 +153,11 @@ export class RoutesHomeTeamComponent implements OnInit {
             });
           }
         });
-        this.cdr.detectChanges();
+        console.log(engineers);
+        this.engineersList = engineers.Items;
+        this.loading = false;
       },
-      err => {},
+      err => (this.loading = false),
       () => {
         const chart = new G2.Chart({
           container: 'lineChart',
@@ -155,27 +197,8 @@ export class RoutesHomeTeamComponent implements OnInit {
             lineWidth: 1,
           });
         chart.render();
-        this.cdr.detectChanges();
-
-        console.log(this.timeChartData);
       },
     );
-
-    // fetching existing engineer status
-    this.http.get('home/EngineersStatus').subscribe(res => {
-      this.engineersList = res.Items;
-      this.cdr.detectChanges();
-    });
-  }
-  render(el: ElementRef) {}
-  getDbStatus() {
-    return this.http.get('home/dbstatus');
-  }
-  getRevenueJson() {
-    return this.http.get('biz/revenue/2019');
-  }
-  getExistEngineers() {
-    return this.http.get('biz/engineers');
   }
 
   engIdx = 0;
@@ -187,7 +210,21 @@ export class RoutesHomeTeamComponent implements OnInit {
     console.log('change');
   }
   engChange(index: number) {}
-  format(val: number) {
-    return `&yen ${val.toFixed(2)}`;
+  trendType='Trend of This Month';
+  JobinChartChange(){
+    const firstDayofThisMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+    const dayCount = Math.abs(new Date().getTime() - firstDayofThisMonth.getTime()) / 1000 / 60 / 60 / 24;
+    if(this.trendType==='Trend of This Month'){
+      this.trendsDataMonth=this.trendsDataYear.slice(-dayCount);
+      this.trendsData=this.trendsDataMonth;
+      this.trendType='Trend of This Year';
+    }else{
+      this.trendsData=this.trendsDataYear;
+      this.trendType='Trend of This Month';
+    }
+    console.log(this.trendsDataMonth);
+    
+    
+
   }
 }

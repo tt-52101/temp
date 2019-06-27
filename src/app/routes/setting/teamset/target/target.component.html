@@ -26,6 +26,8 @@
         <th>Month</th>
         <th>Budget</th>
         <th>Actual</th>
+        <th>Job In Budget</th>
+        <th>Job In Actual</th>
         <th>Operate</th>
       </tr>
     </thead>
@@ -46,6 +48,18 @@
             <input nz-input formControlName="Actual" placeholder="请输入实际输入">
           </span>
         </td>
+        <td>
+            <span *ngIf="editIndex!==i">{{items.value[i].JobInTarget|_currency}}</span>
+            <span *ngIf="editIndex===i" nz-form-control>
+              <input nz-input formControlName="JobIn" placeholder="请输入实际输入">
+            </span>
+          </td>
+          <td>
+              <span *ngIf="editIndex!==i">{{items.value[i].JobInActual|_currency}}</span>
+              <span *ngIf="editIndex===i" nz-form-control>
+                <input nz-input formControlName="JobIn" placeholder="请输入实际输入">
+              </span>
+            </td>
         <td>
           <span *ngIf="editIndex!==i">
             <a (click)="edit(i)">编辑</a>

@@ -47,6 +47,9 @@ export class SettingTeamsetTargetComponent implements OnInit {
       Month: [null, [Validators.required]],
       Budget: [null, [Validators.required]],
       Actual: [null, [Validators.required]],
+      JobInTarget: [null, [Validators.required]],
+      JobInActual: [null, [Validators.required]],
+      
     });
   }
 
@@ -118,6 +121,9 @@ export class SettingTeamsetTargetComponent implements OnInit {
               Month: i.Month,
               Budget: i.Budget,
               Actual: i.Actual,
+              JobInTarget:i.JobInTarget,
+              JobInActual:i.JobInActual,
+              
             });
             j++;
           });
