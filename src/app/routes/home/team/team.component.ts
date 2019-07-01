@@ -60,6 +60,7 @@ export class RoutesHomeTeamComponent implements OnInit {
     }
   }
   engineerTabs: any = [];
+  jobDataofThisYear:any[]=[];
   trendsData:any[]=[];
   trendsDataYear: any[] = [];
   trendsDataMonth:any[]=[];
@@ -67,7 +68,6 @@ export class RoutesHomeTeamComponent implements OnInit {
     this.loading = true;
 
     zip(
-      this.http.get('home/revenuestatus'),
       this.http.get(`biz/revenue/${this.theYear}`),
       this.http.get('biz/EngineersStatus'),
       this.http.get('biz/jobtrends/team', {
@@ -75,10 +75,11 @@ export class RoutesHomeTeamComponent implements OnInit {
         to: '2019-06-01',
       }),
     ).subscribe(
-      ([revenueMonth, revenueYear, engineers, trends]) => {
+      ([revenueYear, engineers, trends]) => {
         console.log(trends);
         const temp1: any[] = [];
         const temp2: any[] = [];
+        this.jobDataofThisYear=trends.Items;
         trends.Items.forEach(element => {
           temp1.push({
             x: format(Date.parse(element.TheDay), 'YYYY-MM-DD'),
@@ -104,8 +105,14 @@ export class RoutesHomeTeamComponent implements OnInit {
           }
         }
         this.trendsDataYear = temp2;
-        this.trendsData=this.trendsDataYear;
-        this.actualMonth = revenueMonth.Items[0].amount;
+        this.trendsDataMonth=this.getFinshedStatusofThisMonth(this.trendsDataYear);
+
+        this.trendsData=this.trendsDataMonth;
+        const thisMonthCom=this.getFinshedStatusofThisMonth(this.jobDataofThisYear);
+        console.log(thisMonthCom);
+        this.actualMonth = thisMonthCom
+          .reduce((acc, cur) => acc + cur.JobCompleteAmount,
+          0,);
         this.monthData = [];
         this.RevenueTitle = 'Revenue (' + revenueYear.unit + ')';
         const monthInt = new Date().getMonth();
@@ -210,19 +217,31 @@ export class RoutesHomeTeamComponent implements OnInit {
     console.log('change');
   }
   engChange(index: number) {}
-  trendType='Trend of This Month';
-  JobinChartChange(){
+  trendType='Trend of This Year';
+  getFinshedStatusofThisMonth(data:any[]){
     const firstDayofThisMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
-    const dayCount = Math.abs(new Date().getTime() - firstDayofThisMonth.getTime()) / 1000 / 60 / 60 / 24;
+  //   console.log(new Date().getTime());
+  //   console.log(firstDayofThisMonth.getTime());
+  //   console.log(new Date().getTime()-firstDayofThisMonth.getTime());
+   const d=new Date().getTime()-firstDayofThisMonth.getTime();
+    const dayCount = Math.abs(Math.floor(d / 1000 / 60 / 60 / 24));
+    console.log(dayCount);
+    return data.slice(-dayCount);
+  }
+  JobinChartChange(){
+    
     if(this.trendType==='Trend of This Month'){
-      this.trendsDataMonth=this.trendsDataYear.slice(-dayCount);
-      this.trendsData=this.trendsDataMonth;
+      
+      this.trendsData=[];
+      this.trendsDataMonth.forEach(item=>this.trendsData.push(item));
+      console.log(this.trendsData);
       this.trendType='Trend of This Year';
     }else{
-      this.trendsData=this.trendsDataYear;
+      this.trendsData=[];
+      this.trendsDataYear.forEach(item=>this.trendsData.push(item));
+      console.log(this.trendsData);
       this.trendType='Trend of This Month';
     }
-    console.log(this.trendsDataMonth);
     
     
 
