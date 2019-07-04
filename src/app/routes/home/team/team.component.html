@@ -1,245 +1,186 @@
 <page-header>
   <div nz-row [nzGutter]="24">
-    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="8">
-      <g2-card
-        id="card1"
-        [title]="'年度完成'"
-        contentHeight="144px"
-        [action]="action1"
-        [footer]="footer1"
-      >
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card1" [title]="'年度完成Revenue'" contentHeight="144px" [action]="action1" [footer]="footer1">
         <ng-template #action1>
           <nz-tooltip [nzTitle]="'Whole Year'">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
-        <g2-water-wave
-          style="margin-top:10px;"
-          title="Finished Percent"
-          [percent]="percentYearRevenue"
-          [height]="121"
-        >
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentYearRevenue" [height]="121">
         </g2-water-wave>
         <ng-template #footer1>
           <p class="text-truncate mb0">
-            <span class="ml-sm"
-              >Actual:{{ actualTotoal | _currency }} Budget:{{
+            <span class="ml-sm">Actual:{{ actualTotoal | _currency }} Budget:{{
                 budgetTotal | _currency
-              }}</span
-            >
-          </p>
-        </ng-template>
-      </g2-card>
-    </div>
-    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="8">
-      <g2-card
-        id="card2"
-        [title]="'月度完成'"
-        contentHeight="144px"
-        [action]="action2"
-        [footer]="footer2"
-      >
-        <ng-template #action2>
-          <nz-tooltip [nzTitle]="'月完成情况'">
-            <i nz-tooltip nz-icon type="info-circle"></i>
-          </nz-tooltip>
-        </ng-template>
-        <g2-water-wave
-          style="margin-top:10px;"
-          title="Finished Percent"
-          [percent]="percentMonthRevenue"
-          [height]="121"
-        >
-        </g2-water-wave>
-        <ng-template #footer2>
-          <p class="text-truncate mb0">
-            <span class="ml-sm"
-              >Actual:{{ actualMonth | _currency }} Target:{{
-                budgetMonth | _currency
-              }}</span
-            >
+              }}</span>
           </p>
         </ng-template>
       </g2-card>
     </div>
 
-    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="8">
-      <g2-card
-        id="card3"
-        [title]="'实时数据'"
-        contentHeight="144px"
-        [action]="action3"
-        [footer]="footer3"
-      >
-        <ng-template #action3>
-          <nz-tooltip [nzTitle]="trendType">
-            <a (click)="JobinChartChange()"> <i nz-tooltip nz-icon type="info-circle"></i></a>
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card2" [title]="'年度Job In趋势'" contentHeight="144px" [action]="action2" [footer]="footer2">
+        <ng-template #action2>
+          <nz-tooltip [nzTitle]="'Job In Data of This Year'">
+            <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
         <div>
-          <g2-mini-area
-            line
-            color="#cceafe"
-            height="145"
-            [data]="trendsData"
-          ></g2-mini-area>
+          <g2-mini-bar  height="135" [data]="jobInDataYear"></g2-mini-bar>
         </div>
+        <ng-template #footer2>
+          <p class="text-truncate mb0">
+            <span class="ml-sm">Year to Day: {{jobInYTD|_currency}}</span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card3" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action3" [footer]="footer3">
+        <ng-template #action3>
+          <nz-tooltip [nzTitle]="'月完成指标情况'">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
+        </g2-water-wave>
         <ng-template #footer3>
           <p class="text-truncate mb0">
-            Year to Day Revenue
-            <span class="ml-sm">{{ totalLiveAmount | _currency }}</span>
+            <span class="ml-sm">Actual:{{ actualMonth | _currency }} Target:{{
+                budgetMonth | _currency
+              }}</span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+
+
+
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card4" [title]="'月度Job In'" contentHeight="144px" [action]="action4" [footer]="footer4">
+        <ng-template #action4>
+          <nz-tooltip [nzTitle]="'Job In of this month'">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <div>
+          <g2-mini-area line color="#cceafe" height="45" [data]="jobInDataMonth"></g2-mini-area>
+        </div>
+        <ng-template #footer4>
+          <p class="text-truncate mb0">
+            Year to Day:
+            <span class="ml-sm">{{ jobInMTD|_currency }}</span>
           </p>
         </ng-template>
       </g2-card>
     </div>
   </div>
   <!-- 细节数据tabset-revenue&job in -->
-  <div>
 
-    <nz-tabset [nzTabBarExtraContent]="extra"
-      (nzSelectedIndexChange)="selectedIndexChange($event)"
-      nzSelectedIndex="chartIndex"
-    >
-      <nz-tab nzTitle="Revenue Output">
-        <div nz-row>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
-            <div height="280" id="lineChart"></div>
-          </div>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-            <div class="rank">
-              <h4 class="ranking-title font-weight-bold">list</h4>
-              <ul class="rank-list">
-                <li *ngFor="let i of monthData; let idx = index">
-                  <span [ngClass]="{ 'font-weight-bold': idx < theMonth }">{{
+
+  <nz-tabset [nzTabBarExtraContent]="extra" (nzSelectedIndexChange)="selectedIndexChange($event)"
+    nzSelectedIndex="chartIndex">
+    <nz-tab nzTitle="Revenue Output">
+      <div nz-row>
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
+          <div height="280" id="lineChart"></div>
+        </div>
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
+          <div class="rank">
+            <h4 class="ranking-title font-weight-bold">list</h4>
+            <ul class="rank-list">
+              <li *ngFor="let i of revenueActual; let idx = index">
+                <span [ngClass]="{ 'font-weight-bold': idx < theMonth }">{{
                     i.x
-                  }}</span
-                  >:
-                  <span class="value" *ngIf="i.y">{{ i.y | _currency }}</span>
-                </li>
-              </ul>
-            </div>
+                  }}</span>:
+                <span class="value" *ngIf="i.y">{{ i.y | _currency }}</span>
+              </li>
+            </ul>
           </div>
         </div>
-      </nz-tab>
-      <nz-tab nzTitle="Job    In">
-        <div nz-row>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
-            <div class="bar" *ngIf="!show">
-              <g2-bar
-                id="revenue"
-                height="295"
-                [title]="RevenueTitle"
-                [data]="jobinData"
-              ></g2-bar>
-            </div>
-          </div>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-            <div class="rank">
-              <h4 class="ranking-title">list</h4>
-              <ul class="rank-list">
-                <li *ngFor="let i of jobinData">
-                  <span [ngClass]="{ 'font-weight-bold': idx < theMonth }">{{
-                    i.x
-                  }}</span
-                  >:
-                  <span class="value">{{ i.y | _currency }}</span>
-                </li>
-              </ul>
-            </div>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="Job    In">
+      <div nz-row>
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
+          <div class="bar" *ngIf="!show">
+            <g2-bar id="revenue" height="295" [title]="RevenueTitle" [data]="jobInActual"></g2-bar>
           </div>
         </div>
-      </nz-tab>
-      <ng-template #extra>
-         
-            
-            <div class="sales-type-radio">
-              <nz-radio-group>
-                <label nz-radio-button [nzValue]="'Monthly'">Monthly</label>
-                <label nz-radio-button [nzValue]="'Daily'">Daily</label>
-              </nz-radio-group>
-            </div>
-        </ng-template>
-    </nz-tabset>
-  </div>
-  <!-- engineer blocks -->
-  <nz-card
-  [nzTitle]="'Engineer loading'"
-    [nzLoading]="loading"
-    [nzExtra]="extratable"
-    [nzBordered]="false"
-    [nzBodyStyle]="{ padding: '0 0 32px' }"
-    class="offline-card mt-lg"
-  >
-  <ng-template #extratable>
-         
-            
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
+          <div class="rank">
+            <h4 class="ranking-title">list</h4>
+            <ul class="rank-list">
+              <li *ngFor="let i of jobInActual; let idx = index">
+                <span [ngClass]="{ 'font-weight-bold': idx < theMonth }">{{
+                    i.x
+                  }}</span>:
+                <span class="value">{{ i.y | _currency }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+    <ng-template #extra>
       <div class="sales-type-radio">
         <nz-radio-group>
-          <label nz-radio-button [nzValue]="'Monthly'">美标</label>
-          <label nz-radio-button [nzValue]="'Daily'">欧标</label>
-          <label nz-radio-button [nzValue]="'Daily'">能效</label>
-          <label nz-radio-button [nzValue]="'Daily'">化学</label>
+          <label nz-radio-button [nzValue]="'Monthly'">Monthly</label>
+          <label nz-radio-button [nzValue]="'Daily'">Daily</label>
         </nz-radio-group>
       </div>
-  </ng-template>
-    <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
-      <thead>
-        <tr>
-          <th>名字</th>
-          <th>进展中项目</th>
-          <th>进展中项目金额</th>
-          <th>已完成项目</th>
-          <th>已完成项目金额</th>
-          <th>总Working Day</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let i of engineersList; let idx = index">
-          <td>{{ i.Name }}</td>
-          <td>
-            <g2-single-bar
-              height="60"
-              plusColor="#40a9ff"
-              [value]="i.LiveCount"
-              [max]="150"
-              line
-            ></g2-single-bar>
-          </td>
-          <td>
-            <g2-single-bar
-              height="60"
-              plusColor="red"
-              [value]="i.LiveAmount"
-              [max]="1000000"
-              line
-            ></g2-single-bar>
-          </td>
-          <td>
-            <g2-single-bar
-              height="60"
-              [value]="i.FinishedCount"
-              [max]="700"
-              line
-            ></g2-single-bar>
-          </td>
-          <td>
-            <g2-single-bar
-              height="60"
-              [value]="i.FinishedAmount"
-              [max]="6000000"
-              line
-            ></g2-single-bar>
-          </td>
-          <td>
-            <g2-single-bar
-              height="60"
-              [value]="i.TotalLoadWorkingDay"
-              [max]="5000"
-              line
-            ></g2-single-bar>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </nz-card>
+    </ng-template>
+  </nz-tabset>
+
+  <!-- engineer blocks -->
+  <nz-tabset [nzTabBarExtraContent]="extra" (nzSelectedIndexChange)="selectedIndexChange($event)"
+    nzSelectedIndex="chartIndex">
+    <nz-tab nzTitle="Total">
+      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>进展中项目（个数）</th>
+            <th>进展中项目金额（RMB）</th>
+            <th>已完成项目（个数）</th>
+            <th>已完成项目金额（RMB）</th>
+            <th>总Working Day（工作日）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of engineersList; let idx = index">
+            <td>{{ i.Name }}</td>
+            <td>
+              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="700" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1000" line></g2-single-bar>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+    <nz-tab nzTitle="安规">
+      
+    </nz-tab>
+    <nz-tab nzTitle="能效">
+      
+    </nz-tab>
+    <nz-tab nzTitle="化学">
+     
+    </nz-tab>
+    
+  </nz-tabset>
+  
 </page-header>

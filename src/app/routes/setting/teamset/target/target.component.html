@@ -1,81 +1,76 @@
 <nz-card>
-   
-        <nz-row nzGutter="16">
-           
-            <nz-col nzLg="6" nzMd="12" nzSm="24">
-               
-                      <nz-select
-                      nzPlaceHolder="请选择年份"
-                      style="width: 180px"
-                      [(ngModel)]="year"
-                      (ngModelChange)="show($event)"
-                    >
-                      <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
-                    </nz-select>
-                
-              </nz-col>
-              <nz-col>
-                单位：RMB
-              </nz-col>
-            </nz-row>
 
-    <form style="margin-top: 20px" nz-form [formGroup]="form" (ngSubmit)="_submitForm()" [nzLayout]="'vertical'">
-  <nz-table formArrayName="items" [nzData]="items.value" [nzShowPagination]="false">
-    <thead>
-      <tr>
-        <th>Month</th>
-        <th>Budget</th>
-        <th>Actual</th>
-        <th>Job In Budget</th>
-        <th>Job In Actual</th>
-        <th>Operate</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
-        <td>
-          <span>{{items.value[i].Month}}</span>
-        </td>
-        <td>
-          <span *ngIf="editIndex!==i">{{items.value[i].Budget|_currency}}</span>
-          <span *ngIf="editIndex===i" nz-form-control>
-            <input nz-input formControlName="Budget" placeholder="请输入计划收入">
-          </span>
-        </td>
-        <td>
-          <span *ngIf="editIndex!==i">{{items.value[i].Actual|_currency}}</span>
-          <span *ngIf="editIndex===i" nz-form-control>
-            <input nz-input formControlName="Actual" placeholder="请输入实际输入">
-          </span>
-        </td>
-        <td>
-            <span *ngIf="editIndex!==i">{{items.value[i].JobInTarget|_currency}}</span>
+  <nz-row nzGutter="16">
+
+    <nz-col nzLg="6" nzMd="12" nzSm="24">
+
+      <nz-select nzPlaceHolder="请选择年份" style="width: 180px" [(ngModel)]="year" (ngModelChange)="show($event)">
+        <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+      </nz-select>
+
+    </nz-col>
+    <nz-col>
+      单位：RMB
+    </nz-col>
+  </nz-row>
+
+  <form style="margin-top: 20px" nz-form [formGroup]="form" (ngSubmit)="_submitForm()" [nzLayout]="'vertical'">
+    <nz-table formArrayName="items" [nzData]="items.value" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Budget</th>
+          <th>Actual</th>
+          <th>Job In Budget</th>
+          <th>Job In Actual</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+          <td>
+            <span>{{items.value[i].Month}}</span>
+          </td>
+          <td>
+            <span *ngIf="editIndex!==i">{{items.value[i].Budget|_currency}}</span>
             <span *ngIf="editIndex===i" nz-form-control>
-              <input nz-input formControlName="JobIn" placeholder="请输入实际输入">
+              <input nz-input formControlName="Budget" placeholder="请输入计划收入">
             </span>
           </td>
           <td>
-              <span *ngIf="editIndex!==i">{{items.value[i].JobInActual|_currency}}</span>
-              <span *ngIf="editIndex===i" nz-form-control>
-                <input nz-input formControlName="JobIn" placeholder="请输入实际输入">
-              </span>
-            </td>
-        <td>
-          <span *ngIf="editIndex!==i">
-            <a (click)="edit(i)">编辑</a>
-          </span>
-          <span *ngIf="editIndex===i">
-            <a (click)="save(i)">保存</a>
-            <nz-divider nzType="vertical"></nz-divider>
-            <nz-popconfirm (nzOnConfirm)="cancel(i)" [nzTitle]="'是否要取消操作？'">
-              <a nz-popconfirm>取消</a>
-            </nz-popconfirm>
-          </span>
+            <span *ngIf="editIndex!==i">{{items.value[i].Actual|_currency}}</span>
+            <span *ngIf="editIndex===i" nz-form-control>
+              <input nz-input formControlName="Actual" placeholder="请输入实际输入">
+            </span>
+          </td>
+          <td>
+            <span *ngIf="editIndex!==i">{{items.value[i].JobInTarget|_currency}}</span>
+            <span *ngIf="editIndex===i" nz-form-control>
+              <input nz-input formControlName="JobInTarget" placeholder="请输入实际输入">
+            </span>
+          </td>
+          <td>
+            <span *ngIf="editIndex!==i">{{items.value[i].JobInActual|_currency}}</span>
+            <span *ngIf="editIndex===i" nz-form-control>
+              <input nz-input formControlName="JobInActual" placeholder="请输入实际输入">
+            </span>
+          </td>
+          <td>
+            <span *ngIf="editIndex!==i">
+              <a (click)="edit(i)">编辑</a>
+            </span>
+            <span *ngIf="editIndex===i">
+              <a (click)="save(i)">保存</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <nz-popconfirm (nzOnConfirm)="cancel(i)" [nzTitle]="'是否要取消操作？'">
+                <a nz-popconfirm>取消</a>
+              </nz-popconfirm>
+            </span>
 
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
-  <button nz-button nzBlock="true" type="submit" nzType="primary">提交</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <button nz-button nzBlock="true" type="submit" nzType="primary">提交</button>
   </form>
 </nz-card>
