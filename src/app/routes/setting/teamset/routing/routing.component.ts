@@ -184,7 +184,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   };
   tags: STColumnTag = {
     Safety: { text: '安规', color: 'orange' },
-
     Chemical: { text: '化学', color: 'blue' },
     EE: { text: '能效', color: 'green' },
     IEC: { text: '欧系', color: 'blue' },
@@ -193,6 +192,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     VIP: { text: 'VIP', color: 'gold' },
     Normal: { text: '普通', color: 'lime' },
     Agent: { text: '代理', color: 'volcano' },
+    Unknown: { text: '未知', color: 'red' },
     '': { text: '未知', color: 'red' },
     ' ': { text: '未知', color: 'red' },
   };
@@ -411,6 +411,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         res => {
           if (res.Message === 'OK') {
             this.pts = res.Items;
+            console.log(res.Items);
           } else {
             this.pts = [];
             this.msg.error(res.Message);

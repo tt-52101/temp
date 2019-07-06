@@ -1,7 +1,9 @@
+import { SyneltsService } from './../../../../../services/biz/SyneltsService';
 import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { SFSchema } from '@delon/form';
+import { Documents } from 'app/services/biz/Document';
 
 @Component({
   selector: 'app-setting-set-edit-serviceedit',
@@ -43,6 +45,27 @@ export class SettingSetEditServiceeditComponent implements OnInit {
         type: 'number',
         title: '预设周期（工作日）',
       },
+      RequiredDocumentsString: {
+        type: 'string',
+        title: '默认需求文件',
+        enum: ['Application_form',
+          'Client_techinfo',
+          'CDR_Report',
+          'TRF_report',
+          'CC_report',
+          'Construction_review_sheet',
+          'Test_record',
+          'Declarations',
+          'Client_confirmation',
+          'Pahs',
+          'Label',
+          'Instrunction_manual'],
+        ui: {
+          widget: 'checkbox',
+          span: 8,
+        },
+        
+      },
     },
     required: ['Name'],
   };
@@ -55,6 +78,7 @@ export class SettingSetEditServiceeditComponent implements OnInit {
   ngOnInit() {}
   save(value: any) {
     console.log(value);
+    this.handleEnum(value);
     this.http
       .put('service/updatesingle', value)
       .subscribe(res => {}, err => {}, () => {});
@@ -64,5 +88,17 @@ export class SettingSetEditServiceeditComponent implements OnInit {
 
   close() {
     this.modal.destroy();
+  }
+  handleEnum(service:SyneltsService){
+    let st='';
+    if(service.RequiredDocumentsString.length>1){
+      service.RequiredDocumentsString.forEach(item=>{
+        st+=Documents[item]+'-';
+      })
+    }
+    if(st.endsWith('-')){
+      st=st.substring(0,st.length-1);
+    }
+    service.RequiredDocuments=st;
   }
 }

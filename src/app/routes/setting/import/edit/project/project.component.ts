@@ -85,6 +85,34 @@ export class SettingImportEditProjectComponent implements OnInit {
         },
         default: '',
       },
+      ManualProgress: {
+        type: 'string',
+        title: '当前进度',
+        ui: {
+          widget: 'radio',
+          asyncData: () =>
+            of([
+              { label: 'Testing', value: 'Testing' },
+              { label: 'Reporting', value: 'Reporting' },
+              {
+                label: 'Waiting for Documents',
+                value: 'Waiting for Documents',
+              },
+              { label: 'Apply Certificate', value: 'Apply Certificate' },
+              { label: 'Waiting for FI', value: 'Waiting for FI' },
+              {
+                label: 'Waiting for Confirmation',
+                value: 'Waiting for Client Confirmation',
+              },
+              {
+                label: 'Waiting for Modification',
+                value: 'Waiting for Client Modification',
+              },
+              { label: 'Apply Termination', value: 'Apply Termination' },
+            ]).pipe(delay(100)),
+          change: console.log,
+        },
+      },
       TobeFinishFlag: {
         type: 'boolean',
         title: '是否本月完成',

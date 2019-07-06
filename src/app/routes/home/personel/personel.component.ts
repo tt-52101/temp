@@ -10,11 +10,12 @@ import { STColumn } from '@delon/abc';
   templateUrl: './personel.component.html',
 })
 export class RoutesHomePersonelComponent implements OnInit {
+  synName='';
   loading = false;
   pageSize = 20;
   pageIndex = 1;
   params: any = { synetlsName: 'Ryan Rui', isInclude: 'true' };
-  ptsShow: ProjectTransfer[];
+  ptsShow: ProjectTransfer[]=[];
   searchValue = '';
   sortName: string | null = null;
   sortValue: string | null = null;
@@ -33,7 +34,12 @@ export class RoutesHomePersonelComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getData('joh');
+    const user=localStorage.getItem('user');
+    const userO=JSON.parse(user);
+    console.log(userO);
+    this.synName=userO.SyneltsName;
+    console.log(this.synName);
+    
   }
 
   openEdit() {}
@@ -71,13 +77,12 @@ export class RoutesHomePersonelComponent implements OnInit {
         {
           this.http
             .get('home/ProjectsByEngName', {
-              synetlsName: 'Ryan Rui',
+              synetlsName: this.synName,
               isInclude: 'true',
               isFinish: 'false',
             })
             .subscribe((res: any) => {
-              this.ptsShow = [...res];
-              console.log(this.ptsShow.length);
+              this.ptsShow = [...res.Items];
               this.loading = false;
               this.cdr.detectChanges();
             });
@@ -88,7 +93,7 @@ export class RoutesHomePersonelComponent implements OnInit {
           {
             this.http
               .get('home/ProjectsByEngName', {
-                synetlsName: 'Ryan Rui',
+                synetlsName: this.synName,
                 isInclude: 'true',
                 isFinish: 'true',
               })
@@ -96,7 +101,7 @@ export class RoutesHomePersonelComponent implements OnInit {
                 if (res === null) {
                   this.ptsShow = [];
                 } else {
-                  this.ptsShow = [...res];
+                  this.ptsShow = [...res.Items];
                 }
 
                 console.log(res);

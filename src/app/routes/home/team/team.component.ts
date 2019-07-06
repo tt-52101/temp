@@ -1,4 +1,3 @@
-
 import { zip } from 'rxjs';
 
 import { Component, OnInit, Inject } from '@angular/core';
@@ -35,8 +34,7 @@ export class RoutesHomeTeamComponent implements OnInit {
   theYear = new Date().getFullYear();
 
   revenueActual: any = [];
-  jobInActual:any=[];
-  jobinData: any = [];
+  jobInActual: any = [];
 
   timeChartData: any = [];
 
@@ -71,13 +69,13 @@ export class RoutesHomeTeamComponent implements OnInit {
 
     zip(
       this.http.get(`biz/revenue/${this.theYear}`),
-      this.http.get('biz/EngineersStatus/safety'),
+      this.http.get('biz/EngineersStatus/total'),
       this.http.get('biz/jobtrends/team', {
         from: new Date(this.theYear, this.theMonth, 1).toLocaleDateString(),
         to: new Date().toLocaleDateString(),
       }),
     ).subscribe(
-      ([rjJsonData, engineers, jonIn]) => {
+      ([rjJsonData,engineers, jonIn]) => {
         // block 1 & 3
         this.revenueActual = [];
         this.RevenueTitle = 'Revenue (' + rjJsonData.unit + ')';
@@ -102,15 +100,13 @@ export class RoutesHomeTeamComponent implements OnInit {
             y: item.JobInActual,
           });
           this.revenueActual.push({
-            x:item.Month,
-            y:item.Actual
+            x: item.Month,
+            y: item.Actual,
           });
-          this.jobInActual.push(
-            {
-              x:item.Month,
-              y:item.JobInActual
-            }
-          )
+          this.jobInActual.push({
+            x: item.Month,
+            y: item.JobInActual,
+          });
         });
         this.jobInDataYear = temp3;
         const temp0 = this.jobInDataYear.reduce((acc, cur) => acc + cur.y, 0);
@@ -157,20 +153,22 @@ export class RoutesHomeTeamComponent implements OnInit {
           (acc, cur) => acc + cur.y,
           0,
         );
-        this.jobInMTD=tempMTD;
+        this.jobInMTD = tempMTD;
         this.jobInYTD = this.jobInYTD + this.jobInMTD;
         console.log(this.jobInMTD);
-
 
         // for chart of revenue
         [...rjJsonData.data].forEach(element => {
           // for timline chart
           if (this.timeChartData.length !== 24) {
-            this.timeChartData.push({
-              month: element.Month,
-              valueType: 'actual',
-              value: element.Actual,
-            });
+            if(element.Actual!==0){
+              this.timeChartData.push({
+                month: element.Month,
+                valueType: 'actual',
+                value: element.Actual,
+              });
+            }
+            
             this.timeChartData.push({
               month: element.Month,
               valueType: 'budget',
@@ -178,7 +176,7 @@ export class RoutesHomeTeamComponent implements OnInit {
             });
           }
         });
-        
+
         this.engineersList = engineers.Items;
         this.loading = false;
       },
@@ -189,7 +187,7 @@ export class RoutesHomeTeamComponent implements OnInit {
     );
   }
 
-  renderChart(chartData:any[]){
+  renderChart(chartData: any[]) {
     const chart = new G2.Chart({
       container: 'lineChart',
       forceFit: true,
@@ -231,13 +229,33 @@ export class RoutesHomeTeamComponent implements OnInit {
   }
   engIdx = 0;
   selectChange(idx: number) {
-    // if (this.totalTabs[idx].show !== true) {
-    //   this.totalTabs[idx].show = true;
-    //   this.cdr.detectChanges();
-    // }
-    console.log('change');
+    this.loading=true;
+    let tabPerson = '';
+    switch (idx) {
+      case 1:
+        tabPerson = 'safety';
+        break;
+      case 2:
+        tabPerson = 'ee';
+        break;
+      case 3:
+        tabPerson = 'chemical';
+        break;
+      default:
+        tabPerson = 'total';
+        break;
+    }
+    this.http.get(`biz/EngineersStatus/${tabPerson}`).subscribe(
+      res=>{
+        this.engineersList=res.Items;
+        this.engineersShowList=res.Items;
+        this.loading=false;
+      },
+      err=>this.loading=false,
+      ()=>{}
+    )
   }
-  
+  engineersShowList:any[]=[];
   getFinshedStatusofThisMonth(data: any[]) {
     const firstDayofThisMonth = new Date(
       new Date().getFullYear(),
@@ -251,6 +269,22 @@ export class RoutesHomeTeamComponent implements OnInit {
     const dayCount = Math.abs(Math.floor(d / 1000 / 60 / 60 / 24));
     console.log(dayCount);
     return data.slice(-dayCount);
+  }
+  sortChange(sort:{key:string,value:string}){
+    
+    if (sort.key &&sort.value) {
+      this.engineersShowList = this.engineersList.sort((a, b) =>
+        sort.value === 'ascend'
+          ? a[sort.key!] > b[sort.key!]
+            ? 1
+            : -1
+          : b[sort.key!] > a[sort.key!]
+          ? 1
+          : -1
+      );
+    } else {
+      this.engineersShowList = this.engineersList;
+    }
   }
   
 }

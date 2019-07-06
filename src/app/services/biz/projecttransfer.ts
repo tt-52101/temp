@@ -16,6 +16,7 @@ export class ProjectTransfer implements BaseEntity {
   ClientName: string;
   CType:string;
   Records:ActionRecord[];
+  ManualProgress:string;
   Reports:any;
   ServiceNames: string[];
   BType:string;
@@ -25,6 +26,8 @@ export class ProjectTransfer implements BaseEntity {
   Product: string;
   Models: string;
   ActualProjectWorkingDays:number;
+  Documents:string;
+  DefaultDocuments:string;
   QuotedFee: number;
   CurrencyInUSD: boolean;
   InvoicedFee?: number;

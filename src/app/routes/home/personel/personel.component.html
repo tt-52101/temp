@@ -17,9 +17,9 @@
           <span>历史完成</span>
         </label>
       </nz-radio-group>
-      <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
+      <!-- <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
         <input type="text" nz-input placeholder="请输入">
-      </nz-input-group>
+      </nz-input-group> -->
     </div>
   </div>
 
@@ -55,7 +55,7 @@
         <td>{{ data.OpenDate|date }}</td>
         <td>{{ data.ClientName }}</td>
         <td>{{ data.ServiceNames }}</td>
-        <td>{{ data.QuotedFee|currency }}</td>
+        <td>{{ data.QuotedFee|_currency }}</td>
       </tr>
     </tbody>
   </nz-table>

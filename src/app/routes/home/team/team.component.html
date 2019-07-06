@@ -3,17 +3,19 @@
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card1" [title]="'年度完成Revenue'" contentHeight="144px" [action]="action1" [footer]="footer1">
         <ng-template #action1>
-          <nz-tooltip [nzTitle]="'Whole Year'">
+          <nz-tooltip [nzTitle]="titleTemplate1">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
+        </ng-template>
+        <ng-template #titleTemplate1>
+          <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
+            year:{{budgetTotal|_currency}}</span>
         </ng-template>
         <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentYearRevenue" [height]="121">
         </g2-water-wave>
         <ng-template #footer1>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Actual:{{ actualTotoal | _currency }} Budget:{{
-                budgetTotal | _currency
-              }}</span>
+            <span class="ml-sm">Till Last Month:{{ actualTotoal | _currency }}</span>
           </p>
         </ng-template>
       </g2-card>
@@ -22,12 +24,13 @@
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card2" [title]="'年度Job In趋势'" contentHeight="144px" [action]="action2" [footer]="footer2">
         <ng-template #action2>
-          <nz-tooltip [nzTitle]="'Job In Data of This Year'">
+          <nz-tooltip [nzTitle]="'Job in of every month'">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
+
         <div>
-          <g2-mini-bar  height="135" [data]="jobInDataYear"></g2-mini-bar>
+          <g2-mini-bar height="135" color="#975FE4" [data]="jobInDataYear"></g2-mini-bar>
         </div>
         <ng-template #footer2>
           <p class="text-truncate mb0">
@@ -40,17 +43,19 @@
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card3" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action3" [footer]="footer3">
         <ng-template #action3>
-          <nz-tooltip [nzTitle]="'月完成指标情况'">
+          <nz-tooltip [nzTitle]="titleTemplate2">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
+        </ng-template>
+        <ng-template #titleTemplate2>
+          <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
+            month:{{budgetMonth|_currency}}</span>
         </ng-template>
         <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
         </g2-water-wave>
         <ng-template #footer3>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Actual:{{ actualMonth | _currency }} Target:{{
-                budgetMonth | _currency
-              }}</span>
+            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
           </p>
         </ng-template>
       </g2-card>
@@ -66,7 +71,7 @@
           </nz-tooltip>
         </ng-template>
         <div>
-          <g2-mini-area line color="#cceafe" height="45" [data]="jobInDataMonth"></g2-mini-area>
+          <g2-mini-area line color="#975FE4" height="45" [data]="jobInDataMonth"></g2-mini-area>
         </div>
         <ng-template #footer4>
           <p class="text-truncate mb0">
@@ -80,8 +85,7 @@
   <!-- 细节数据tabset-revenue&job in -->
 
 
-  <nz-tabset [nzTabBarExtraContent]="extra" (nzSelectedIndexChange)="selectedIndexChange($event)"
-    nzSelectedIndex="chartIndex">
+  <nz-tabset (nzSelectedIndexChange)="selectedIndexChange($event)" nzSelectedIndex="chartIndex">
     <nz-tab nzTitle="Revenue Output">
       <div nz-row>
         <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
@@ -135,18 +139,51 @@
   </nz-tabset>
 
   <!-- engineer blocks -->
-  <nz-tabset [nzTabBarExtraContent]="extra" (nzSelectedIndexChange)="selectedIndexChange($event)"
-    nzSelectedIndex="chartIndex">
+  <nz-tabset (nzSelectedIndexChange)="selectChange($event)" nzSelectedIndex="chartIndex">
     <nz-tab nzTitle="Total">
       <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
-        <thead>
+        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
           <tr>
-            <th>姓名</th>
-            <th>进展中项目（个数）</th>
-            <th>进展中项目金额（RMB）</th>
-            <th>已完成项目（个数）</th>
-            <th>已完成项目金额（RMB）</th>
-            <th>总Working Day（工作日）</th>
+            <th nzShowSort nzSortKey="Name">姓名</th>
+            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
+            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
+            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of engineersList; let idx = index">
+            <td>{{ i.Name }}</td>
+            <td>
+              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="1800" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1500" line></g2-single-bar>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+    <nz-tab nzTitle="安规">
+      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
+        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
+          <tr>
+            <th nzShowSort nzSortKey="Name">姓名</th>
+            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
+            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
+            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
           </tr>
         </thead>
         <tbody>
@@ -171,16 +208,75 @@
         </tbody>
       </nz-table>
     </nz-tab>
-    <nz-tab nzTitle="安规">
-      
-    </nz-tab>
     <nz-tab nzTitle="能效">
-      
+      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
+        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
+          <tr>
+            <th nzShowSort nzSortKey="Name">姓名</th>
+            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
+            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
+            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of engineersList; let idx = index">
+            <td>{{ i.Name }}</td>
+            <td>
+              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="700" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1000" line></g2-single-bar>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
     </nz-tab>
     <nz-tab nzTitle="化学">
-     
+      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
+        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
+          <tr>
+            <th nzShowSort nzSortKey="Name">姓名</th>
+            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
+            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
+            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
+            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of engineersList; let idx = index">
+            <td>{{ i.Name }}</td>
+            <td>
+              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="700" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
+            </td>
+            <td>
+              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1000" line></g2-single-bar>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
     </nz-tab>
-    
+
   </nz-tabset>
-  
+
 </page-header>
