@@ -18,6 +18,7 @@ export class SettingTeamsetTargetComponent implements OnInit {
   editObj = {};
 
   form: FormGroup;
+  
   get items() {
     return this.form.controls.items as FormArray;
   }
@@ -143,5 +144,14 @@ export class SettingTeamsetTargetComponent implements OnInit {
       err => this.msg.error(err),
       () => {},
     );
+  }
+  notSave=false;
+  showConfirm() {
+    this.confirmModal = this.modal.confirm({
+      nzTitle: 'Do you Want to give up these modification?',
+      nzContent: 'Click OK, these modification will be abandon',
+      nzOnOk: () =>this.notSave=true,
+      nzOnCancel:()=>this.notSave=false,
+    });
   }
 }

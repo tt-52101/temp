@@ -1,17 +1,17 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit,OnDestroy, ViewChild } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { SFComponent, SFSchema } from '@delon/form';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
 import { SyneltsRole } from 'app/services/biz/SyneltsRole';
-import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
+import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-setting-teamset-edit-staff',
   templateUrl: './staff.component.html',
 })
-export class SettingTeamsetEditStaffComponent implements OnInit {
-  constructor(private http: _HttpClient,private modal:NzModalRef, public msg:NzMessageService) {}
+export class SettingTeamsetEditStaffComponent implements OnInit,OnDestroy {
+  constructor(private http: _HttpClient,private modal:NzModalRef,private modalService:NzModalService, public msg:NzMessageService) {}
   loading = false;
   i: any = {};
   @ViewChild('sf') sf: SFComponent;
@@ -66,5 +66,19 @@ export class SettingTeamsetEditStaffComponent implements OnInit {
     } else {
       return SyneltsRole[res.SyneltsRoles[0]];
     }
+  }
+  notSave=false;
+  showConfirm() {
+    this.modalService.confirm({
+      nzTitle: 'Confirm',
+      nzContent: 'Click OK will not save your changes',
+      nzOkText: 'OK',
+      nzCancelText: 'Cancel',
+      nzOnCancel:()=>this.notSave=true,
+      nzOnOk:()=>this.notSave=false,
+    });
+  }
+  ngOnDestroy(){
+    
   }
 }

@@ -1,4 +1,87 @@
 <page-header>
+  <div nz-row [nzGutter]="24">
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card1" [title]="'年度完成Revenue'" contentHeight="144px" [action]="action1" [footer]="footer1">
+        <ng-template #action1>
+          <nz-tooltip [nzTitle]="titleTemplate1">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <ng-template #titleTemplate1>
+          <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
+            year:{{budgetTotal|_currency}}</span>
+        </ng-template>
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentYearRevenue" [height]="121">
+        </g2-water-wave>
+        <ng-template #footer1>
+          <p class="text-truncate mb0">
+            <span class="ml-sm">Till Last Month:{{ actualTotoal | _currency }}</span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card3" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action3" [footer]="footer3">
+        <ng-template #action3>
+          <nz-tooltip [nzTitle]="titleTemplate2">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <ng-template #titleTemplate2>
+          <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
+            month:{{budgetMonth|_currency}}</span>
+        </ng-template>
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
+        </g2-water-wave>
+        <ng-template #footer3>
+          <p class="text-truncate mb0">
+            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card3" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action3" [footer]="footer3">
+        <ng-template #action3>
+          <nz-tooltip [nzTitle]="titleTemplate3">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <ng-template #titleTemplate3>
+          <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
+            month:{{budgetMonth|_currency}}</span>
+        </ng-template>
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
+        </g2-water-wave>
+        <ng-template #footer3>
+          <p class="text-truncate mb0">
+            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card4" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action4" [footer]="footer4">
+        <ng-template #action4>
+          <nz-tooltip [nzTitle]="titleTemplate4">
+            <i nz-tooltip nz-icon type="info-circle"></i>
+          </nz-tooltip>
+        </ng-template>
+        <ng-template #titleTemplate4>
+          <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
+            month:{{budgetMonth|_currency}}</span>
+        </ng-template>
+        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
+        </g2-water-wave>
+        <ng-template #footer4>
+          <p class="text-truncate mb0">
+            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
+          </p>
+        </ng-template>
+      </g2-card>
+    </div>
+  </div>
+
   <div class="d-flex align-items-center mb-lg">
     <h3 class="flex-1 text-lg">项目列表</h3>
     <div>
@@ -17,14 +100,11 @@
           <span>历史完成</span>
         </label>
       </nz-radio-group>
-      <!-- <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
+      <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
         <input type="text" nz-input placeholder="请输入">
-      </nz-input-group> -->
+      </nz-input-group>
     </div>
   </div>
-
-
-
   <nz-table #nzTable [nzData]="ptsShow" [(nzPageSize)]="pageSize" [(nzPageIndex)]="pageIndex"
     [nzShowQuickJumper]="'true'">
     <thead (nzSortChange)="sort($event)" nzSingleSort>

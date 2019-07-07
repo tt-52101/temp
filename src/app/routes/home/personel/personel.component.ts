@@ -10,12 +10,16 @@ import { STColumn } from '@delon/abc';
   templateUrl: './personel.component.html',
 })
 export class RoutesHomePersonelComponent implements OnInit {
-  synName='';
+  theYear=new Date().getFullYear();
+  theMonth=new Date().getMonth();
+  // block1
+  RevenueActualYTM = 0;
+
+  synName = '';
   loading = false;
   pageSize = 20;
   pageIndex = 1;
-  params: any = { synetlsName: 'Ryan Rui', isInclude: 'true' };
-  ptsShow: ProjectTransfer[]=[];
+  ptsShow: ProjectTransfer[] = [];
   searchValue = '';
   sortName: string | null = null;
   sortValue: string | null = null;
@@ -34,14 +38,20 @@ export class RoutesHomePersonelComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const user=localStorage.getItem('user');
-    const userO=JSON.parse(user);
+    const user = localStorage.getItem('user');
+    const userO = JSON.parse(user);
     console.log(userO);
-    this.synName=userO.SyneltsName;
+    this.synName = userO.SyneltsName;
     console.log(this.synName);
-    
   }
-
+   // block 1 年度完成revenue
+   percentYearRevenue = 0;
+   budgetTotal = 0;
+   actualTotoal = 0;
+  // block 2 月度完成revenue
+  percentMonthRevenue = 0;
+  budgetMonth = 0;
+  actualMonth = 0;
   openEdit() {}
   search(): void {
     const filterFunc = (item: ProjectTransfer) => {
@@ -92,10 +102,12 @@ export class RoutesHomePersonelComponent implements OnInit {
         {
           {
             this.http
-              .get('home/ProjectsByEngName', {
-                synetlsName: this.synName,
-                isInclude: 'true',
-                isFinish: 'true',
+              .get('home/ProjectsByFilter', {
+                EngineerName: this.synName,
+                IsIncludeAll: 'true',
+                isFinished: 'true',
+                CompleteDateFrom:new Date(this.theYear,this.theMonth,1).toLocaleDateString(),
+                CompleteDateTo:new Date().toLocaleDateString(),
               })
               .subscribe((res: any) => {
                 if (res === null) {
@@ -113,12 +125,52 @@ export class RoutesHomePersonelComponent implements OnInit {
         break;
       case 'jfy':
         {
-          console.log('jfy');
+          {
+            this.http
+              .get('home/ProjectsByFilter', {
+                EngineerName: this.synName,
+                IsIncludeAll: 'true',
+                isFinished: 'true',
+                CompleteDateFrom:new Date(this.theYear,0,1).toLocaleDateString(),
+                CompleteDateTo:new Date().toLocaleDateString(),
+              })
+              .subscribe((res: any) => {
+                if (res === null) {
+                  this.ptsShow = [];
+                } else {
+                  this.ptsShow = [...res.Items];
+                }
+
+                console.log(res);
+                this.loading = false;
+                this.cdr.detectChanges();
+              });
+          }
         }
         break;
       case 'jfe':
         {
-          console.log('jfe');
+          {
+            this.http
+              .get('home/ProjectsByFilter', {
+                EngineerName: this.synName,
+                IsIncludeAll: 'true',
+                isFinished: 'true',
+                CompleteDateFrom:new Date(2015,0,1).toLocaleDateString(),
+                CompleteDateTo:new Date().toLocaleDateString(),
+              })
+              .subscribe((res: any) => {
+                if (res === null) {
+                  this.ptsShow = [];
+                } else {
+                  this.ptsShow = [...res.Items];
+                }
+
+                console.log(res);
+                this.loading = false;
+                this.cdr.detectChanges();
+              });
+          }
         }
         break;
     }

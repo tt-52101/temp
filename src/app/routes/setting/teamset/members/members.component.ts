@@ -77,8 +77,12 @@ export class SettingTeamsetMembersComponent implements OnInit {
             component: SettingTeamsetEditStaffComponent,
             paramsName: 'i',
             size: 'md',
+            // modalOptions:{
+            //   nzOnCancel:(data)=>data.showConfirm(),
+            // }
           },
           click: 'reload',
+          
         },
         {
           icon: 'delete',
