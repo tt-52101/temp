@@ -1,7 +1,13 @@
 <page-header>
   <div nz-row [nzGutter]="24">
-    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
-      <g2-card id="card1" [title]="'年度完成Revenue'" contentHeight="144px" [action]="action1" [footer]="footer1">
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8">
+      <g2-card id="card1" [bordered]="true" [title]="'年度完成情况'" contentHeight="55px"
+        [total]="thisYearJobAmount||'Nothing'" [action]="action1" [footer]="footer1">
+        <trend flag="up" style="display:block; margin-top:2px;">个数占比：<span class="pl-sm">{{percentYearofNos}}</span>
+        </trend>
+        <trend flag="up" style="display:block; margin-top:2px;">金额占比：<span class="pl-sm">{{percentYearofAmount}}</span>
+        </trend>
+
         <ng-template #action1>
           <nz-tooltip [nzTitle]="titleTemplate1">
             <i nz-tooltip nz-icon type="info-circle"></i>
@@ -9,39 +15,42 @@
         </ng-template>
         <ng-template #titleTemplate1>
           <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
-            year:{{budgetTotal|_currency}}</span>
+            year:</span>
         </ng-template>
-        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentYearRevenue" [height]="121">
-        </g2-water-wave>
         <ng-template #footer1>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Till Last Month:{{ actualTotoal | _currency }}</span>
+            <span class="ml-sm">Till Last Month:{{ thisYearJobAmount | _currency }}</span>
           </p>
         </ng-template>
       </g2-card>
     </div>
-    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
-      <g2-card id="card3" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action3" [footer]="footer3">
-        <ng-template #action3>
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8">
+      <g2-card id="card2" [bordered]="true" [title]="'月度完成情况'" [total]="thisMonthJobNos||'Nothing'" contentHeight="55px"
+        [action]="action2" [footer]="footer2">
+        <trend flag="up" style="display:block; margin-top:2px;">个数占比：<span class="pl-sm">{{percentMonthofNos}}</span>
+        </trend>
+        <trend flag="up" style="display:block; margin-top:2px;">金额占比：<span class="pl-sm">{{percentMonthofAmount}}</span>
+        </trend>
+        <ng-template #action2>
           <nz-tooltip [nzTitle]="titleTemplate2">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
         <ng-template #titleTemplate2>
           <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
-            month:{{budgetMonth|_currency}}</span>
+            month</span>
         </ng-template>
-        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
-        </g2-water-wave>
-        <ng-template #footer3>
+
+        <ng-template #footer2>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
+            <span class="ml-sm">Till Yesterday:{{ thisMonthJobAmount | _currency }} </span>
           </p>
         </ng-template>
       </g2-card>
     </div>
-    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
-      <g2-card id="card3" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action3" [footer]="footer3">
+    <!-- <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
+      <g2-card id="card3" [bordered]="true" [title]="'进出比情况'" contentHeight="55px" [action]="action3"
+        [footer]="footer3">
         <ng-template #action3>
           <nz-tooltip [nzTitle]="titleTemplate3">
             <i nz-tooltip nz-icon type="info-circle"></i>
@@ -49,19 +58,23 @@
         </ng-template>
         <ng-template #titleTemplate3>
           <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
-            month:{{budgetMonth|_currency}}</span>
+            month:</span>
         </ng-template>
-        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
-        </g2-water-wave>
+        <div height="120" id="chartDiv"></div>
         <ng-template #footer3>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
+            <span class="ml-sm">IO ratio:45% </span>
           </p>
         </ng-template>
       </g2-card>
-    </div>
-    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
-      <g2-card id="card4" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action4" [footer]="footer4">
+    </div> -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8">
+      <g2-card id="card4" [bordered]="true" [title]="'历史完成情况'" [total]="everJobNos||'Nothing'" contentHeight="55px"
+        [action]="action4" [footer]="footer4">
+        <trend flag="up" style="display:block; margin-top:2px;">个数占比：<span class="pl-sm">{{percentEverofNos}}</span>
+        </trend>
+        <trend flag="up" style="display:block; margin-top:2px;">金额占比：<span class="pl-sm">{{percentEverofAmount}}</span>
+        </trend>
         <ng-template #action4>
           <nz-tooltip [nzTitle]="titleTemplate4">
             <i nz-tooltip nz-icon type="info-circle"></i>
@@ -69,19 +82,20 @@
         </ng-template>
         <ng-template #titleTemplate4>
           <i nz-icon nzType="file" style="margin-right: 8px"></i> <span>Target of this
-            month:{{budgetMonth|_currency}}</span>
+            month:</span>
         </ng-template>
-        <g2-water-wave style="margin-top:10px;" title="Finished Percent" [percent]="percentMonthRevenue" [height]="121">
-        </g2-water-wave>
+
         <ng-template #footer4>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
+            <span class="ml-sm">History:{{ everJobAmount | _currency }} </span>
           </p>
         </ng-template>
       </g2-card>
     </div>
   </div>
-
+  <nz-card>
+      <g2-timeline [data]="timeJobData" [mask]="'YYYY-MM-DD HH:mm'" [titleMap]="{y1:'开案',y2:'结案'}" [height]="200"></g2-timeline>
+  </nz-card>
   <div class="d-flex align-items-center mb-lg">
     <h3 class="flex-1 text-lg">项目列表</h3>
     <div>
