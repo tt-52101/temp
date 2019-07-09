@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { SFSchema } from '@delon/form';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
@@ -5,12 +6,14 @@ import { _HttpClient } from '@delon/theme';
 import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { ProjectTransfer } from 'app/services/biz/projecttransfer';
 
 @Component({
-  selector: 'app-setting-import-edit-project',
+  selector: 'app-home-personel-project',
   templateUrl: './project.component.html',
 })
-export class SettingImportEditProjectComponent implements OnInit {
+export class HomePersonelProjectComponent implements OnInit {
+
   form: FormGroup;
   submitting = false;
   i: any = {};
@@ -132,10 +135,20 @@ export class SettingImportEditProjectComponent implements OnInit {
     private http: _HttpClient,
     private fb: FormBuilder,
     private msg: NzMessageService,
-    private modal: NzModalRef,
+    private routeInfo: ActivatedRoute
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const proNo=this.routeInfo.snapshot.params['projectNo'];
+    console.log(proNo);
+    this.http.get(`home/projectbyprojectno/${proNo}`).subscribe(
+      (res)=>{
+        
+        this.i=res.Items[0];
+        console.log(res);
+      }
+    )
+  }
   save(value: any) {
     console.log(value);
     this.http.put('home/project', value).subscribe(
@@ -148,12 +161,11 @@ export class SettingImportEditProjectComponent implements OnInit {
       },
       err => {},
       () => {
-        this.modal.close(value);
+        
       },
     );
   }
 
-  close() {
-    this.modal.destroy();
-  }
+ 
+
 }

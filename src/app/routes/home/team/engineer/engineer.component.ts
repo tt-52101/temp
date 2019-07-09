@@ -1,16 +1,15 @@
-import { ProjectTransfer } from './../../../services/biz/projecttransfer';
-import { LayoutProHeaderWidgetComponent } from './../../../layout/pro/components/widget/widget.component';
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
 import { STColumn } from '@delon/abc';
 import { format } from 'date-fns';
+import { ProjectTransfer } from 'app/services/biz/projecttransfer';
 
 @Component({
-  selector: 'app-routes-home-personel',
-  templateUrl: './personel.component.html',
+  selector: 'app-home-team-engineer',
+  templateUrl: './engineer.component.html',
 })
-export class RoutesHomePersonelComponent implements OnInit {
+export class HomeTeamEngineerComponent implements OnInit {
   theYear = new Date().getFullYear();
   theMonth = new Date().getMonth();
   // block1

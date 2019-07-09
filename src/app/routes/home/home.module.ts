@@ -4,12 +4,15 @@ import { SharedModule } from '@shared';
 import { HomeRoutingModule } from './home-routing.module';
 import { RoutesHomeTeamComponent } from './team/team.component';
 import { RoutesHomePersonelComponent } from './personel/personel.component';
+import { HomeTeamEngineerComponent } from './team/engineer/engineer.component';
+import { HomePersonelProjectComponent } from './personel/project/project.component';
 
 
 const COMPONENTS = [
   RoutesHomeTeamComponent,
   RoutesHomePersonelComponent,
-];
+  HomeTeamEngineerComponent,
+  HomePersonelProjectComponent];
 const COMPONENTS_NOROUNT = [
 ];
 
