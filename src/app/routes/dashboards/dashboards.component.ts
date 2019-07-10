@@ -23,12 +23,28 @@ export class RoutesHomeDashboardsComponent implements OnInit {
     private msg: NzMessageService,
     private cd: ChangeDetectorRef,
   ) {}
-
+synName='';
   ngOnInit() {
-    this.http.get('/project').subscribe((res: any) => {
-      this.list = res;
-      this.cd.detectChanges();
-    });
+    const user = localStorage.getItem('user');
+    const userO = JSON.parse(user);
+    console.log(userO);
+    this.synName = userO.SyneltsName;
+     this.http
+      .get('home/ProjectsByEngName', { 
+          syneltsname: this.synName,
+          isInclude:'true',
+          isFinish:'false' 
+          })
+      .subscribe( res=>{
+        this.list=res.Items;
+        console.log(res.Items);
+        
+        this.cd.detectChanges();
+      });
+    // this.http.get('/project').subscribe((res: any) => {
+    //   this.list = res;
+    //   this.cd.detectChanges();
+    // }); 
   }
 
   del(i: any, idx: number) {

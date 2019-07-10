@@ -188,7 +188,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let i of engineersList; let idx = index">
-            <td>{{ i.Name }}</td>
+            <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
             <td>
               <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
             </td>
@@ -222,7 +222,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let i of engineersList; let idx = index">
-            <td>{{ i.Name }}</td>
+            <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
             <td>
               <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
             </td>
@@ -256,7 +256,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let i of engineersList; let idx = index">
-            <td>{{ i.Name }}</td>
+            <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
             <td>
               <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
             </td>

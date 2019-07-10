@@ -4,18 +4,18 @@
       <nz-card class="ant-card__body-nopadding">
         <div class="d-flex justify-content-between align-items-start px-md pt-md">
           <div>
-            <a routerLink="/other/project/{{i.id}}" class="text-md pr-sm">{{i.title}}</a>
-            <nz-tag *ngIf="i.status === 'active'" nzColor="green">Active</nz-tag>
-            <nz-tag *ngIf="i.status === 'pending'" nzColor="orange">Pending</nz-tag>
-            <nz-tag *ngIf="i.status === 'complete'" nzColor="blue">Complete</nz-tag>
+            <a [routerLink]="['/home/project',i.ProjectNo]" class="text-md pr-sm">{{i.ProjectNo}}</a>
+            <nz-tag *ngIf="i.ManualProgress === 'Job Created'" nzColor="green">Active</nz-tag>
+            <nz-tag *ngIf="i.ManualProgress === 'Job Terminated'" nzColor="orange">Pending</nz-tag>
+            <nz-tag *ngIf="i.ManualProgress === 'Job Finished'" nzColor="blue">Complete</nz-tag> 
             <div class="text-grey text-xs mt-xs">
-              {{i.task.opened}} opened tasks, {{i.task.completed}} tasks completed
+              <!-- {{i.task.opened}} opened tasks, {{i.task.completed}} tasks completed -->
             </div>
           </div>
           <nz-dropdown nzPlacement="bottomRight">
             <span class="dd-btn" nz-dropdown><i nz-icon type="ellipsis"></i></span>
             <ul nz-menu>
-              <li nz-menu-item routerLink="/other/project/{{i.id}}">View</li>
+              <li nz-menu-item [routerLink]="['/home/project',i.ProjectNo]">View</li>
               <li nz-menu-item (click)="msg.success('edit')">Edit</li>
               <li nz-menu-item>
                 <nz-popconfirm nzTitle="确定吗？" (nzOnConfirm)="del(i, idx)">
@@ -25,20 +25,20 @@
             </ul>
           </nz-dropdown>
         </div>
-        <nz-progress [nzPercent]="i.task.process" [nzStatus]="i.status" [nzShowInfo]="false" nzStrokeWidth="3"
+        <nz-progress [nzPercent]="50" [nzStatus]="i.ManualProgress" [nzShowInfo]="false" nzStrokeWidth="3"
           nzSize="small"></nz-progress>
         <div class="px-md text-xs">
-          <strong class="pr-xs">{{i.task.process}}%</strong>completed
+          <strong class="pr-xs">50%</strong>completed 
         </div>
-        <div class="px-md pt-md overflow-hidden" style="height: 70px">{{i.remark}}</div>
+        <div class="px-md pt-md overflow-hidden" style="height: 70px">{{i.ClientName}},{{i.ServiceNames}}</div>
         <div class="px-md pb-md d-flex align-items-start">
           <div class="width-50">
             <div class="text-grey text-sm">Created</div>
-            <strong>{{i.created | _date: 'MM/DD/YYYY' }}</strong>
+            <strong>{{i.OpenDate | _date: 'MM/DD/YYYY' }}</strong>
           </div>
           <div class="width-50">
             <div class="text-grey text-sm">Deadline</div>
-            <strong>{{i.deadline | _date: 'MM/DD/YYYY' }}</strong>
+            <strong>{{i.CompleteDate | _date: 'MM/DD/YYYY' }}</strong>
           </div>
         </div>
         <div class="p-md border-top-1">

@@ -6,13 +6,15 @@ import { RoutesHomeTeamComponent } from './team/team.component';
 import { RoutesHomePersonelComponent } from './personel/personel.component';
 import { HomeTeamEngineerComponent } from './team/engineer/engineer.component';
 import { HomePersonelProjectComponent } from './personel/project/project.component';
+import { HomeTeamAnalysisComponent } from './team/analysis/analysis.component';
 
 
 const COMPONENTS = [
   RoutesHomeTeamComponent,
   RoutesHomePersonelComponent,
   HomeTeamEngineerComponent,
-  HomePersonelProjectComponent];
+  HomePersonelProjectComponent,
+  HomeTeamAnalysisComponent];
 const COMPONENTS_NOROUNT = [
 ];
 
