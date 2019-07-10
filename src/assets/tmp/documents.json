@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Applicaion Form",
+    "workload": 1
+  },
+  {
+    "name": "CDR Report",
+    "workload": 20
+  },
+  {
+    "name": "Photos",
+    "workload": 5
+  },
+  {
+    "name": "TRF Report",
+    "workload": 40
+  },
+  {
+    "name": "CC Report",
+    "workload": 10
+  },
+  {
+    "name": "Construction Review Sheet",
+    "workload": 15
+  },
+  {
+    "name": "Test Record",
+    "workload": 35
+  },
+  {
+    "name": "Subcontract Report",
+    "workload": 5
+  },
+  {
+    "name": "Client Technical Documents",
+    "workload": 5
+  },
+  {
+    "name": "Declarations",
+    "workload": 5
+  },
+  {
+    "name": "Client Confirmation",
+    "workload": 10
+  },
+  {
+    "name": "Pahs Evaluation Sheet",
+    "workload": 10
+  },
+  {
+    "name": "Pahs Test Report",
+    "workload": 2
+  },
+  {
+    "name": "Test Plan for GS",
+    "workload": 5
+  },
+  {
+    "name": "Certificate Template",
+    "workload": 5
+  },
+  {
+    "name": "Label",
+    "workload": 3
+  },
+  {
+    "name": "Instruction Manual-English Version",
+    "workload": 5
+  },
+  {
+    "name": "Instruction Manual-Native Version",
+    "workload": 5
+  }
+]

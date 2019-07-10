@@ -323,7 +323,10 @@ export class SettingTeamsetRoutingComponent implements OnInit {
 
   pts: ProjectTransfer[] = [];
   loading = false;
+  documents:any[]=[];
   ngOnInit(): void {
+    this.http.get('assets/tmp/documents.json').subscribe(
+      res=>this.documents=res);
     // this.http.get(`home/dbstatus`).subscribe(res => (this.record = res));
     this.http.get('service/collectionbyfilter', { Name: '' }).subscribe(res => {
       console.log(res);
@@ -411,6 +414,13 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         res => {
           if (res.Message === 'OK') {
             this.pts = res.Items;
+            const totalLoad=this.documents.reduce((arr,cur)=>arr+cur.workload,0);
+        this.pts.forEach(item=>{
+          const arr=item.Documents.split('_');
+          const actual=this.documents.filter(f=>arr.includes(f.name))
+            .reduce((acc,cur)=>acc+cur.workload,0);
+            item.ProgressPercent=actual*100/totalLoad;
+        })
             console.log(res.Items);
           } else {
             this.pts = [];
@@ -444,6 +454,13 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       res => {
         if (res.Message === 'OK') {
           this.pts = res.Items;
+          const totalLoad=this.documents.reduce((arr,cur)=>arr+cur.workload,0);
+        this.pts.forEach(item=>{
+          const arr=item.Documents.split('_');
+          const actual=this.documents.filter(f=>arr.includes(f.name))
+            .reduce((acc,cur)=>acc+cur.workload,0);
+            item.ProgressPercent=actual*100/totalLoad;
+        })
           this.msg.success(`成功搜索到${res.Items.length}个案子！`);
         } else {
           this.msg.success('搜索到0个案子！');
@@ -456,6 +473,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       },
       () => {
         this.loading = false;
+        console.log(this.pts);
       },
     );
   }

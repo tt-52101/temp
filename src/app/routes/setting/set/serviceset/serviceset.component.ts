@@ -4,7 +4,7 @@ import { NzMessageService, isTemplateRef } from 'ng-zorro-antd';
 import { STComponent, STData, STColumn, STChange } from '@delon/abc';
 import { SettingSetEditServiceeditComponent } from '../edit/serviceedit/serviceedit.component';
 import { SyneltsService } from 'app/services/biz/SyneltsService';
-import { Documents } from 'app/services/biz/Document';
+
 
 @Component({
   selector: 'app-setting-set-serviceset',
@@ -121,7 +121,12 @@ export class SettingSetServicesetComponent implements OnInit {
       ],
     },
   ];
-  ngOnInit() {}
+  documents:any[]=[];
+  ngOnInit() {
+    this.http.get('assets/tmp/documents.json').subscribe(
+      res=>this.documents=res
+    );
+  }
   change(e: STChange) {
     if (e.checkbox) {
       this.selectServices = e.checkbox;
@@ -282,16 +287,11 @@ export class SettingSetServicesetComponent implements OnInit {
   handleStringtoEnums(data:SyneltsService[]){
     
     data.forEach(item=>{
-      
       if(item.RequiredDocuments){
-        const arr=item.RequiredDocuments.split('-');
+        const arr=item.RequiredDocuments.split('_');
         item.RequiredDocumentsString=[];
-        console.log(arr);
         arr.forEach(single=>{
-          var col=parseInt(single,10);
-          console.log(Documents[col]);
-          
-          item.RequiredDocumentsString.push(Documents[col]);
+          item.RequiredDocumentsString.push(single);
         })
       }
     })
@@ -299,12 +299,12 @@ export class SettingSetServicesetComponent implements OnInit {
   handleEnumtoString(services:SyneltsService[]){
     services.forEach(service=>{
       let st='';
-      if(service.RequiredDocumentsString.length>1){
+      if(service.RequiredDocumentsString.length>0){
         service.RequiredDocumentsString.forEach(item=>{
-          st+=Documents[item]+'-';
+          st+=item+'_';
         })
       }
-      if(st.endsWith('-')){
+      if(st.endsWith('_')){
         st=st.substring(0,st.length-1);
       }
       service.RequiredDocuments=st;

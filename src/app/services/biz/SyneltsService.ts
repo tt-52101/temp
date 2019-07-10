@@ -5,7 +5,7 @@ export class SyneltsService {
   BusinessType: string;
   RegionType: string;
   DefaultRequiredWorkingDays: number;
-  RequiredDocumentsString:string[]=['Application_form'];
+  RequiredDocumentsString:string[];
   RequiredDocuments:string;
   IsDeleted: boolean;
   CreatedOn: Date;

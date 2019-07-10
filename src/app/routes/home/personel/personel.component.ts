@@ -1,10 +1,8 @@
 import { ProjectTransfer } from './../../../services/biz/projecttransfer';
-import { LayoutProHeaderWidgetComponent } from './../../../layout/pro/components/widget/widget.component';
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
-import { STColumn } from '@delon/abc';
-import { format } from 'date-fns';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'app-routes-home-personel',
@@ -44,19 +42,23 @@ export class RoutesHomePersonelComponent implements OnInit {
     console.log(userO);
     this.synName = userO.SyneltsName;
     console.log(this.synName);
-    this.getPersonelJobData('Desmond Liu');
+    this.getPersonelJobData(this.synName);
   }
 
   getPersonelJobData(synName: string) {
-    this.http
+    zip(
+      this.http
       .get(`biz/jobtrends/${synName}`, {
         from: new Date(2015, 0, 1).toLocaleDateString(),
         to: new Date().toLocaleDateString(),
-      })
-      .subscribe(res => {
+      }),
+      this.http
+      .get('biz/engineerstatus', { name: this.synName })
+    ).subscribe(
+      ([jobTrends,engineerStatus])=>{
         const temp1 = [];
         const temp2 = [];
-        res.Items.forEach(element => {
+        jobTrends.Items.forEach(element => {
           temp1.push({
             TheDay: Date.parse(element.TheDay),
             JobOpenAmount: element.JobOpenAmount,
@@ -83,35 +85,22 @@ export class RoutesHomePersonelComponent implements OnInit {
             });
           }
         }
-        console.log(res.Items);
+        console.log(jobTrends.Items);
 
         this.timeJobData = temp2;
+        this.thisYearJobNos = engineerStatus.Items[0].FinishedCountofThisYear;
+        this.thisYearJobAmount = engineerStatus.Items[0].FinishedAmountofThisYear;
+        this.thisMonthJobNos = engineerStatus.Items[0].FinishedCountofThisMonth;
+        this.thisMonthJobAmount = engineerStatus.Items[0].FinishedAmountofThisMonth;
+        this.everJobNos = engineerStatus.Items[0].FinishedCount;
+        this.everJobAmount = engineerStatus.Items[0].FinishedAmount;
+        console.log(engineerStatus.Items);
+      }
+      
+      
+    );
 
-        // this.everJobNos=res.Items.reduce((acc,cur)=>
-        //   acc+cur.JobCompleteCount,0);
-        // this.everJobAmount=res.Items.reduce((acc,cur)=>acc+cur.JobCompleteAmount,0);
-        // const bb=this.getFinshedStatusofThisMonth(res.Items);
-        // this.thisYearJobNos=bb.reduce((acc,cur)=>
-        //   acc+cur.JobCompleteCount,0);
-        // this.thisYearJobAmount=bb.reduce((acc,cur)=>acc+cur.JobCompleteAmount,0);
-
-        // const cc=this.getFinshedStatusofThisMonth(res.Items);
-        // this.thisMonthJobAmount=cc.reduce((acc,cur)=>acc+cur.JobCompleteAmount,0);
-        // this.thisMonthJobNos=cc.reduce((acc,cur)=>acc+cur.JobCompleteCount,0);
-
-        // console.log(temp2);
-      });
-    this.http
-      .get('biz/engineerstatus', { name: 'Desmond Liu' })
-      .subscribe(res => {
-        this.thisYearJobNos = res.Items[0].FinishedCountofThisYear;
-        this.thisYearJobAmount = res.Items[0].FinishedAmountofThisYear;
-        this.thisMonthJobNos = res.Items[0].FinishedCountofThisMonth;
-        this.thisMonthJobAmount = res.Items[0].FinishedAmountofThisMonth;
-        this.everJobNos = res.Items[0].FinishedCount;
-        this.everJobAmount = res.Items[0].FinishedAmount;
-        console.log(res.Items);
-      });
+    
   }
   getFinshedStatusofThisMonth(data: any[]) {
     const firstDayofThisMonth = new Date(
