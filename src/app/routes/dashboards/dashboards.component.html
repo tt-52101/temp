@@ -4,7 +4,7 @@
       <nz-card class="ant-card__body-nopadding">
         <div class="d-flex justify-content-between align-items-start px-md pt-md">
           <div>
-            <a [routerLink]="['/home/project',i.ProjectNo]" class="text-md pr-sm">{{i.ProjectNo}}</a>
+            <a [routerLink]="['/projectdetails',i.ProjectNo]" class="text-md pr-sm">{{i.ProjectNo}}</a>
             <nz-tag *ngIf="i.ManualProgress === 'Job Created'" nzColor="green">Active</nz-tag>
             <nz-tag *ngIf="i.ManualProgress === 'Job Terminated'" nzColor="orange">Pending</nz-tag>
             <nz-tag *ngIf="i.ManualProgress === 'Job Finished'" nzColor="blue">Complete</nz-tag>
@@ -25,10 +25,10 @@
             </ul>
           </nz-dropdown>
         </div>
-        <nz-progress [nzPercent]="i.ProgressPercent" [nzStatus]="i.ManualProgress" [nzShowInfo]="false" nzStrokeWidth="3"
-          nzSize="small"></nz-progress>
+        <nz-progress [nzPercent]="i.ProgressPercent" [nzStatus]="i.ManualProgress" [nzShowInfo]="false"
+          nzStrokeWidth="3" nzSize="small"></nz-progress>
         <div class="px-md text-xs">
-          <strong class="pr-xs">50%</strong>completed
+          <strong class="pr-xs">{{i.ProgressPercent||0}}%</strong>completed
         </div>
         <div class="px-md pt-md overflow-hidden" style="height: 70px">{{i.ClientName}},{{i.ServiceNames}}</div>
         <div class="px-md pb-md d-flex align-items-start">
@@ -38,14 +38,14 @@
           </div>
           <div class="width-50">
             <div class="text-grey text-sm">Deadline</div>
-            <strong>{{i.CompleteDate | _date: 'MM/DD/YYYY' }}</strong>
+            <strong>{{i.TargetDate | _date: 'MM/DD/YYYY' }}</strong>
           </div>
         </div>
         <div class="p-md border-top-1">
           <div class="text-grey text-sm pb-sm">Team</div>
-          <avatar-list size="small">
+          <!-- <avatar-list size="small">
             <avatar-list-item *ngFor="let u of i.tean" [tips]="u.name" [src]="u.mp"></avatar-list-item>
-          </avatar-list>
+          </avatar-list> -->
         </div>
       </nz-card>
     </div>

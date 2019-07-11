@@ -12,6 +12,7 @@ import { UserLockComponent } from './passport/lock/lock.component';
 // single pages
 import { CallbackComponent } from './callback/callback.component';
 import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
+import { RoutesDashboardsProjectdetailsComponent } from './dashboards/projectdetails/projectdetails.component';
 const COMPONENTS = [
   // passport pages
   UserLoginComponent,
@@ -21,7 +22,7 @@ const COMPONENTS = [
   // single pages
   CallbackComponent,
   RoutesHomeDashboardsComponent,
-  ];
+  RoutesDashboardsProjectdetailsComponent];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({

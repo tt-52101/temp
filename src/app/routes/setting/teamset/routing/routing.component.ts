@@ -1,3 +1,4 @@
+import { Validators } from '@angular/forms';
 import { async } from '@angular/core/testing';
 import { debounceTime } from 'rxjs/operators';
 import { ProjectTransfer } from './../../../../services/biz/projecttransfer';
@@ -6,6 +7,7 @@ import {
   SFComponent,
   SFButton,
   SFSchema,
+  
   SFSchemaEnum,
   SFSchemaEnumType,
 } from '@delon/form';
@@ -111,6 +113,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
           widget: 'autocomplete',
           debounceTime: 100,
           placeholder: '输入Service名称',
+          backfill:true,
           asyncData: (input: string) =>
             of(
               input
@@ -119,7 +122,8 @@ export class SettingTeamsetRoutingComponent implements OnInit {
                   )
                 : [],
             ),
-        },
+            
+        } 
       },
       QuotationNo: {
         type: 'string',
@@ -416,10 +420,13 @@ export class SettingTeamsetRoutingComponent implements OnInit {
             this.pts = res.Items;
             const totalLoad=this.documents.reduce((arr,cur)=>arr+cur.workload,0);
         this.pts.forEach(item=>{
-          const arr=item.Documents.split('_');
-          const actual=this.documents.filter(f=>arr.includes(f.name))
-            .reduce((acc,cur)=>acc+cur.workload,0);
-            item.ProgressPercent=actual*100/totalLoad;
+          if(item.SetDocuments){
+            const arr=item.SetDocuments.split('_');
+            const actual=this.documents.filter(f=>arr.includes(f.name))
+              .reduce((acc,cur)=>acc+cur.workload,0);
+              item.ProgressPercent=actual*100/totalLoad;
+          }
+         
         })
             console.log(res.Items);
           } else {
@@ -440,6 +447,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     this.loading = true;
     console.log(this.sf.value);
     const sfv = this.sf.value;
+    
     if (sfv.OpenDateFromTo) {
       sfv.OpenDateFrom = this.sf.value.OpenDateFromTo[0];
       sfv.OpenDateTo = this.sf.value.OpenDateFromTo[1];
@@ -456,10 +464,12 @@ export class SettingTeamsetRoutingComponent implements OnInit {
           this.pts = res.Items;
           const totalLoad=this.documents.reduce((arr,cur)=>arr+cur.workload,0);
         this.pts.forEach(item=>{
-          const arr=item.Documents.split('_');
-          const actual=this.documents.filter(f=>arr.includes(f.name))
-            .reduce((acc,cur)=>acc+cur.workload,0);
-            item.ProgressPercent=actual*100/totalLoad;
+          if(item.SetDocuments){
+            const arr=item.SetDocuments.split('_');
+            const actual=this.documents.filter(f=>arr.includes(f.name))
+              .reduce((acc,cur)=>acc+cur.workload,0);
+              item.ProgressPercent=actual*100/totalLoad;
+          }
         })
           this.msg.success(`成功搜索到${res.Items.length}个案子！`);
         } else {

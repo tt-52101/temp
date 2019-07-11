@@ -7,6 +7,7 @@ export class ProjectTransfer implements BaseEntity {
   QuotationNo: string;
   OpenDate: Date;
   CompleteDate?: Date;
+  TargetDate?:Date;
   InvoiceDate?: Date;
   EngineerName: string;
   AssistEngineerName: string;
@@ -26,9 +27,9 @@ export class ProjectTransfer implements BaseEntity {
   Product: string;
   Models: string;
   ActualProjectWorkingDays:number;
-  Documents:string;
+  SetDocuments:string;
   ProgressPercent:number;
-  DefaultDocuments:string;
+  FinishedDocuments:string;
   QuotedFee: number;
   CurrencyInUSD: boolean;
   InvoicedFee?: number;
