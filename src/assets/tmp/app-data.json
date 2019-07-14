@@ -34,6 +34,13 @@
               "icon": "anticon anticon-dashboard",
               "acl": ["Admin"],
               "link": "/home/team"
+            },
+            {
+              "text": "数据窗口——分析",
+              "i18n": "menu.workspace.dataanalysis",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["Admin"],
+              "link": "/home/analysis"
             }
           ]
         },

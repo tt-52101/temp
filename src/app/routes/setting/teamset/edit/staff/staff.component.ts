@@ -1,3 +1,4 @@
+import { ACLService } from '@delon/acl';
 
 import { Component, OnInit,OnDestroy, ViewChild } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
@@ -11,15 +12,28 @@ import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
   templateUrl: './staff.component.html',
 })
 export class SettingTeamsetEditStaffComponent implements OnInit,OnDestroy {
-  constructor(private http: _HttpClient,private modal:NzModalRef,private modalService:NzModalService, public msg:NzMessageService) {}
+  constructor(private http: _HttpClient,private modal:NzModalRef,private modalService:NzModalService, 
+    public msg:NzMessageService,public acl:ACLService) {}
   loading = false;
   i: any = {};
   @ViewChild('sf') sf: SFComponent;
   ngOnInit() {}
   pSchema: SFSchema = {
     properties: {
-      Name: { type: 'string', title: 'Name', maxLength: 40 },
-      Email: { type: 'string', title: 'Email', maxLength: 50 },
+      Name: { type: 'string', title: 'Name', maxLength: 40,ui:{acl:'god'} },
+      Email: { 
+        type: 'string', 
+        title: 'Email', 
+        maxLength: 50,
+        ui:{
+          validator:(value:string)=>{
+            if(value!==null&&value!==undefined&&(!value.endsWith('@intertek.com'))&&value.length!==0){
+              return [{keyword:'error',message:'必须是intertek邮件地址'}];
+            }
+          },
+          acl:'god'
+        } 
+      },
       SyneltsRoles: {
         type: 'string',
         title: 'Mulit',

@@ -75,7 +75,7 @@ export class RoutesHomeTeamComponent implements OnInit {
         to: new Date().toLocaleDateString(),
       }),
     ).subscribe(
-      ([rjJsonData,engineers, jonIn]) => {
+      ([rjJsonData, engineers, jonIn]) => {
         // block 1 & 3
         this.revenueActual = [];
         this.RevenueTitle = 'Revenue (' + rjJsonData.unit + ')';
@@ -114,7 +114,9 @@ export class RoutesHomeTeamComponent implements OnInit {
         console.log(this.jobInDataYear);
         console.log(this.jobInYTD);
         // block 3
-        this.actualMonth = this.jobInDataMonth.reduce(
+        // this.jobInDataMonth = this.getFinshedStatusofThisMonth(jonIn);
+        console.log(jonIn);
+        this.actualMonth = jonIn.Items.reduce(
           (acc, cur) => acc + cur.JobCompleteAmount,
           0,
         );
@@ -127,7 +129,7 @@ export class RoutesHomeTeamComponent implements OnInit {
         jonIn.Items.forEach(element => {
           temp1.push({
             x: format(Date.parse(element.TheDay), 'YYYY-MM-DD'),
-            y: element.JobOpenCount,
+            y: element.JobOpenAmount,
           });
         });
         const beginDay = new Date(this.theYear, this.theMonth, 1).getTime();
@@ -161,14 +163,14 @@ export class RoutesHomeTeamComponent implements OnInit {
         [...rjJsonData.data].forEach(element => {
           // for timline chart
           if (this.timeChartData.length !== 24) {
-            if(element.Actual!==0){
+            if (element.Actual !== 0) {
               this.timeChartData.push({
                 month: element.Month,
                 valueType: 'actual',
                 value: element.Actual,
               });
             }
-            
+
             this.timeChartData.push({
               month: element.Month,
               valueType: 'budget',
@@ -229,7 +231,7 @@ export class RoutesHomeTeamComponent implements OnInit {
   }
   engIdx = 0;
   selectChange(idx: number) {
-    this.loading=true;
+    this.loading = true;
     let tabPerson = '';
     switch (idx) {
       case 1:
@@ -246,16 +248,16 @@ export class RoutesHomeTeamComponent implements OnInit {
         break;
     }
     this.http.get(`biz/EngineersStatus/${tabPerson}`).subscribe(
-      res=>{
-        this.engineersList=res.Items;
-        this.engineersShowList=res.Items;
-        this.loading=false;
+      res => {
+        this.engineersList = res.Items;
+        this.engineersShowList = res.Items;
+        this.loading = false;
       },
-      err=>this.loading=false,
-      ()=>{}
-    )
+      err => (this.loading = false),
+      () => {},
+    );
   }
-  engineersShowList:any[]=[];
+  engineersShowList: any[] = [];
   getFinshedStatusofThisMonth(data: any[]) {
     const firstDayofThisMonth = new Date(
       new Date().getFullYear(),
@@ -270,9 +272,8 @@ export class RoutesHomeTeamComponent implements OnInit {
     console.log(dayCount);
     return data.slice(-dayCount);
   }
-  sortChange(sort:{key:string,value:string}){
-    
-    if (sort.key &&sort.value) {
+  sortChange(sort: { key: string; value: string }) {
+    if (sort.key && sort.value) {
       this.engineersShowList = this.engineersList.sort((a, b) =>
         sort.value === 'ascend'
           ? a[sort.key!] > b[sort.key!]
@@ -280,11 +281,10 @@ export class RoutesHomeTeamComponent implements OnInit {
             : -1
           : b[sort.key!] > a[sort.key!]
           ? 1
-          : -1
+          : -1,
       );
     } else {
       this.engineersShowList = this.engineersList;
     }
   }
-  
 }

@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BizsettingUIi18nComponent } from './uii18n.component';
+import { RoutesDashboardsTaskComponent } from './task.component';
 
-describe('BizsettingUIi18nComponent', () => {
-  let component: BizsettingUIi18nComponent;
-  let fixture: ComponentFixture<BizsettingUIi18nComponent>;
+describe('RoutesDashboardsTaskComponent', () => {
+  let component: RoutesDashboardsTaskComponent;
+  let fixture: ComponentFixture<RoutesDashboardsTaskComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BizsettingUIi18nComponent ]
+      declarations: [ RoutesDashboardsTaskComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BizsettingUIi18nComponent);
+    fixture = TestBed.createComponent(RoutesDashboardsTaskComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

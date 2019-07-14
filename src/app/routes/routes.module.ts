@@ -13,6 +13,8 @@ import { UserLockComponent } from './passport/lock/lock.component';
 import { CallbackComponent } from './callback/callback.component';
 import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
 import { RoutesDashboardsProjectdetailsComponent } from './dashboards/projectdetails/projectdetails.component';
+import { RoutesDashboardsProgressComponent } from './dashboards/progress/progress.component';
+import { RoutesDashboardsTaskComponent } from './dashboards/task/task.component';
 const COMPONENTS = [
   // passport pages
   UserLoginComponent,
@@ -23,7 +25,10 @@ const COMPONENTS = [
   CallbackComponent,
   RoutesHomeDashboardsComponent,
   RoutesDashboardsProjectdetailsComponent];
-const COMPONENTS_NOROUNT = [];
+const COMPONENTS_NOROUNT = [
+  
+  RoutesDashboardsProgressComponent,
+  RoutesDashboardsTaskComponent];
 
 @NgModule({
   imports: [SharedModule, RouteRoutingModule],

@@ -6,15 +6,15 @@
   "menu.lang": "语言",
   "menu.main": "主导航",
   "menu.workspace": "工作台",
-  "menu.dashboard":"工作入口",
+  "menu.dashboard": "工作入口",
   "menu.workspace.dashboards": "工作区域",
   "menu.workspace.personeldataservice": "数据窗口-个人",
   "menu.workspace.teamdataservice": "数据窗口-团队",
-
+  "menu.workspace.dataanalysis": "数据窗口-分析",
   "menu.setting": "设置",
   "menu.settings.import": "数据导入",
   "menu.settings.set": "规则设置",
-  "menu.settings.teamset":"团队设置",
+  "menu.settings.teamset": "团队设置",
 
   "menu.tools": "工具",
   "menu.tools.safety": "安规",
