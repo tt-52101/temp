@@ -12,6 +12,7 @@ export class RoutesDashboardsTaskComponent implements OnInit {
   
   i: any;
   persons:any[]=[];
+  loading=false;
   schema: SFSchema = {
     properties: {
       Description: { type: 'string', title: '内容' },

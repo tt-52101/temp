@@ -1,6 +1,6 @@
 import { zip } from 'rxjs';
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { format } from 'date-fns';
 
@@ -61,21 +61,76 @@ export class RoutesHomeTeamComponent implements OnInit {
       this.show = true;
     }
   }
-
+  maxLiveCount = 0;
+  maxLiveAmount = 0;
+  maxFYCount = 0;
+  maxFYAmount = 0;
+  maxLoad = 0;
   jobDataofThisYear: any[] = [];
+  @Input() set subTeam(value: string) {
+    this.loading = true;
+    this.http.get(`biz/EngineersStatus/${value}`).subscribe(
+      res => {
+        // this.engineersList = res.Items;
+        this.engineersShowList = res.Items;
+        this.loading = false;
 
+        this.maxLiveCount = this.engineersShowList.reduce(
+          (acc, cur) => (cur.LiveCount <acc ? acc : cur.LiveCount),
+          0,
+        );
+        this.maxLiveAmount = this.engineersShowList.reduce(
+          (acc, cur) => (cur.LiveAmount < acc ? acc : cur.LiveAmount),
+          0,
+        );
+        this.maxFYCount = this.engineersShowList.reduce(
+          (acc, cur) =>
+            cur.FinishedCountofThisYear < acc
+              ? acc
+              : cur.FinishedCountofThisYear,
+          0,
+        );
+        this.maxFYAmount = this.engineersShowList.reduce(
+          (acc, cur) =>
+            cur.FinishedAmountofThisYear < acc
+              ? acc
+              : cur.FinishedAmountofThisYear,
+          0,
+        );
+        this.maxLoad = this.engineersShowList.reduce(
+          (acc, cur) =>
+            cur.TotalLoadWorkingDay < acc ? acc : cur.TotalLoadWorkingDay,
+          0,
+        );
+
+        this.maxLoad *= 2;
+        this.maxLiveCount *= 2;
+        this.maxLiveAmount *= 2;
+        this.maxFYCount *= 2;
+        this.maxFYAmount *= 2;
+        console.log(
+          this.maxLiveCount,
+          this.maxLiveAmount,
+          this.maxFYCount,
+          this.maxFYAmount,
+          this.maxLoad,
+        );
+      },
+      err => (this.loading = false),
+      () => {},
+    );
+  }
   ngOnInit() {
     this.loading = true;
 
     zip(
       this.http.get(`biz/revenue/${this.theYear}`),
-      this.http.get('biz/EngineersStatus/total'),
       this.http.get('biz/jobtrends/team', {
         from: new Date(this.theYear, this.theMonth, 1).toLocaleDateString(),
         to: new Date().toLocaleDateString(),
       }),
     ).subscribe(
-      ([rjJsonData, engineers, jonIn]) => {
+      ([rjJsonData, jonIn]) => {
         // block 1 & 3
         this.revenueActual = [];
         this.RevenueTitle = 'Revenue (' + rjJsonData.unit + ')';
@@ -179,11 +234,12 @@ export class RoutesHomeTeamComponent implements OnInit {
           }
         });
 
-        this.engineersList = engineers.Items;
+        
         this.loading = false;
       },
       err => (this.loading = false),
       () => {
+        this.subTeam='total';
         this.renderChart(this.timeChartData);
       },
     );
@@ -230,33 +286,7 @@ export class RoutesHomeTeamComponent implements OnInit {
     chart.render();
   }
   engIdx = 0;
-  selectChange(idx: number) {
-    this.loading = true;
-    let tabPerson = '';
-    switch (idx) {
-      case 1:
-        tabPerson = 'safety';
-        break;
-      case 2:
-        tabPerson = 'ee';
-        break;
-      case 3:
-        tabPerson = 'chemical';
-        break;
-      default:
-        tabPerson = 'total';
-        break;
-    }
-    this.http.get(`biz/EngineersStatus/${tabPerson}`).subscribe(
-      res => {
-        this.engineersList = res.Items;
-        this.engineersShowList = res.Items;
-        this.loading = false;
-      },
-      err => (this.loading = false),
-      () => {},
-    );
-  }
+
   engineersShowList: any[] = [];
   getFinshedStatusofThisMonth(data: any[]) {
     const firstDayofThisMonth = new Date(
@@ -274,7 +304,7 @@ export class RoutesHomeTeamComponent implements OnInit {
   }
   sortChange(sort: { key: string; value: string }) {
     if (sort.key && sort.value) {
-      this.engineersShowList = this.engineersList.sort((a, b) =>
+      this.engineersShowList = this.engineersShowList.sort((a, b) =>
         sort.value === 'ascend'
           ? a[sort.key!] > b[sort.key!]
             ? 1
@@ -284,7 +314,7 @@ export class RoutesHomeTeamComponent implements OnInit {
           : -1,
       );
     } else {
-      this.engineersShowList = this.engineersList;
+      this.engineersShowList = this.engineersShowList;
     }
   }
 }

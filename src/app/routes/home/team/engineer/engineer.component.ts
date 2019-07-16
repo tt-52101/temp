@@ -97,7 +97,8 @@ export class HomeTeamEngineerComponent implements OnInit {
         this.thisMonthJobAmount = engineerStatus.Items[0].FinishedAmountofThisMonth;
         this.everJobNos = engineerStatus.Items[0].FinishedCount;
         this.everJobAmount = engineerStatus.Items[0].FinishedAmount;
-      
+      console.log(this.thisMonthJobNos,this.thisMonthJobAmount);
+      console.log(engineerStatus.Items);
       });
     
   }

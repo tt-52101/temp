@@ -20,7 +20,7 @@
         </ng-template>
       </g2-card>
     </div>
-
+  
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card2" [title]="'年度Job In趋势'" contentHeight="144px" [action]="action2" [footer]="footer2">
         <ng-template #action2>
@@ -84,7 +84,7 @@
   </div>
   <!-- 细节数据tabset-revenue&job in -->
 
-
+<nz-card>
   <nz-tabset (nzSelectedIndexChange)="selectedIndexChange($event)" nzSelectedIndex="chartIndex">
     <nz-tab nzTitle="Revenue Output">
       <div nz-row>
@@ -136,147 +136,65 @@
         </nz-radio-group>
       </div>
     </ng-template>
-  </nz-tabset>
+  </nz-tabset></nz-card>
 
   <!-- engineer blocks -->
-  <nz-tabset (nzSelectedIndexChange)="selectChange($event)" nzSelectedIndex="chartIndex">
-    <nz-tab nzTitle="Total">
-      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
-        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
-          <tr>
-            <th nzShowSort nzSortKey="Name">姓名</th>
-            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
-            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
-            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let i of engineersList; let idx = index">
-            <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
-            <td>
-              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="1800" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1500" line></g2-single-bar>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </nz-tab>
-    <nz-tab nzTitle="安规">
-      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
-        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
-          <tr>
-            <th nzShowSort nzSortKey="Name">姓名</th>
-            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
-            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
-            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let i of engineersList; let idx = index">
-            <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
-            <td>
-              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="700" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1000" line></g2-single-bar>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </nz-tab>
-    <nz-tab nzTitle="能效">
-      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
-        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
-          <tr>
-            <th nzShowSort nzSortKey="Name">姓名</th>
-            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
-            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
-            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let i of engineersList; let idx = index">
-            <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
-            <td>
-              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="700" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1000" line></g2-single-bar>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </nz-tab>
-    <nz-tab nzTitle="化学">
-      <nz-table [nzLoading]="loading" [nzData]="engineersList" [nzShowPagination]="false">
-        <thead (nzSortChange)="sortChange($event)" nzSingleSort>
-          <tr>
-            <th nzShowSort nzSortKey="Name">姓名</th>
-            <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
-            <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="FinishedCount">已完成项目（个数）</th>
-            <th nzShowSort nzSortKey="FinishedAmount">已完成项目金额（RMB）</th>
-            <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let i of engineersList; let idx = index">
-            <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
-            <td>
-              <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="150" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="1000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedCount" [max]="700" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.FinishedAmount" [max]="6000000" line></g2-single-bar>
-            </td>
-            <td>
-              <g2-single-bar height="60" [value]="i.TotalLoadWorkingDay" [max]="1000" line></g2-single-bar>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </nz-tab>
-
-  </nz-tabset>
+  <nz-card nzTitle="workload" [nzExtra]="btn">
+    <ng-template #btn>
+      <nz-radio-group [(ngModel)]="subTeam" nzButtonStyle="solid" class="mr-md">
+        <label nz-radio-button [nzValue]="'total'">
+          <span>Total</span>
+        </label>
+        <label nz-radio-button [nzValue]="'safety'">
+          <span>Safety</span>
+        </label>
+        <label nz-radio-button [nzValue]="'ee'">
+          <span>Energy Efficiency</span>
+        </label>
+        <label nz-radio-button [nzValue]="'chemical'">
+          <span>Chemical</span>
+        </label>
+        <label nz-radio-button [nzValue]="'cs'">
+            <span>cs</span>
+          </label>
+      </nz-radio-group>
+    </ng-template>
+    <nz-table [nzLoading]="loading" [nzShowPagination]="false">
+      <thead (nzSortChange)="sortChange($event)" nzSingleSort>
+        <tr>
+          <th nzShowSort nzSortKey="Name">姓名</th>
+          <th nzShowSort nzSortKey="LiveCount">进展中项目（个数）</th>
+          <th nzShowSort nzSortKey="LiveAmount">进展中项目金额（RMB）</th>
+          <th nzShowSort nzSortKey="FinishedCountofThisYear">本年度已完成项目（个数）</th>
+          <th nzShowSort nzSortKey="FinishedAmountofThisYear">本年度已完成项目金额（RMB）</th>
+          <th nzShowSort nzSortKey="TotalLoadWorkingDay">总Working Day（工作日）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of engineersShowList; let idx = index">
+          <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
+          <td>
+            <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="maxLiveCount" line></g2-single-bar>
+          </td>
+          <td>
+            <g2-single-bar height="60" plusColor="red" [value]="i.LiveAmount" [max]="maxLiveAmount" line></g2-single-bar>
+          </td>
+          <td>
+            <g2-single-bar height="60" plusColor="green" [value]="i.FinishedCountofThisYear" [max]="maxFYCount" line>
+            </g2-single-bar>
+          </td>
+          <td>
+            <g2-single-bar height="60" plusColor="green" [value]="i.FinishedAmountofThisYear" [max]="maxFYAmount" line>
+            </g2-single-bar>
+          </td>
+          <td>
+            <g2-single-bar height="60" plusColor="orange"
+              [value]="i.TotalLoadWorkingDay" [max]="maxLoad" line></g2-single-bar>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+  
 
 </page-header>

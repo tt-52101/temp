@@ -120,7 +120,7 @@
             </nz-input-group> -->
           </div>
         </div>
-        <nz-table #nzTable [nzData]="ptsShow" [(nzPageSize)]="pageSize" [(nzPageIndex)]="pageIndex"
+        <nz-table #nzTable [nzLoading]="loading" [nzData]="ptsShow"  [(nzPageSize)]="pageSize" [(nzPageIndex)]="pageIndex"
           [nzShowQuickJumper]="'true'">
           <thead (nzSortChange)="sort($event)" nzSingleSort>
             <tr>

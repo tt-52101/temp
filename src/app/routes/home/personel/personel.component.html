@@ -2,7 +2,7 @@
   <div nz-row [nzGutter]="24">
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8">
       <g2-card id="card1" [bordered]="true" [title]="'年度完成情况'" contentHeight="40px"
-        [total]="thisYearJobNos||'Nothing'" [action]="action1" [footer]="footer1">
+        [total]="thisYearJobNos+'个'||'Nothing'" [action]="action1" [footer]="footer1">
         <!-- <trend flag="up" style="display:block; margin-top:2px;">个数占比：<span class="pl-sm">{{percentYearofNos}}</span>
         </trend>
         <trend flag="up" style="display:block; margin-top:2px;">金额占比：<span class="pl-sm">{{percentYearofAmount}}</span>
@@ -25,7 +25,7 @@
       </g2-card>
     </div>
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8">
-      <g2-card id="card2" [bordered]="true" [title]="'月度完成情况'" [total]="thisMonthJobNos||'Nothing'" contentHeight="40px"
+      <g2-card id="card2" [bordered]="true" [title]="'月度完成情况'" [total]="thisMonthJobNos+'个'||'Nothing'" contentHeight="40px"
         [action]="action2" [footer]="footer2">
         <!-- <trend flag="up" style="display:block; margin-top:2px;">个数占比：<span class="pl-sm">{{percentMonthofNos}}</span>
         </trend>
@@ -69,7 +69,7 @@
       </g2-card>
     </div> -->
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8">
-      <g2-card id="card4" [bordered]="true" [title]="'历史完成情况'" [total]="everJobNos||'Nothing'" contentHeight="40px"
+      <g2-card id="card4" [bordered]="true" [title]="'历史完成情况'" [total]="everJobNos+'个'||'Nothing'" contentHeight="40px"
         [action]="action4" [footer]="footer4">
         <!-- <trend flag="up" style="display:block; margin-top:2px;">个数占比：<span class="pl-sm">{{percentEverofNos}}</span>
         </trend>
@@ -119,7 +119,7 @@
       </nz-input-group> -->
     </div>
   </div>
-  <nz-table #nzTable [nzData]="ptsShow" [(nzPageSize)]="pageSize" [(nzPageIndex)]="pageIndex"
+  <nz-table #nzTable [nzData]="ptsShow" [nzLoading]="loading" [(nzPageSize)]="pageSize" [(nzPageIndex)]="pageIndex"
     [nzShowQuickJumper]="'true'">
     <thead (nzSortChange)="sort($event)" nzSingleSort>
       <tr>

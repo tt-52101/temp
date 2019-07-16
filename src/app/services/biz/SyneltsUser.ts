@@ -4,6 +4,7 @@ export class SyneltsUser {
   Email: string;
   SyneltsRole: number;
   SyneltsRoles: string[];
+  SubTeam:string;
   IsCurrentOnJob: boolean;
   IsDeleted: boolean;
   CreatedOn: Date;
