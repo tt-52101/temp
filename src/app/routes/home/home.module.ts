@@ -7,6 +7,7 @@ import { RoutesHomePersonelComponent } from './personel/personel.component';
 import { HomeTeamEngineerComponent } from './team/engineer/engineer.component';
 import { HomePersonelProjectComponent } from './personel/project/project.component';
 import { HomeTeamAnalysisComponent } from './team/analysis/analysis.component';
+import { HomePersonelCategorizeComponent } from './personel/categorize/categorize.component';
 
 
 const COMPONENTS = [
@@ -16,7 +17,8 @@ const COMPONENTS = [
   HomePersonelProjectComponent,
   HomeTeamAnalysisComponent];
 const COMPONENTS_NOROUNT = [
-];
+
+  HomePersonelCategorizeComponent];
 
 @NgModule({
   imports: [
