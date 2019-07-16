@@ -4,11 +4,13 @@ import { UserRoutingModule } from './user-routing.module';
 import { UserUsersettingComponent } from './usersetting/usersetting.component';
 import { UserUsersettingBasicComponent } from './usersetting/basic/basic.component';
 import { UserUsersettingSecurityComponent } from './usersetting/security/security.component';
+import { UserUsersettingSecurityPwdEditComponent } from './usersetting/security/pwd-edit/pwd-edit.component';
 
 const COMPONENTS = [
   UserUsersettingComponent,
   UserUsersettingBasicComponent,
-  UserUsersettingSecurityComponent];
+  UserUsersettingSecurityComponent,
+  UserUsersettingSecurityPwdEditComponent];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({

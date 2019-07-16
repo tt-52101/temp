@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserUsersettingComponent } from './usersetting/usersetting.component';
 import { UserUsersettingBasicComponent } from './usersetting/basic/basic.component';
 import { UserUsersettingSecurityComponent } from './usersetting/security/security.component';
+import { UserUsersettingSecurityPwdEditComponent } from './usersetting/security/pwd-edit/pwd-edit.component';
 
 const routes: Routes = [
 
@@ -11,7 +12,8 @@ const routes: Routes = [
     { path: 'basic', component: UserUsersettingBasicComponent },
     { path: 'security', component: UserUsersettingSecurityComponent },
   ] },
-  ];
+  
+  { path: 'PwdEdit', component: UserUsersettingSecurityPwdEditComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

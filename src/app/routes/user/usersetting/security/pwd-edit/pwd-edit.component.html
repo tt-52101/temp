@@ -1,0 +1,18 @@
+
+<form nz-form nzLayout="vertical" #f="ngForm" (submit)="submit()" se-container="1">
+  <se label="原密码">
+    <input nz-input [(ngModel)]="Password" name="Pwd" type="password" required>
+  </se>
+  <se label="新密码">
+    <input nz-input [(ngModel)]="NewPassword" name="NewPwd" type="password" required>
+  </se>
+  <se label="确认新密码">
+    <input nz-input [(ngModel)]="ConfirmPwd" name="ConfirmPwd" type="password" required>
+  </se>
+
+
+
+  <se>
+    <button nz-button nzType="primary" type="submit" [nzLoading]="loading" [disabled]="f.invalid||loading">更新基本信息</button>
+  </se>
+</form>

@@ -21,6 +21,10 @@ import { syntaxError } from '@angular/compiler';
   templateUrl: './batchimport.component.html',
 })
 export class SettingImportBatchimportComponent implements OnInit, OnChanges {
+  revenueYear=new Date().getFullYear().toString();
+  revenueMonth=(new Date().getMonth()+1).toString();
+  isRevenue=false;
+  importOption='cover';
   private _inputValue: string;
   inputJsonObj=[];
   @Input() set inputValue(value: string) {
@@ -89,7 +93,49 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
         this.disabled = false;
       },
       () => {
-        this.http
+        switch(this.importOption){
+          case 'cover':
+            this.coverImport();
+            break;
+            case 'ignore':
+              {}
+              break;
+              case 'only':
+                {
+                  
+                  this.onlyImport();
+                }
+            
+            break;
+        }
+      },
+    );
+  }
+  
+  optionChange(value:any){
+    if(value===false){
+      if(this.importOption==='only'){
+        console.log('bingo');
+        this.isRevenue=true;
+      }else{
+        this.isRevenue=false;
+      }
+    }
+  }
+  onlyImport(){
+    console.log(this.revenueMonth);
+    // if(this.isRevenue){
+    //   this.inputJsonObj.forEach(element => {
+    //     console.log(this.revenueMonth);
+    //   });
+    // }
+    // this.http.post('home/revenueregister',this.inputJsonObj)
+    // .subscribe(
+    //   res=>{}
+    // )
+  }
+  coverImport(){
+    this.http
           .post('home/Projects/addandupdatecollection', this.inputJsonObj)
           .subscribe(
             res => console.log(res),
@@ -103,7 +149,5 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
               this.message.info('完成了');
             },
           );
-      },
-    );
   }
 }

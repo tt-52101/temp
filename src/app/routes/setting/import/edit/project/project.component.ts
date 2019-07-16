@@ -16,12 +16,28 @@ export class SettingImportEditProjectComponent implements OnInit {
   i: any = {};
   schema: SFSchema = {
     properties: {
-      ProjectNo: { type: 'string', title: 'Job No', maxLength: 12,readOnly:true },
-      QuotationNo: { type: 'string', title: 'Quotation No', maxLength: 13,readOnly:true },
-      ClientName: { type: 'string', title: 'Client', maxLength: 100,readOnly:true },
-      Product: { type: 'string', title: 'Product',readOnly:true },
-      ServiceNames: { type: 'string', title: 'Services',readOnly:true },
+      ProjectNo: {
+        type: 'string',
+        title: 'Job No',
+        maxLength: 12,
+        readOnly: true,
+      },
+      QuotationNo: {
+        type: 'string',
+        title: 'Quotation No',
+        maxLength: 13,
+        readOnly: true,
+      },
+      ClientName: {
+        type: 'string',
+        title: 'Client',
+        maxLength: 100,
+        readOnly: true,
+      },
+      Product: { type: 'string', title: 'Product', readOnly: true },
+      ServiceNames: { type: 'string', title: 'Services', readOnly: true },
       QuotedFee: { type: 'number', title: 'Fee', ui: { prefix: '￥' } },
+      ActualWorkloadFactor:{type:'number',title:'工作量系数',minimum:0,maximum:5},
       CType: {
         type: 'string',
         title: '客户类型',
@@ -32,7 +48,7 @@ export class SettingImportEditProjectComponent implements OnInit {
               { label: '普通客户', value: 'Normal' },
               { label: 'VIP客户', value: 'VIP' },
               { label: 'Agent客户', value: 'Agent' },
-              { label: '未知', value: '' },
+              { label: '未知', value: null },
             ]).pipe(delay(100)),
           change: console.log,
         },
@@ -46,9 +62,9 @@ export class SettingImportEditProjectComponent implements OnInit {
           asyncData: () =>
             of([
               { label: '安规', value: 'Safety' },
-              { label: '能效', value: 'Energy Efficiency' },
+              { label: '能效', value: 'EE' },
               { label: '化学', value: 'Chemical' },
-              { label: '未知', value: '' },
+              { label: '未知', value: null },
             ]).pipe(delay(100)),
           change: console.log,
         },
@@ -64,11 +80,51 @@ export class SettingImportEditProjectComponent implements OnInit {
               { label: '欧洲', value: 'IEC' },
               { label: '北美', value: 'US' },
               { label: 'GMAP', value: 'GMAP' },
-              { label: '未知', value: '' },
+              { label: '未知', value: null },
             ]).pipe(delay(100)),
           change: console.log,
         },
         default: '',
+      },
+      ManualProgress: {
+        type: 'string',
+        title: '当前进度',
+        ui: {
+          widget: 'radio',
+          asyncData: () =>
+            of([
+              { label: 'Testing', value: 'Testing' },
+              { label: 'Reporting', value: 'Reporting' },
+              {
+                label: 'Waiting for Documents',
+                value: 'Waiting for Documents',
+              },
+              { label: 'Apply Certificate', value: 'Apply Certificate' },
+              { label: 'Waiting for FI', value: 'Waiting for FI' },
+              {
+                label: 'Waiting for Confirmation',
+                value: 'Waiting for Client Confirmation',
+              },
+              {
+                label: 'Waiting for Modification',
+                value: 'Waiting for Client Modification',
+              },
+              { label: 'Apply Termination', value: 'Apply Termination' },
+            ]).pipe(delay(100)),
+          change: console.log,
+        },
+      },
+      TobeFinishFlag: {
+        type: 'boolean',
+        title: '是否本月完成',
+        ui: {
+          widget: 'radio',
+          asyncData: () =>
+            of([
+              { label: '能', value: true },
+              { label: '不能', value: false },
+            ]).pipe(delay(100)),
+        },
       },
     },
   };
@@ -82,23 +138,19 @@ export class SettingImportEditProjectComponent implements OnInit {
   ngOnInit() {}
   save(value: any) {
     console.log(value);
-    this.http
-      .put('home/project', value)
-      .subscribe(
-        res => {
-          if(res.Message==='OK'){
-            this.msg.success('保存成功');
-            
-          }else{
-            this.msg.warning('出了点问题');
-          }
-        }, 
-        err => {}, 
-        () => {
-          this.modal.close(value);
-        });
-    
-    
+    this.http.put('home/project', value).subscribe(
+      res => {
+        if (res.Message === 'OK') {
+          this.msg.success('保存成功');
+        } else {
+          this.msg.warning('出了点问题');
+        }
+      },
+      err => {},
+      () => {
+        this.modal.close(value);
+      },
+    );
   }
 
   close() {

@@ -53,6 +53,14 @@ export class SettingTeamsetMembersComponent implements OnInit {
       },
     },
     {
+      title: '分组',
+      index: 'SubTeam',
+      sort: {
+        compare: (a: SyneltsUser, b: SyneltsUser) =>
+          a.SubTeam > b.SubTeam ? 1 : -1,
+      },
+    },
+    {
       title: 'Job Status',
       index: 'IsCurrentOnJob',
       type: 'yn',
@@ -77,8 +85,12 @@ export class SettingTeamsetMembersComponent implements OnInit {
             component: SettingTeamsetEditStaffComponent,
             paramsName: 'i',
             size: 'md',
+            // modalOptions:{
+            //   nzOnCancel:(data)=>data.showConfirm(),
+            // }
           },
           click: 'reload',
+          
         },
         {
           icon: 'delete',

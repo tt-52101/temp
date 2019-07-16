@@ -1,34 +1,62 @@
+import { ACLService } from '@delon/acl';
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit,OnDestroy, ViewChild } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { SFComponent, SFSchema } from '@delon/form';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
 import { SyneltsRole } from 'app/services/biz/SyneltsRole';
-import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
+import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-setting-teamset-edit-staff',
   templateUrl: './staff.component.html',
 })
-export class SettingTeamsetEditStaffComponent implements OnInit {
-  constructor(private http: _HttpClient,private modal:NzModalRef, public msg:NzMessageService) {}
+export class SettingTeamsetEditStaffComponent implements OnInit,OnDestroy {
+  constructor(private http: _HttpClient,private modal:NzModalRef,private modalService:NzModalService, 
+    public msg:NzMessageService,public acl:ACLService) {}
   loading = false;
   i: any = {};
   @ViewChild('sf') sf: SFComponent;
   ngOnInit() {}
   pSchema: SFSchema = {
     properties: {
-      Name: { type: 'string', title: 'Name', maxLength: 20 },
-      Email: { type: 'string', title: 'Email', maxLength: 20 },
+      Name: { type: 'string', title: 'Name', maxLength: 40,ui:{acl:'god'} },
+      Email: { 
+        type: 'string', 
+        title: 'Email', 
+        maxLength: 50,
+        ui:{
+          validator:(value:string)=>{
+            if(value!==null&&value!==undefined&&(!value.endsWith('@intertek.com'))&&value.length!==0){
+              return [{keyword:'error',message:'必须是intertek邮件地址'}];
+            }
+          },
+          acl:'god'
+        } 
+      },
       SyneltsRoles: {
         type: 'string',
-        title: 'Mulit',
+        title: '角色',
         enum: ['Engineer',  'EngineeringCS', 'Sales','SalesCS'],
         ui: {
           widget: 'checkbox',
           span: 8,
         },
         default: ['Engineer'],
+      },
+      SubTeam: {
+        type: 'string',
+        title: '分组',
+        enum: [
+          {label:'安规',value:'safety'},
+          {label:'能效',value:'ee'},
+          {label:'化学',value:'chemical'},
+          {label:'助理',value:'cs'},
+      ],
+        ui: {
+          widget: 'select',
+          span: 8,
+        },
       },
       IsCurrentOnJob: { type: 'boolean', title: 'On Job' },
     },
@@ -66,5 +94,19 @@ export class SettingTeamsetEditStaffComponent implements OnInit {
     } else {
       return SyneltsRole[res.SyneltsRoles[0]];
     }
+  }
+  notSave=false;
+  showConfirm() {
+    this.modalService.confirm({
+      nzTitle: 'Confirm',
+      nzContent: 'Click OK will not save your changes',
+      nzOkText: 'OK',
+      nzCancelText: 'Cancel',
+      nzOnCancel:()=>this.notSave=true,
+      nzOnOk:()=>this.notSave=false,
+    });
+  }
+  ngOnDestroy(){
+    
   }
 }

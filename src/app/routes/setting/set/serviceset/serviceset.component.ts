@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, isTemplateRef } from 'ng-zorro-antd';
 import { STComponent, STData, STColumn, STChange } from '@delon/abc';
 import { SettingSetEditServiceeditComponent } from '../edit/serviceedit/serviceedit.component';
+import { SyneltsService } from 'app/services/biz/SyneltsService';
+
 
 @Component({
   selector: 'app-setting-set-serviceset',
@@ -34,15 +36,13 @@ export class SettingSetServicesetComponent implements OnInit {
 
   BusinessTypes = [
     { index: 0, text: '安规', value: 'Safety' },
-    { index: 1, text: '能效', value: 'Energy Efficency' },
+    { index: 1, text: '能效', value: 'EE' },
     { index: 2, text: '化学', value: 'Chemical' },
-    { index: 3, text: '其他', value: '' },
   ];
   RegionTypes = [
     { index: 0, text: '欧线', value: 'IEC' },
     { index: 1, text: '美线', value: 'US' },
     { index: 2, text: 'GMAP', value: 'GMAP' },
-    { index: 4, text: '其他', value: '' },
   ];
   startDate: Date = new Date();
   services = [];
@@ -94,8 +94,11 @@ export class SettingSetServicesetComponent implements OnInit {
             size: 'md',
             paramsName: 'i',
           },
-          click: 'load',
+          click: (i,m,c)=>{
+            this.getData();
+          },
         },
+        
         {
           icon: 'delete',
           type: 'del',
@@ -118,7 +121,12 @@ export class SettingSetServicesetComponent implements OnInit {
       ],
     },
   ];
-  ngOnInit() {}
+  documents:any[]=[];
+  ngOnInit() {
+    this.http.get('assets/tmp/documents.json').subscribe(
+      res=>this.documents=res
+    );
+  }
   change(e: STChange) {
     if (e.checkbox) {
       this.selectServices = e.checkbox;
@@ -143,8 +151,10 @@ export class SettingSetServicesetComponent implements OnInit {
       }
 
       this.http.get('service/collectionByFilter', this.params).subscribe(
-        res => {
+        (res:SyneltsService[]) => {
           this.services = [...res];
+          this.handleStringtoEnums(this.services);
+          console.log(this.services);
           this.cdr.detectChanges();
         },
         err => {
@@ -170,8 +180,9 @@ export class SettingSetServicesetComponent implements OnInit {
         this.params.RegionType = '';
         console.log(this.params);
         this.http.get('service/collectionByFilter', this.params).subscribe(
-          res => {
+          (res:SyneltsService[]) => {
             this.services = res;
+            this.handleStringtoEnums(this.services);
             console.log(this.services);
             this.cdr.detectChanges();
           },
@@ -184,10 +195,12 @@ export class SettingSetServicesetComponent implements OnInit {
             this.checkloading = false;
             this.loading = false;
             this.msg.success('数据获取成功！');
+            
           },
         );
       }
     }
+    
   }
 
   setService(type: string) {
@@ -222,24 +235,24 @@ export class SettingSetServicesetComponent implements OnInit {
         break;
       case 'EE':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
         });
         break;
       case 'EEUS':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
           c.RegionType = 'US';
         });
         break;
       case 'EEIEC':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
           c.RegionType = 'IEC';
         });
         break;
       case 'EEGMAP':
         this.selectServices.map(c => {
-          c.BusinessType = 'Energy Efficiency';
+          c.BusinessType = 'EE';
           c.RegionType = 'GMAP';
         });
         break;
@@ -249,7 +262,7 @@ export class SettingSetServicesetComponent implements OnInit {
     // } else {
     //   this.selectServices.map(c => (c.BusinessType = type));
     // }
-
+    
     this.http.put('service/updatecollection', this.selectServices).subscribe(
       res => {
         console.log(res);
@@ -270,6 +283,33 @@ export class SettingSetServicesetComponent implements OnInit {
     this.modal
       .createStatic(SettingSetServicesetComponent, {}, { size: 'lg' })
       .subscribe(() => this.st.reload());
+  }
+  handleStringtoEnums(data:SyneltsService[]){
+    
+    data.forEach(item=>{
+      if(item.RequiredDocuments){
+        const arr=item.RequiredDocuments.split('_');
+        item.RequiredDocumentsString=[];
+        arr.forEach(single=>{
+          item.RequiredDocumentsString.push(single);
+        })
+      }
+    })
+  }
+  handleEnumtoString(services:SyneltsService[]){
+    services.forEach(service=>{
+      let st='';
+      if(service.RequiredDocumentsString.length>0){
+        service.RequiredDocumentsString.forEach(item=>{
+          st+=item+'_';
+        })
+      }
+      if(st.endsWith('_')){
+        st=st.substring(0,st.length-1);
+      }
+      service.RequiredDocuments=st;
+    })
+    
   }
   reset() {
     this.inputServiceName = '';

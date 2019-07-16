@@ -13,6 +13,7 @@ import { UserLockComponent } from './passport/lock/lock.component';
 import { CallbackComponent } from './callback/callback.component';
 import { JWTGuard } from '@delon/auth';
 import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
+import { RoutesDashboardsProjectdetailsComponent } from './dashboards/projectdetails/projectdetails.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
     canActivateChild: [JWTGuard],
     children: [
       { path: 'dashboard', component: RoutesHomeDashboardsComponent },
+      {
+        path: 'projectdetails/:projectNo',
+        component: RoutesDashboardsProjectdetailsComponent,
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'home',
@@ -31,8 +36,8 @@ const routes: Routes = [
         loadChildren: './setting/setting.module#SettingModule',
       },
       {
-        path:'user',
-        loadChildren:'./user/user.module#UserModule',
+        path: 'user',
+        loadChildren: './user/user.module#UserModule',
       },
       {
         path: 'tools',

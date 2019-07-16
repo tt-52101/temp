@@ -1,12 +1,12 @@
-<nz-card>
+
   <form *ngIf="!expandForm" nz-form [nzLayout]="'inline'" (ngSubmit)="simpleGetData()" class="search__form">
     <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 24, xxl: 24 }">
-      <div nz-col nzSpan="16">
+      <div nz-col nzSpan="12">
         <nz-form-item>
           <nz-form-label nzFor="jobno">项目号</nz-form-label>
           <nz-form-control>
             <nz-input-group [nzSuffix]="suffixTemplate">
-              <input type="text" name="jobno" nz-input [(ngModel)]="inputJobno" placeholder="input job no" />
+              <input type="text" name="jobno" nz-input [(ngModel)]="inputJobno" placeholder="请输入项目号" />
             </nz-input-group>
 
           </nz-form-control>
@@ -25,37 +25,49 @@
     </div>
 
   </form>
-  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="AdvancedGetData()"
+  <sf #sf *ngIf="expandForm" layout="horizontal" [schema]="qSchema" [button]="btn" (formSubmit)="AdvancedGetData()" [loading]="loading"
     class="sf__no-error"></sf>
   <a (click)="expandForm=!expandForm">
     {{expandForm ? '简单搜索' : '高级搜索'}}
     <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
   </a>
-  <div nz-row>
-    <button nz-button nzType="primary">新建</button>
+  <div nz-row style="margin-bottom: 15px;margin-top: 15px;">
+    <button nz-button nzType="primary" (click)="msg.warning('暂时不允许自建项目')">新建</button>
     <nz-dropdown [nzPlacement]="'bottomLeft'">
-        <button nz-button nz-dropdown>
-          批量操作
-          <i nz-icon type="down"></i>
-        </button>
-        <ul nz-menu>
-          <li nz-menu-item (click)="setNormal()">设定为普通客户</li>
-          <li nz-menu-item (click)="setVIP()">设定为VIP客户</li>
-          <li nz-menu-item (click)="setAgent()">设定为Agent客户</li>
-        </ul>
-      </nz-dropdown>
-      <nz-dropdown [nzPlacement]="'bottomLeft'">
-          <button nz-button nz-dropdown>
-            批量操作
-            <i nz-icon type="down"></i>
-          </button>
-          <ul nz-menu>
-            <li nz-menu-item (click)="setNormal()">设定为普通客户</li>
-            <li nz-menu-item (click)="setVIP()">设定为VIP客户</li>
-            <li nz-menu-item (click)="setAgent()">设定为Agent客户</li>
-          </ul>
-        </nz-dropdown>
+      <button nz-button nz-dropdown>
+        产出操作
+        <i nz-icon type="down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item (click)="setRows([{property:'TobeFinishFlag',type:true}])">设定为本月预计产出</li>
+        <li nz-menu-item (click)="setRows([{property:'TobeFinishFlag',type:false}])">取消设定为本月预计产出</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="listTarget()">列出本月预计产出</li>
+      </ul>
+    </nz-dropdown>
+    
+    <nz-dropdown [nzPlacement]="'bottomLeft'">
+      <button nz-button nz-dropdown>
+        类型设置
+        <i nz-icon type="down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:''}])">设定为安规业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:'IEC'}])">设定为欧洲安规业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:'US'}])">设定为北美安规业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Safety'},{property:'RType',type:'GMAP'}])">设定为GMAP安规业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'EE'},{property:'RType',type:''}])">设定为能效业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'EE'},{property:'RType',type:'IEC'}])">设定为欧洲能效业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'EE'},{property:'RType',type:'US'}])">设定为北美能效业务</li>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'EE'},{property:'RType',type:'GMAP'}])">设定为GMAP能效业务</li>
+        <nz-divider></nz-divider>
+        <li nz-menu-item (click)="setRows([{property:'BType',type:'Chemical'},{property:'RType','type':''}])">设定为化学业务</li>
+      </ul>
+    </nz-dropdown>
+    <button nz-button nzType="danger" class="text-right" (click)="filterNoneSetting()">{{settingChoose}}</button>
   </div>
-  <st #st [columns]="ptColumns" [data]="pts" [loading]="loading" (change)="stChange($event)"></st>
+  <st #st [columns]="ptColumns" [page]="pageInfo"  [data]="pts" [loading]="loading" (change)="stChange($event)" ></st>
 
-</nz-card>

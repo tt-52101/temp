@@ -1,51 +1,215 @@
 <page-header>
-  <div nz-row [nzGutter]="24">
-    <nz-tabset nzType="card" (nzSelectedIndexChange)="selectedIndexChange($event)">
-      <nz-tab nzTitle="Revenue Output">
-        <div nz-row>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
-            <div class="bar">
-              <g2-bar id="revenue" height="295" [title]="RevenueTitle" [data]="monthData"></g2-bar>
-            </div>
-          </div>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-            <div class="rank">
-              <h4 class="ranking-title">list</h4>
-              <ul class="rank-list">
-                <li *ngFor="let i of monthData">
-                  <span class="title">{{i.x}}</span>:
-                  <span class="value">{{i.y|_currency}}</span>
-                </li>
-              </ul>
+  <nz-card>
+    <nz-card-tab>
+      <ng-template #action1>
+        <button nz-button (click)="setupNewTask(idx1)"><i nz-icon type="ellipsis"></i></button>
+
+      </ng-template>
+      <nz-tabset style="height: 200px" nzSelectedIndex="idx1" [nzTabBarExtraContent]="action1">
+        <nz-tab nzTitle="任务列表">
+          task
+        </nz-tab>
+        <nz-tab nzTitle="通知列表">
+          notice
+        </nz-tab>
+        <nz-tab nzTitle="技术资讯">
+          notice
+        </nz-tab>
+      </nz-tabset>
+    </nz-card-tab>
+  </nz-card>
+  <nz-card>
+    <nz-card-tab>
+      <nz-tabset nzSize="large" [(nzSelectedIndex)]="idx2" (nzSelectedIndexChange)="selectedIndexChange2($event)"
+        [nzTabBarExtraContent]="switch">
+        <ng-template #switch>
+          <nz-radio-group [(ngModel)]="sortType" nzButtonStyle="solid" class="mr-md">
+            <label nz-radio-button [nzValue]="'client'">
+              <span>Client</span>
+            </label>
+            <label nz-radio-button [nzValue]="'service'">
+              <span>Service</span>
+            </label>
+            <label nz-radio-button [nzValue]="'progress'">
+              <span>Progress</span>
+            </label>
+
+          </nz-radio-group>
+        </ng-template>
+        <nz-tab nzTitle="Under handling" style="padding-top: 15px">
+
+        </nz-tab>
+        <nz-tab nzTitle="Pending">
+
+        </nz-tab>
+        <nz-tab nzTitle="All">
+
+        </nz-tab>
+      </nz-tabset>
+      <ng-container [ngSwitch]="idx2">
+        <div *ngSwitchCase="0">
+          <div *ngIf="showList" nz-row nzGutter="32" style="margin-top: 15px;">
+
+            <div *ngFor="let i of showList" nz-col nzSm="12" nzXl="8">
+              <nz-card class="ant-card__body-nopadding">
+                <div class="d-flex justify-content-between align-items-start px-md pt-md">
+                  <div>
+                    <a target="_blank" [routerLink]="['/projectdetails',i.ProjectNo]"
+                      class="text-md pr-sm">{{i.ProjectNo}}</a>
+                    <nz-tag nzColor="green">{{i.ManualProgress}}</nz-tag>
+                    <nz-tag *ngIf="i.ManualProgress === 'Job Terminated'" nzColor="orange">Pending</nz-tag>
+                    <nz-tag *ngIf="i.ManualProgress === 'Job Finished'" nzColor="blue">Complete</nz-tag>
+                    <div class="text-grey text-xs mt-xs">
+                      i.opened tasks, tasks completed
+                    </div>
+                  </div>
+                  <nz-dropdown nzPlacement="bottomRight">
+                    <span class="dd-btn" nz-dropdown><i nz-icon type="ellipsis"></i></span>
+                    <ul nz-menu>
+
+                      <li nz-menu-item (click)="setProgressType(i)">修改进度</li>
+
+                    </ul>
+                  </nz-dropdown>
+                </div>
+                <nz-progress [nzPercent]="i.ProgressPercent" [nzStatus]="i.ManualProgress" [nzShowInfo]="false"
+                  nzStrokeWidth="3" nzSize="small"></nz-progress>
+                <div class="px-md text-xs">
+                  <strong class="pr-xs">{{i.ProgressPercent||0}}%</strong>completed
+                </div>
+                <div class="px-md pt-md overflow-hidden" style="height: 70px">{{i.ClientName}},{{i.ServiceNames}}</div>
+                <div class="px-md pb-md d-flex align-items-start">
+                  <div class="width-50">
+                    <div class="text-grey text-sm">Created</div>
+                    <strong>{{i.OpenDate | _date: 'MM/DD/YYYY' }}</strong>
+                  </div>
+                  <div class="width-50">
+                    <div class="text-grey text-sm">Deadline</div>
+                    <strong>{{i.TargetDate | _date: 'MM/DD/YYYY' }}</strong>
+                  </div>
+                </div>
+                <div class="p-md border-top-1">
+                  <div class="text-grey text-sm pb-sm">Team</div>
+                  <!-- <avatar-list size="small">
+                  <avatar-list-item *ngFor="let u of i.tean" [tips]="u.name" [src]="u.mp"></avatar-list-item>
+                </avatar-list> -->
+                </div>
+              </nz-card>
             </div>
           </div>
         </div>
-      </nz-tab>
-      <nz-tab nzTitle="Job        In" nzForceRender="true">
-        <div nz-row>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="16">
-            <div class="bar">
-              <g2-bar *ngIf="show" id="revenue" height="295" [title]="RevenueTitle" [data]="jobinData"></g2-bar>
-            </div>
-          </div>
-          <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8">
-            <div class="rank">
-              <h4 class="ranking-title">list</h4>
-              <ul class="rank-list">
-                <li *ngFor="let i of jobinData">
-                  <span class="title">{{i.x}}</span>:
-                  <span class="value">{{i.y|_currency}}</span>
-                </li>
-              </ul>
+        <div *ngSwitchCase="1">
+          <div *ngIf="showList" nz-row nzGutter="32" style="margin-top: 15px;">
+
+            <div *ngFor="let i of showList" nz-col nzSm="12" nzXl="8">
+              <nz-card class="ant-card__body-nopadding">
+                <div class="d-flex justify-content-between align-items-start px-md pt-md">
+                  <div>
+                    <a target="_blank" [routerLink]="['/projectdetails',i.ProjectNo]"
+                      class="text-md pr-sm">{{i.ProjectNo}}</a>
+                    <nz-tag nzColor="green">{{i.ManualProgress}}</nz-tag>
+                    <nz-tag *ngIf="i.ManualProgress === 'Job Terminated'" nzColor="orange">Pending</nz-tag>
+                    <nz-tag *ngIf="i.ManualProgress === 'Job Finished'" nzColor="blue">Complete</nz-tag>
+                    <div class="text-grey text-xs mt-xs">
+                      opened tasks, tasks completed
+                    </div>
+                  </div>
+                  <nz-dropdown nzPlacement="bottomRight">
+                    <span class="dd-btn" nz-dropdown><i nz-icon type="ellipsis"></i></span>
+                    <ul nz-menu>
+                      <li nz-menu-item [routerLink]="['/home/project',i.ProjectNo]">View</li>
+                      <li nz-menu-item (click)="msg.success('edit')">Edit</li>
+                      <li nz-menu-item>
+                        <nz-popconfirm nzTitle="确定吗？" (nzOnConfirm)="del(i, idx2)">
+                          <span nz-popconfirm>Remove</span>
+                        </nz-popconfirm>
+                      </li>
+                    </ul>
+                  </nz-dropdown>
+                </div>
+                <nz-progress [nzPercent]="i.ProgressPercent" [nzStatus]="i.ManualProgress" [nzShowInfo]="false"
+                  nzStrokeWidth="3" nzSize="small"></nz-progress>
+                <div class="px-md text-xs">
+                  <strong class="pr-xs">{{i.ProgressPercent||0}}%</strong>completed
+                </div>
+                <div class="px-md pt-md overflow-hidden" style="height: 70px">{{i.ClientName}},{{i.ServiceNames}}</div>
+                <div class="px-md pb-md d-flex align-items-start">
+                  <div class="width-50">
+                    <div class="text-grey text-sm">Created</div>
+                    <strong>{{i.OpenDate | _date: 'MM/DD/YYYY' }}</strong>
+                  </div>
+                  <div class="width-50">
+                    <div class="text-grey text-sm">Deadline</div>
+                    <strong>{{i.TargetDate | _date: 'MM/DD/YYYY' }}</strong>
+                  </div>
+                </div>
+                <div class="p-md border-top-1">
+                  <div class="text-grey text-sm pb-sm">Team</div>
+                  <!-- <avatar-list size="small">
+                  <avatar-list-item *ngFor="let u of i.tean" [tips]="u.name" [src]="u.mp"></avatar-list-item>
+                </avatar-list> -->
+                </div>
+              </nz-card>
             </div>
           </div>
         </div>
-      </nz-tab>
+        <div *ngSwitchCase="2">
+          <div *ngIf="showList" nz-row nzGutter="32" style="margin-top: 15px;">
 
-    </nz-tabset>
-  </div>
-  <div nz-row>
-    <g2-bar id="revenue" height="295" [title]="RevenueTitle" [data]="jobinData"></g2-bar>
-  </div>
+            <div *ngFor="let i of showList" nz-col nzSm="12" nzXl="8">
+              <nz-card class="ant-card__body-nopadding">
+                <div class="d-flex justify-content-between align-items-start px-md pt-md">
+                  <div>
+                    <a target="_blank" [routerLink]="['/projectdetails',i.ProjectNo]"
+                      class="text-md pr-sm">{{i.ProjectNo}}</a>
+                    <nz-tag nzColor="green">{{i.ManualProgress}}</nz-tag>
+                    <nz-tag *ngIf="i.ManualProgress === 'Job Terminated'" nzColor="orange">Pending</nz-tag>
+                    <nz-tag *ngIf="i.ManualProgress === 'Job Finished'" nzColor="blue">Complete</nz-tag>
+                    <div class="text-grey text-xs mt-xs">
+                      opened tasks, tasks completed
+                    </div>
+                  </div>
+                  <nz-dropdown nzPlacement="bottomRight">
+                    <span class="dd-btn" nz-dropdown><i nz-icon type="ellipsis"></i></span>
+                    <ul nz-menu>
+                      <li nz-menu-item [routerLink]="['/home/project',i.ProjectNo]">View</li>
+                      <li nz-menu-item (click)="msg.success('edit')">Edit</li>
+                      <li nz-menu-item>
+                        <nz-popconfirm nzTitle="确定吗？" (nzOnConfirm)="del(i, idx2)">
+                          <span nz-popconfirm>Remove</span>
+                        </nz-popconfirm>
+                      </li>
+                    </ul>
+                  </nz-dropdown>
+                </div>
+                <nz-progress [nzPercent]="i.ProgressPercent" [nzStatus]="i.ManualProgress" [nzShowInfo]="false"
+                  nzStrokeWidth="3" nzSize="small"></nz-progress>
+                <div class="px-md text-xs">
+                  <strong class="pr-xs">{{i.ProgressPercent||0}}%</strong>completed
+                </div>
+                <div class="px-md pt-md overflow-hidden" style="height: 70px">{{i.ClientName}},{{i.ServiceNames}}</div>
+                <div class="px-md pb-md d-flex align-items-start">
+                  <div class="width-50">
+                    <div class="text-grey text-sm">Created</div>
+                    <strong>{{i.OpenDate | _date: 'MM/DD/YYYY' }}</strong>
+                  </div>
+                  <div class="width-50">
+                    <div class="text-grey text-sm">Deadline</div>
+                    <strong>{{i.TargetDate | _date: 'MM/DD/YYYY' }}</strong>
+                  </div>
+                </div>
+                <div class="p-md border-top-1">
+                  <div class="text-grey text-sm pb-sm">Team</div>
+                  <!-- <avatar-list size="small">
+                  <avatar-list-item *ngFor="let u of i.tean" [tips]="u.name" [src]="u.mp"></avatar-list-item>
+                </avatar-list> -->
+                </div>
+              </nz-card>
+            </div>
+          </div>
+        </div>
+      </ng-container>
 
+    </nz-card-tab>
+  </nz-card>
 </page-header>

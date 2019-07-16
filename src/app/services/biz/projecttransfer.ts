@@ -7,6 +7,7 @@ export class ProjectTransfer implements BaseEntity {
   QuotationNo: string;
   OpenDate: Date;
   CompleteDate?: Date;
+  TargetDate?:Date;
   InvoiceDate?: Date;
   EngineerName: string;
   AssistEngineerName: string;
@@ -16,6 +17,8 @@ export class ProjectTransfer implements BaseEntity {
   ClientName: string;
   CType:string;
   Records:ActionRecord[];
+  ManualProgress:string;
+  Reports:any;
   ServiceNames: string[];
   BType:string;
   RType:string;
@@ -24,10 +27,14 @@ export class ProjectTransfer implements BaseEntity {
   Product: string;
   Models: string;
   ActualProjectWorkingDays:number;
+  SetDocuments:string;
+  ProgressPercent:number;
+  FinishedDocuments:string;
   QuotedFee: number;
   CurrencyInUSD: boolean;
   InvoicedFee?: number;
   TobeFinishFlag:boolean;
+  RevenueMonth:string;
   CreatedOn: Date;
   DeletedOn?: Date;
   LastModifiedOn?: Date;

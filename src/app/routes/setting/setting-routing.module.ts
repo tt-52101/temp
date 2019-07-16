@@ -24,6 +24,7 @@ const routes: Routes = [
   { path: 'monthlyDataEdit', component: SettingTeamsetEditMonthlyDataEditComponent },
   { path: 'target', component: SettingTeamsetTargetComponent },
   { path: 'members', component: SettingTeamsetMembersComponent },
+ 
   { path: 'project', component: SettingImportEditProjectComponent },
   { path: 'records', component: SettingImportEditRecordsComponent },
   { path: 'staff', component: SettingTeamsetEditStaffComponent },

@@ -1,18 +1,8 @@
-import { ToolsModule } from './../../tools/tools.module';
-import { map, zip } from 'rxjs/operators';
-import {
-  ElementRef,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewChild,
-} from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { zip } from 'rxjs';
+
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { format } from 'date-fns';
-import { ProjectTransfer } from 'app/services/biz/projecttransfer';
-import { Observable } from 'rxjs';
-import { LineChartOutline } from '@ant-design/icons-angular/icons/public_api';
-import { G2CustomComponent } from '@delon/chart';
 
 @Component({
   selector: 'app-routes-home-team',
@@ -21,56 +11,48 @@ import { G2CustomComponent } from '@delon/chart';
 export class RoutesHomeTeamComponent implements OnInit {
   constructor(private http: _HttpClient) {
     this.show = true;
-    console.log('constructor');
-    console.log(this.show);
   }
-  // project查询参数
-  params: any = {
-    CurrentPage: 1,
-    PageSize: 20,
-    IsDeleted: false,
-    IsIncludeAll: true,
-    IsFinished: false,
-    EngineerName: '',
-    EngineeringCSName: '',
-    AssistEngineerName: '',
-    SalesCSName: '',
-    SalesName: '',
-    ServiceName: '',
-    ClientName: '',
-    OpenDateFrom: '',
-    OpenDateTo: '',
-    CompleteDateFrom: '',
-    CompleteDateTo: '',
-  };
-  //  revenue Data from json
+
+  // four blocks
+  // block 1 年度完成revenue
+  percentYearRevenue = 0;
   budgetTotal = 0;
   actualTotoal = 0;
+  // block 2 年度Job In
+  jobInData: any[] = [];
+  jobInDataYear: any[] = [];
+  jobInYTD = 0;
+  // block 3 月度完成revenue
+  percentMonthRevenue = 0;
   budgetMonth = 0;
   actualMonth = 0;
-  monthData: any = [];
-  jobinData: any = [];
-  percentMonthRevenue = 0;
-  percentYearRevenue = 0;
+  // block 4 月度Job In
+  jobInDataMonth: any[] = [];
+  jobInMTD = 0;
+  //  date var
+  theMonth = new Date().getMonth();
+  theYear = new Date().getFullYear();
+
+  revenueActual: any = [];
+  jobInActual: any = [];
+
   timeChartData: any = [];
 
-  
-  latestUpdateDate: Date;
-  totalLiveQuantity = 0;
-  totalLiveAmount = 0;
+  // latestUpdateDate: Date;
+  // totalLiveQuantity = 0;
+  // totalLiveAmount = 0;
   RevenueTitle = '';
 
   ProjectNos = 'Project Nos';
   loading = false;
   engineersList = [];
-
-  projectNoPieData = [];
+  workload = 0;
 
   totalTabs: any[] = [
     { key: 'Revenue', show: true },
     { key: 'Job in', show: false },
   ];
-  chartIndex=0;
+  chartIndex = 0;
   show = true;
   selectedIndexChange(idx: any) {
     if (idx === 1) {
@@ -79,49 +61,171 @@ export class RoutesHomeTeamComponent implements OnInit {
       this.show = true;
     }
   }
-  engineerTabs: any = [];
-
-  ngOnInit() {
-    this.getRevenueJson().subscribe(
+  maxLiveCount = 0;
+  maxLiveAmount = 0;
+  maxFYCount = 0;
+  maxFYAmount = 0;
+  maxLoad = 0;
+  jobDataofThisYear: any[] = [];
+  @Input() set subTeam(value: string) {
+    this.loading = true;
+    this.http.get(`biz/EngineersStatus/${value}`).subscribe(
       res => {
-        this.monthData = [];
-        this.RevenueTitle = 'Revenue (' + res.unit + ')';
-        const monthInt = new Date().getMonth();
-        this.budgetMonth = res.data[monthInt].Budget;
-        this.budgetTotal = [...res.data].reduce(
+        // this.engineersList = res.Items;
+        this.engineersShowList = res.Items;
+        this.loading = false;
+
+        this.maxLiveCount = this.engineersShowList.reduce(
+          (acc, cur) => (cur.LiveCount <acc ? acc : cur.LiveCount),
+          0,
+        );
+        this.maxLiveAmount = this.engineersShowList.reduce(
+          (acc, cur) => (cur.LiveAmount < acc ? acc : cur.LiveAmount),
+          0,
+        );
+        this.maxFYCount = this.engineersShowList.reduce(
+          (acc, cur) =>
+            cur.FinishedCountofThisYear < acc
+              ? acc
+              : cur.FinishedCountofThisYear,
+          0,
+        );
+        this.maxFYAmount = this.engineersShowList.reduce(
+          (acc, cur) =>
+            cur.FinishedAmountofThisYear < acc
+              ? acc
+              : cur.FinishedAmountofThisYear,
+          0,
+        );
+        this.maxLoad = this.engineersShowList.reduce(
+          (acc, cur) =>
+            cur.TotalLoadWorkingDay < acc ? acc : cur.TotalLoadWorkingDay,
+          0,
+        );
+
+        this.maxLoad *= 2;
+        this.maxLiveCount *= 2;
+        this.maxLiveAmount *= 2;
+        this.maxFYCount *= 2;
+        this.maxFYAmount *= 2;
+        console.log(
+          this.maxLiveCount,
+          this.maxLiveAmount,
+          this.maxFYCount,
+          this.maxFYAmount,
+          this.maxLoad,
+        );
+      },
+      err => (this.loading = false),
+      () => {},
+    );
+  }
+  ngOnInit() {
+    this.loading = true;
+
+    zip(
+      this.http.get(`biz/revenue/${this.theYear}`),
+      this.http.get('biz/jobtrends/team', {
+        from: new Date(this.theYear, this.theMonth, 1).toLocaleDateString(),
+        to: new Date().toLocaleDateString(),
+      }),
+    ).subscribe(
+      ([rjJsonData, jonIn]) => {
+        // block 1 & 3
+        this.revenueActual = [];
+        this.RevenueTitle = 'Revenue (' + rjJsonData.unit + ')';
+        this.budgetMonth = rjJsonData.data[this.theMonth].Budget;
+        this.budgetTotal = [...rjJsonData.data].reduce(
           (acc, cur) => acc + cur.Budget,
           0,
         );
-        this.actualTotoal = [...res.data].reduce(
+        this.actualTotoal = [...rjJsonData.data].reduce(
           (acc, cur) => acc + cur.Actual,
           0,
         );
         this.percentYearRevenue = Math.floor(
           (this.actualTotoal * 100) / this.budgetTotal,
         );
-        this.percentMonthRevenue = Math.floor((134 * 100) / this.budgetMonth);
-        // for bar chart of revenue
-        [...res.data].forEach(element => {
-          if (this.monthData.length !== 12) {
-            this.monthData.push({
-              x: element.Month,
-              y: element.Actual,
+
+        // block 2
+        const temp3: any[] = [];
+        [...rjJsonData.data].forEach(item => {
+          temp3.push({
+            x: item.Month,
+            y: item.JobInActual,
+          });
+          this.revenueActual.push({
+            x: item.Month,
+            y: item.Actual,
+          });
+          this.jobInActual.push({
+            x: item.Month,
+            y: item.JobInActual,
+          });
+        });
+        this.jobInDataYear = temp3;
+        const temp0 = this.jobInDataYear.reduce((acc, cur) => acc + cur.y, 0);
+        this.jobInYTD = temp0;
+        console.log(this.jobInDataYear);
+        console.log(this.jobInYTD);
+        // block 3
+        // this.jobInDataMonth = this.getFinshedStatusofThisMonth(jonIn);
+        console.log(jonIn);
+        this.actualMonth = jonIn.Items.reduce(
+          (acc, cur) => acc + cur.JobCompleteAmount,
+          0,
+        );
+        this.percentMonthRevenue = Math.floor(
+          (this.actualMonth * 100) / rjJsonData.data[this.theMonth].Budget,
+        );
+        // block 4
+        const temp1: any[] = [];
+        const temp2: any[] = [];
+        jonIn.Items.forEach(element => {
+          temp1.push({
+            x: format(Date.parse(element.TheDay), 'YYYY-MM-DD'),
+            y: element.JobOpenAmount,
+          });
+        });
+        const beginDay = new Date(this.theYear, this.theMonth, 1).getTime();
+        const endDay = new Date().getTime();
+        const dayCount = Math.abs(endDay - beginDay) / 1000 / 60 / 60 / 24;
+        for (let i = 0; i < dayCount; i += 1) {
+          let theDay = new Date(beginDay + 1000 * 60 * 60 * 24 * i);
+          let ss = temp1.find(n => n.x === format(theDay, 'YYYY-MM-DD'));
+          if (ss) {
+            temp2.push({
+              x: format(theDay, 'YYYY-MM-DD'),
+              y: ss.y,
+            });
+          } else {
+            temp2.push({
+              x: format(theDay, 'YYYY-MM-DD'),
+              y: 0,
             });
           }
-          // for bar chart of job in
-          if (this.jobinData.length !== 12) {
-            this.jobinData.push({
-              x: element.Month,
-              y: element.Budget,
-            });
-          }
+        }
+        this.jobInDataMonth = temp2;
+        const tempMTD = this.jobInDataMonth.reduce(
+          (acc, cur) => acc + cur.y,
+          0,
+        );
+        this.jobInMTD = tempMTD;
+        this.jobInYTD = this.jobInYTD + this.jobInMTD;
+        console.log(this.jobInMTD);
+
+        // for chart of revenue
+        [...rjJsonData.data].forEach(element => {
           // for timline chart
           if (this.timeChartData.length !== 24) {
-            this.timeChartData.push({
-              month: element.Month,
-              valueType: 'actual',
-              value: element.Actual,
-            });
+            if (element.Actual !== 0) {
+              this.timeChartData.push({
+                month: element.Month,
+                valueType: 'actual',
+                value: element.Actual,
+              });
+            }
+
             this.timeChartData.push({
               month: element.Month,
               valueType: 'budget',
@@ -129,43 +233,26 @@ export class RoutesHomeTeamComponent implements OnInit {
             });
           }
         });
-      },
-      err => {},
-      () => {
-        console.log(this.timeChartData);
-      },
-    );
 
-    // fetching existing engineer
-    this.getExistEngineers().subscribe(
-      res => (this.engineersList = res),
-      err => {},
+        
+        this.loading = false;
+      },
+      err => (this.loading = false),
       () => {
-        for (let i = 0; i < this.engineersList.length; i++) {
-          this.engineerTabs.push({
-            name: this.engineersList[i],
-            content: '',
-          });
-        }
+        this.subTeam='total';
+        this.renderChart(this.timeChartData);
       },
     );
-    console.log('after init');
-    console.log(this.show);
   }
-  render(el: ElementRef) {
-    // fetch dbstatus
-    this.getDBStatus().subscribe(res => {
-      this.latestUpdateDate = res.LastUpdateTime;
-      this.totalLiveQuantity = res.LiveCount;
-      this.totalLiveAmount = res.LiveAmount;
-    });
-    console.log('before render');
+
+  renderChart(chartData: any[]) {
     const chart = new G2.Chart({
-      container: el.nativeElement,
+      container: 'lineChart',
       forceFit: true,
       height: 290,
+      animate: false,
     });
-    chart.source(this.timeChartData, {
+    chart.source(chartData, {
       month: {
         range: [0, 1],
       },
@@ -178,7 +265,7 @@ export class RoutesHomeTeamComponent implements OnInit {
     chart.axis('value', {
       label: {
         formatter: function formatter(val) {
-          return val + '$';
+          return val + '￥';
         },
       },
     });
@@ -197,31 +284,37 @@ export class RoutesHomeTeamComponent implements OnInit {
         lineWidth: 1,
       });
     chart.render();
-    console.log('after render');
-    console.log(this.show);
-  }
-  getDbStatus() {
-    return this.http.get('home/dbstatus');
-  }
-  getRevenueJson() {
-    return this.http.get('biz/revenue');
-  }
-  getExistEngineers() {
-    return this.http.get('biz/engineers');
-  }
-  getDBStatus() {
-    return this.http.get('home/dbstatus');
   }
   engIdx = 0;
-  selectChange(idx: number) {
-    // if (this.totalTabs[idx].show !== true) {
-    //   this.totalTabs[idx].show = true;
-    //   this.cdr.detectChanges();
-    // }
-    console.log('change');
+
+  engineersShowList: any[] = [];
+  getFinshedStatusofThisMonth(data: any[]) {
+    const firstDayofThisMonth = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1,
+    );
+    //   console.log(new Date().getTime());
+    //   console.log(firstDayofThisMonth.getTime());
+    //   console.log(new Date().getTime()-firstDayofThisMonth.getTime());
+    const d = new Date().getTime() - firstDayofThisMonth.getTime();
+    const dayCount = Math.abs(Math.floor(d / 1000 / 60 / 60 / 24));
+    console.log(dayCount);
+    return data.slice(-dayCount);
   }
-  engChange(index: number) {}
-  format(val: number) {
-    return `&yen ${val.toFixed(2)}`;
+  sortChange(sort: { key: string; value: string }) {
+    if (sort.key && sort.value) {
+      this.engineersShowList = this.engineersShowList.sort((a, b) =>
+        sort.value === 'ascend'
+          ? a[sort.key!] > b[sort.key!]
+            ? 1
+            : -1
+          : b[sort.key!] > a[sort.key!]
+          ? 1
+          : -1,
+      );
+    } else {
+      this.engineersShowList = this.engineersShowList;
+    }
   }
 }

@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRe
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
 import { SettingSetEditClienteditComponent } from '../edit/clientedit/clientedit.component';
+import { isThisMinute } from 'date-fns';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class SettingSetClientsetComponent implements OnInit {
   checkloading = false;
   inputclientName='';
   selectStatus=0;
-  selectClientType:string;
+  selectClientType='Normal';
   params={
     ClientType:'Normal',
     EntryDate:new Date(2006,2,1).toLocaleDateString(),
@@ -68,7 +69,7 @@ export class SettingSetClientsetComponent implements OnInit {
           type: 'static',
           modal: {
             component: SettingSetEditClienteditComponent,
-            size: 'lg',
+            size: 'md',
             paramsName: 'i',
           },
           click: 'load',
@@ -104,19 +105,32 @@ export class SettingSetClientsetComponent implements OnInit {
   getData(){
     this.checkloading=true;
     this.loading=true;
+    console.log(this.selectClientType);
     if(this.expandForm){
       if(this.selectStatus===0){
+        this.params.Name='';
         this.params.ClientType='';
+        this.params.SetAlready=false;
         this.params.EntryDate=this.startDate.toLocaleDateString();
       }else{
+        this.params.Name='';
         this.params.ClientType=this.selectClientType;
         this.params.EntryDate=this.startDate.toLocaleDateString();
         this.params.SetAlready=true;
       }
       
       this.http.get('client/collectionByFilter',this.params).subscribe(res=>{
-        this.clients=[...res];
-        this.cdr.detectChanges();
+        if(res.Message==='OK'){
+          this.clients=res.Items;
+          this.cdr.detectChanges();
+          this.msg.success(`成功搜索到${res.Items.length}个客户！`);
+        }
+        else{
+          this.clients=[];
+          this.cdr.detectChanges();
+          this.msg.error(`搜索到0个客户！`);
+        }
+        
       },
       err=>{
         this.checkloading=false;
@@ -126,6 +140,7 @@ export class SettingSetClientsetComponent implements OnInit {
       ()=>{
         this.checkloading=false;
         this.loading=false;
+        console.log(this.clients);
         this.msg.success('数据获取成功！');
       });
     }else{
@@ -135,16 +150,22 @@ export class SettingSetClientsetComponent implements OnInit {
         this.loading=false;
         return;
       }else{
+        this.selectClientType='';
         this.params.Name=this.inputclientName;
       this.params.ClientType='';
       this.params.EntryDate='';
       console.log(this.params);
       this.http.get('client/collectionByFilter',this.params).subscribe(
         res=>{
+          if(res.Message==='OK'){
+            this.clients=res.Items;
+            console.log(this.clients);
+            this.cdr.detectChanges();
+            this.msg.success(`成功搜索到${res.Items.length}个客户`);
+          }else{
+            this.msg.error('出了点问题！');
+          }
           
-          this.clients=res;
-          console.log(this.clients);
-          this.cdr.detectChanges();
         },
         err=>{
           this.checkloading=false;
