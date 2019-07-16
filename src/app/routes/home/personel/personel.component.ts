@@ -1,6 +1,7 @@
+import { HomePersonelCategorizeComponent } from './categorize/categorize.component';
 import { ProjectTransfer } from './../../../services/biz/projecttransfer';
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { _HttpClient, ModalHelper } from '@delon/theme';
+import { _HttpClient, ModalHelper, DrawerHelper } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
 import { zip } from 'rxjs';
 
@@ -34,6 +35,7 @@ export class RoutesHomePersonelComponent implements OnInit {
     private http: _HttpClient,
     public msg: NzMessageService,
     private cdr: ChangeDetectorRef,
+    private drawer:DrawerHelper
   ) {}
 
   ngOnInit() {
@@ -43,6 +45,7 @@ export class RoutesHomePersonelComponent implements OnInit {
     this.synName = userO.SyneltsName;
     console.log(this.synName);
     this.getPersonelJobData(this.synName);
+    this.status='joh';
   }
 
   getPersonelJobData(synName: string) {
@@ -273,5 +276,10 @@ export class RoutesHomePersonelComponent implements OnInit {
         }
         break;
     }
+  }
+  openCaculation(i:any){
+    this.drawer.static('分类计算结果',HomePersonelCategorizeComponent,{i},{}).subscribe(
+      res=>console.log(res)
+    );
   }
 }

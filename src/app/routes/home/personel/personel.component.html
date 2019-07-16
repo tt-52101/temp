@@ -97,7 +97,8 @@
     <g2-timeline [padding]="[40,20,40,50]" mask="MM/DD" [data]="timeJobData" [colorMap]="{y1:'red',y2:'green'}" [titleMap]="{y1: '开案', y2: '结案'}" [height]="280"></g2-timeline>
   </nz-card>
   <div class="d-flex align-items-center mb-lg">
-    <h3 class="flex-1 text-lg">项目列表</h3>
+    <h3 class="flex-1 text-lg text-orange">项目列表 <button  *ngIf="ptsShow.length>0" (click)="openCaculation(ptsShow)" nz-button nzType="danger">分类计算</button></h3>
+    
     <div>
 
       <nz-radio-group [(ngModel)]="status" nzButtonStyle="solid" class="mr-md">
@@ -119,6 +120,8 @@
       </nz-input-group> -->
     </div>
   </div>
+ 
+
   <nz-table #nzTable [nzData]="ptsShow" [nzLoading]="loading" [(nzPageSize)]="pageSize" [(nzPageIndex)]="pageIndex"
     [nzShowQuickJumper]="'true'">
     <thead (nzSortChange)="sort($event)" nzSingleSort>
