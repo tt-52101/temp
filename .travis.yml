@@ -3,7 +3,7 @@ dist: trusty
 language: node_js
 
 node_js:
-  - '10.9.0'
+  - '10.15.1'
 
 addons:
   apt:
@@ -19,9 +19,6 @@ git:
 jobs:
   include:
     - env: "MODE=build"
-    - env: "MODE=lint"
-    - env: "MODE=test-coverage"
-    - env: "DEPLOY_MODE=artifacts"
       if: branch = master
 
 matrix:
