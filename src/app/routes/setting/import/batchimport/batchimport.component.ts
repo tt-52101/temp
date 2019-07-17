@@ -1,32 +1,32 @@
-import { HttpClient } from '@angular/common/http';
+import { toBoolean } from '@delon/util';
+import { SFSchema, SFUISchema, SFUISchemaItem } from '@delon/form';
 import { NzMessageService } from 'ng-zorro-antd';
 import {
   Component,
   OnInit,
   Input,
-  Output,
   OnChanges,
-  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
 
 import { _HttpClient } from '@delon/theme';
 import { ProjectTransfer } from 'app/services/biz/projecttransfer';
-import { zip, forkJoin, Observable, of, from } from 'rxjs';
-import { zipAll, concatMap } from 'rxjs/operators';
+import { zip } from 'rxjs';
 import { syntaxError } from '@angular/compiler';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-setting-import-batchimport',
   templateUrl: './batchimport.component.html',
 })
 export class SettingImportBatchimportComponent implements OnInit, OnChanges {
-  revenueYear=new Date().getFullYear().toString();
-  revenueMonth=(new Date().getMonth()+1).toString();
-  isRevenue=false;
-  importOption='cover';
+  revenueMonth:Date;
+  theYear = new Date().getFullYear().toString();
+  theMonth = (new Date().getMonth() + 1).toString();
+  isRevenue = false;
+  importOption: string;
   private _inputValue: string;
-  inputJsonObj=[];
+  inputJsonObj:ProjectTransfer[]= [];
   @Input() set inputValue(value: string) {
     if (this._inputValue !== value) {
       this._inputValue = value;
@@ -34,8 +34,7 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
         this.inputJsonObj = JSON.parse(value);
         this.pCount = this.inputJsonObj.length;
         this.pTime = this.inputJsonObj.length * 0.2;
-        this._inputValue=JSON.stringify(this.inputJsonObj,undefined,'\t');
-        
+        this._inputValue = JSON.stringify(this.inputJsonObj, undefined, '\t');
       } catch (e) {
         if (e instanceof syntaxError) {
         } else {
@@ -69,15 +68,15 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
       this.inputJsonObj === null
     ) {
       this.message.warning('还没有内容呢！');
-      this.loading=false;
-      this.disabled=false;
+      this.loading = false;
+      this.disabled = false;
       return;
     }
-    const urlcalls = [];
-    urlcalls.push('person/SimpleCreateByProjects');
-    urlcalls.push('home/Client/addandupdatecollection');
-    urlcalls.push('home/Service/addandupdatecollection');
-
+    if(!this.validateRegister()){
+      
+      this.message.error('无法继续');
+    };
+    console.log(format(this.revenueMonth,'YYYY-MM'));
     zip(
       this.http.post('person/SimpleCreateByProjects', this.inputJsonObj),
       this.http.post('home/Service/addandupdatecollection', this.inputJsonObj),
@@ -93,61 +92,74 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
         this.disabled = false;
       },
       () => {
-        switch(this.importOption){
+        switch (this.importOption) {
           case 'cover':
-            this.coverImport();
+            this.coverImport(true);
             break;
-            case 'ignore':
-              {}
-              break;
-              case 'only':
-                {
-                  
-                  this.onlyImport();
-                }
-            
+          case 'ignore':
+            this.coverImport(false);
+            break;
+          case 'only':
+            this.onlyImport();
             break;
         }
+        this.loading = false;
+        this.disabled = false;
       },
     );
   }
-  
-  optionChange(value:any){
-    if(value===false){
-      if(this.importOption==='only'){
-        console.log('bingo');
-        this.isRevenue=true;
-      }else{
-        this.isRevenue=false;
-      }
+
+  onlyImport() {
+    
+    if(this.validateRegister()){
+      this.inputJsonObj.forEach(item=>{
+        item.RevenueMonth=format(this.revenueMonth,'YYYY-MM');
+       });
+        this.http.post('home/revenueregisterbatch',this.inputJsonObj)
+        .subscribe(
+          res=>{console.log(res);}
+        )
+    }else{
+      this.message.error('无法继续');
+    };
+   
+  }
+  validateRegister():boolean{
+    if(!this.revenueMonth){
+      this.message.error('月份未输入！');
+      return false;
     }
+    this.inputJsonObj.forEach(item=>{
+      if(item.CompleteDate===null){
+        this.message.error('有项目还未完成！');
+        return false;
+      }
+      if(item.InvoicedFee===0){
+        this.message.error('有项目还没分钱');
+        return false;
+      }
+      return true;
+    });
+    return true;
   }
-  onlyImport(){
-    console.log(this.revenueMonth);
-    // if(this.isRevenue){
-    //   this.inputJsonObj.forEach(element => {
-    //     console.log(this.revenueMonth);
-    //   });
-    // }
-    // this.http.post('home/revenueregister',this.inputJsonObj)
-    // .subscribe(
-    //   res=>{}
-    // )
-  }
-  coverImport(){
-    this.http
-          .post('home/Projects/addandupdatecollection', this.inputJsonObj)
-          .subscribe(
-            res => console.log(res),
-            err => {
-              this.loading = false;
-              this.disabled = false;
-            },
-            () => {
-              this.loading = false;
-              this.disabled = false;
-              this.message.info('完成了');
-            },
-          );
+  coverImport(isCovered: boolean) {
+    let url = '';
+    if (isCovered) {
+      url = 'home/Projects/addandupdatecollection';
+    } else {
+      url = 'home/Projects/addcollection';
+    }
+    this.http.post(url, this.inputJsonObj).subscribe(
+      res => console.log(res),
+      err => {
+        this.loading = false;
+        this.disabled = false;
+      },
+      () => {
+        this.loading = false;
+        this.disabled = false;
+        this.message.info('完成了');
+      },
+    );
   }
 }

@@ -1,36 +1,17 @@
 <nz-row>
+
   <nz-col nzMd="8" nzLg="8">
-    <nz-select [(ngModel)]="importOption" (nzOpenChange)="optionChange($event)" style="width: 300px">
+    <nz-select [(ngModel)]="importOption" nzShowSearch style="width: 340px"  nzAllowClear="true" nzPlaceHolder="请选择导入方式" >
       <nz-option nzLabel="导入全部属性并覆盖已存在项目" nzValue="cover"></nz-option>
       <nz-option nzLabel="导入全部属性但忽略已存在项目" nzValue="ignore"></nz-option>
       <nz-option nzLabel="只导入产出相关属性" nzValue="only"></nz-option>
     </nz-select>
   </nz-col>
-  <nz-col nzMd="4" nzLg="4">
-
-  </nz-col>
+ 
 
   <nz-col nzMd="4" nzLg="4">
-    <nz-select *ngIf="isRevenue" [nzDisabled]="!isRevenue" [(ngModel)]="revenueYear" style="width: 100px">
-      <nz-option nzLabel="2019" nzValue='2019'></nz-option>
-      <nz-option nzLabel="2018" nzValue='2018'></nz-option>
-    </nz-select>
-  </nz-col>
-  <nz-col nzMd="3" nzLg="3">
-    <nz-select *ngIf="isRevenue" [(ngModel)]="revenueMonth"  [nzDisabled]="!isRevenue" style="width: 100px">
-      <nz-option nzLabel="01" nzValue=1></nz-option>
-      <nz-option nzLabel="02" nzValue=2></nz-option>
-      <nz-option nzLabel="03" nzValue=3></nz-option>
-      <nz-option nzLabel="04" nzValue=4></nz-option>
-      <nz-option nzLabel="05" nzValue=5></nz-option>
-      <nz-option nzLabel="06" nzValue=6></nz-option>
-      <nz-option nzLabel="07" nzValue=7></nz-option>
-      <nz-option nzLabel="08" nzValue=8></nz-option>
-      <nz-option nzLabel="09" nzValue=9></nz-option>
-      <nz-option nzLabel="10" nzValue=10></nz-option>
-      <nz-option nzLabel="11" nzValue=11></nz-option>
-      <nz-option nzLabel="12" nzValue=12></nz-option>
-    </nz-select>
+    <nz-month-picker [(ngModel)]="revenueMonth" *ngIf="importOption==='only'" nzPlaceHolder="Select Month"></nz-month-picker>
+    
   </nz-col>
 </nz-row>
 <nz-row style="margin-top: 20px">
