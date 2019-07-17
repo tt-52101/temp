@@ -3,7 +3,7 @@ dist: trusty
 language: node_js
 
 node_js:
-  - '10.9.0'
+  - '10.15.1'
 
 addons:
   apt:
