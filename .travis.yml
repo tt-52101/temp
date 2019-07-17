@@ -19,9 +19,6 @@ git:
 jobs:
   include:
     - env: "MODE=build"
-    - env: "MODE=lint"
-    - env: "MODE=test-coverage"
-    - env: "DEPLOY_MODE=artifacts"
       if: branch = master
 
 matrix:
