@@ -42,13 +42,14 @@ export class RoutesHomePersonelComponent implements OnInit {
 
   ngOnInit() {
     const engineerName=this.routeInfo.snapshot.params['engineerName'];
-    if(engineerName){
-      this.synName=engineerName;
-    }else{
+    if(engineerName==='self'){
       const user = localStorage.getItem('user');
       const userO = JSON.parse(user);
       console.log(userO);
       this.synName = userO.SyneltsName;
+    }else{
+      this.synName=engineerName;
+      
     }
     
     console.log(this.synName);

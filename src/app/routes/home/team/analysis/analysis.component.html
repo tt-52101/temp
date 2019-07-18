@@ -1,1 +1,10 @@
-<sf [schema]="periodSchema" layout="inline" [button]="sfBtn" (formSubmit)="submit($event)"></sf>
+<nz-card>
+  <sf
+    #sf
+    [schema]="periodSchema"
+    [button]="sfBtn"
+    (formSubmit)="submit($event)"
+  ></sf>
+</nz-card>
+<nz-card *ngIf="needRevenue" nzTitle="Revenue"> </nz-card>
+<nz-card *ngIf="needJobin" nzTitle="Revenue"> </nz-card>

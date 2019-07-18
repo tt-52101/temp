@@ -7,7 +7,6 @@ import {
   SFComponent,
   SFButton,
   SFSchema,
-  
   SFSchemaEnum,
   SFSchemaEnumType,
 } from '@delon/form';
@@ -113,7 +112,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
           widget: 'autocomplete',
           debounceTime: 100,
           placeholder: '输入Service名称',
-          backfill:true,
+          backfill: true,
           asyncData: (input: string) =>
             of(
               input
@@ -122,8 +121,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
                   )
                 : [],
             ),
-            
-        } 
+        },
       },
       QuotationNo: {
         type: 'string',
@@ -327,10 +325,11 @@ export class SettingTeamsetRoutingComponent implements OnInit {
 
   pts: ProjectTransfer[] = [];
   loading = false;
-  documents:any[]=[];
+  documents: any[] = [];
   ngOnInit(): void {
-    this.http.get('assets/tmp/documents.json').subscribe(
-      res=>this.documents=res);
+    this.http
+      .get('assets/tmp/documents.json')
+      .subscribe(res => (this.documents = res));
     // this.http.get(`home/dbstatus`).subscribe(res => (this.record = res));
     this.http.get('service/collectionbyfilter', { Name: '' }).subscribe(res => {
       console.log(res);
@@ -418,16 +417,19 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         res => {
           if (res.Message === 'OK') {
             this.pts = res.Items;
-            const totalLoad=this.documents.reduce((arr,cur)=>arr+cur.workload,0);
-        this.pts.forEach(item=>{
-          if(item.SetDocuments){
-            const arr=item.SetDocuments.split('_');
-            const actual=this.documents.filter(f=>arr.includes(f.name))
-              .reduce((acc,cur)=>acc+cur.workload,0);
-              item.ProgressPercent=actual*100/totalLoad;
-          }
-         
-        })
+            const totalLoad = this.documents.reduce(
+              (arr, cur) => arr + cur.workload,
+              0,
+            );
+            this.pts.forEach(item => {
+              if (item.SetDocuments) {
+                const arr = item.SetDocuments.split('_');
+                const actual = this.documents
+                  .filter(f => arr.includes(f.name))
+                  .reduce((acc, cur) => acc + cur.workload, 0);
+                item.ProgressPercent = (actual * 100) / totalLoad;
+              }
+            });
             console.log(res.Items);
           } else {
             this.pts = [];
@@ -447,7 +449,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     this.loading = true;
     console.log(this.sf.value);
     const sfv = this.sf.value;
-    
+
     if (sfv.OpenDateFromTo) {
       sfv.OpenDateFrom = this.sf.value.OpenDateFromTo[0];
       sfv.OpenDateTo = this.sf.value.OpenDateFromTo[1];
@@ -462,15 +464,19 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       res => {
         if (res.Message === 'OK') {
           this.pts = res.Items;
-          const totalLoad=this.documents.reduce((arr,cur)=>arr+cur.workload,0);
-        this.pts.forEach(item=>{
-          if(item.SetDocuments){
-            const arr=item.SetDocuments.split('_');
-            const actual=this.documents.filter(f=>arr.includes(f.name))
-              .reduce((acc,cur)=>acc+cur.workload,0);
-              item.ProgressPercent=actual*100/totalLoad;
-          }
-        })
+          const totalLoad = this.documents.reduce(
+            (arr, cur) => arr + cur.workload,
+            0,
+          );
+          this.pts.forEach(item => {
+            if (item.SetDocuments) {
+              const arr = item.SetDocuments.split('_');
+              const actual = this.documents
+                .filter(f => arr.includes(f.name))
+                .reduce((acc, cur) => acc + cur.workload, 0);
+              item.ProgressPercent = (actual * 100) / totalLoad;
+            }
+          });
           this.msg.success(`成功搜索到${res.Items.length}个案子！`);
         } else {
           this.msg.success('搜索到0个案子！');
@@ -511,12 +517,14 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   setTarget() {}
   cancelTarget() {}
   listTarget() {
-    this.loading=true;
-    this.http.get('home/projectsbyfilter',{TobeFinishedFlag:true}).subscribe(
-      res=>this.pts=res.Items,
-      err=>{},
-    ()=>this.loading=false
-    )
+    this.loading = true;
+    this.http
+      .get('home/projectsbyfilter', { TobeFinishedFlag: true })
+      .subscribe(
+        res => (this.pts = res.Items),
+        err => {},
+        () => (this.loading = false),
+      );
   }
   filterNoneSetting() {
     if (this.settingChoose === '只显示未设置项目') {

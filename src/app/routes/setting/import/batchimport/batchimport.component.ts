@@ -72,11 +72,11 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
       this.disabled = false;
       return;
     }
-    if(!this.validateRegister()){
+    // if((!this.validateRegister())&&this.importOption==='only'){
       
-      this.message.error('无法继续');
-    };
-    console.log(format(this.revenueMonth,'YYYY-MM'));
+    //   this.message.error('无法继续');
+    // };
+    console.log(format(this.revenueMonth,'YYYYMM'));
     zip(
       this.http.post('person/SimpleCreateByProjects', this.inputJsonObj),
       this.http.post('home/Service/addandupdatecollection', this.inputJsonObj),
@@ -103,8 +103,7 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
             this.onlyImport();
             break;
         }
-        this.loading = false;
-        this.disabled = false;
+        
       },
     );
   }
@@ -113,11 +112,17 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
     
     if(this.validateRegister()){
       this.inputJsonObj.forEach(item=>{
-        item.RevenueMonth=format(this.revenueMonth,'YYYY-MM');
+        item.RevenueMonth=format(this.revenueMonth,'YYYYMM');
        });
         this.http.post('home/revenueregisterbatch',this.inputJsonObj)
         .subscribe(
-          res=>{console.log(res);}
+          res=>{console.log(res);},
+          err=>{
+            this.tailWork();
+          },
+          ()=>{
+            this.tailWork();
+          }
         )
     }else{
       this.message.error('无法继续');
@@ -152,14 +157,18 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
     this.http.post(url, this.inputJsonObj).subscribe(
       res => console.log(res),
       err => {
-        this.loading = false;
-        this.disabled = false;
+        this.tailWork();
       },
       () => {
-        this.loading = false;
-        this.disabled = false;
+        this.tailWork();
         this.message.info('完成了');
       },
     );
+  }
+
+  tailWork(){
+    this.loading = false;
+        this.disabled = false;
+        this.inputValue='';
   }
 }
