@@ -172,7 +172,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let i of engineersShowList; let idx = index">
-          <td><a [routerLink]="['/home/engineer',i.Name]">{{ i.Name }}</a></td>
+          <td><a [routerLink]="['/home/personel',i.Name]">{{ i.Name }}</a></td>
           <td>
             <g2-single-bar height="60" plusColor="#40a9ff" [value]="i.LiveCount" [max]="maxLiveCount" line></g2-single-bar>
           </td>
