@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { HomePersonelCategorizeComponent } from './categorize/categorize.component';
 import { ProjectTransfer } from './../../../services/biz/projecttransfer';
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
@@ -35,14 +36,21 @@ export class RoutesHomePersonelComponent implements OnInit {
     private http: _HttpClient,
     public msg: NzMessageService,
     private cdr: ChangeDetectorRef,
-    private drawer:DrawerHelper
+    private drawer:DrawerHelper,
+    private routeInfo: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    const user = localStorage.getItem('user');
-    const userO = JSON.parse(user);
-    console.log(userO);
-    this.synName = userO.SyneltsName;
+    const engineerName=this.routeInfo.snapshot.params['engineerName'];
+    if(engineerName){
+      this.synName=engineerName;
+    }else{
+      const user = localStorage.getItem('user');
+      const userO = JSON.parse(user);
+      console.log(userO);
+      this.synName = userO.SyneltsName;
+    }
+    
     console.log(this.synName);
     this.getPersonelJobData(this.synName);
     this.status='joh';

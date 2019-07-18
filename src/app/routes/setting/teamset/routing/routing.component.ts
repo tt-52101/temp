@@ -510,7 +510,14 @@ export class SettingTeamsetRoutingComponent implements OnInit {
   filterData() {}
   setTarget() {}
   cancelTarget() {}
-  listTarget() {}
+  listTarget() {
+    this.loading=true;
+    this.http.get('home/projectsbyfilter',{TobeFinishedFlag:true}).subscribe(
+      res=>this.pts=res.Items,
+      err=>{},
+    ()=>this.loading=false
+    )
+  }
   filterNoneSetting() {
     if (this.settingChoose === '只显示未设置项目') {
       this.pts = this.pts.filter(
