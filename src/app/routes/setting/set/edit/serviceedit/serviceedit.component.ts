@@ -101,6 +101,7 @@ export class SettingSetEditServiceeditComponent implements OnInit {
   }
   handleEnum(service: SyneltsService) {
     let st='';
+    service.RequiredDocumentsString=[];
     if(service.RequiredDocumentsString.length>0){
       service.RequiredDocumentsString.forEach(item=>{
         st+=item+'_';

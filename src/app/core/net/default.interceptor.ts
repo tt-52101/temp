@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   HttpInterceptor,
@@ -12,8 +12,8 @@ import { Observable, of, throwError } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
 import { NzMessageService, NzNotificationService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
-import { environment } from '@env/environment';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+import { environment } from '../../../environments/environment';
 
 const CODEMESSAGE = {
   200: '服务器成功返回请求的数据。',
@@ -38,8 +38,15 @@ const CODEMESSAGE = {
  */
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
-  constructor(private injector: Injector) {}
-
+  constructor(private injector: Injector, @Inject('BASE_URL') base: string) {
+    if (environment.production) {
+      this.baseUri = base;
+    } else {
+      this.baseUri = environment.SERVER_URL;
+    }
+    console.log(this.baseUri);
+  }
+  baseUri: string;
   get msg(): NzMessageService {
     return this.injector.get(NzMessageService);
   }
@@ -99,6 +106,7 @@ export class DefaultInterceptor implements HttpInterceptor {
         break;
       default:
         if (ev instanceof HttpErrorResponse) {
+          console.log(ev);
           console.warn(
             '未可知错误，大部分是由于后端不支持CORS或无效配置引起',
             ev,
@@ -119,11 +127,10 @@ export class DefaultInterceptor implements HttpInterceptor {
     if (!url.startsWith('https://') && !url.startsWith('http://')) {
       const cc = url.indexOf('assets');
       if (url.indexOf('assets') < 0) {
-        url = environment.SERVER_URL + url;
+        url = this.baseUri + 'api/' + url;
       }
     }
 
-    
     // add access token
 
     const newReq = req.clone({ url });

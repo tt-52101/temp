@@ -1,7 +1,9 @@
+import { ProjectTransfer } from './../../../../services/biz/projecttransfer';
 import { Validators } from '@angular/forms';
 import { SFSchema, SFButton, SFComponent } from '@delon/form';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient, Layout } from '@delon/theme';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-home-team-analysis',
@@ -13,6 +15,12 @@ export class HomeTeamAnalysisComponent implements OnInit {
   @ViewChild('sf') sf:SFComponent
   needRevenue=false;
   needJobin=false;
+  dataSource:ProjectTransfer[]=[];
+  jobAmountPieBiz=[];
+  totalAmount:string;
+  jobCountPieDBiz=[];
+  totalCount:string;
+  
   ngOnInit() {
    
    }
@@ -66,8 +74,20 @@ export class HomeTeamAnalysisComponent implements OnInit {
   }
   submit(data:any){
     console.log(data);
+    const from=format(this.sf.value.FromMonth,'YYYYMM');
+    const to=format(this.sf.value.ToMonth,'YYYYMM');
     // 获取选择时间间隔的所有register案子，使用revenueMonth属性
-    this.http.get('projectsbyfilter',{RevenueMonth:this})
+    this.http.get('home/projectsbyfilter',{FromRevenueMonth:from,ToRevenueMonth:to})
+      .subscribe(
+        res=>{
+          this.dataSource=res.Items;
+          console.log(res.Items);
+        },
+        err=>{},
+        ()=>{
+          
+        }
+        );
   }
 
 }

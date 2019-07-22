@@ -131,11 +131,13 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       OpenDateFromTo: {
         type: 'string',
         title: '开案时间',
+        format:'date',
         ui: { widget: 'date', mode: 'range' },
       },
       CompleteDateFromTo: {
         type: 'string',
         title: '结案时间',
+        format:'date',
         ui: { widget: 'date', mode: 'range' },
       },
       IsFinished: {
@@ -449,16 +451,21 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     this.loading = true;
     console.log(this.sf.value);
     const sfv = this.sf.value;
-
-    if (sfv.OpenDateFromTo) {
-      sfv.OpenDateFrom = this.sf.value.OpenDateFromTo[0];
-      sfv.OpenDateTo = this.sf.value.OpenDateFromTo[1];
+    
+    
+    if(this.sf.value.IsFinished===false){
+      sfv.CompleteDateFrom=null;
+      sfv.CompleteDateTo=null;
+    }else{
+      if (sfv.OpenDateFromTo) {
+        sfv.OpenDateFrom = this.sf.value.OpenDateFromTo[0];
+        sfv.OpenDateTo = this.sf.value.OpenDateFromTo[1];
+      }
+      if (sfv.CompleteDateFromTo) {
+        sfv.CompleteDateFrom = this.sf.value.CompleteDateFromTo[0];
+        sfv.CompleteDateTo = this.sf.value.CompleteDateFromTo[1];
+      }
     }
-    if (sfv.CompleteDateFromTo) {
-      sfv.CompleteDateFrom = this.sf.value.CompleteDateFromTo[0];
-      sfv.CompleteDateTo = this.sf.value.CompleteDateFromTo[1];
-    }
-
     console.log(sfv);
     this.http.get('home/projectsbyfilter', sfv).subscribe(
       res => {

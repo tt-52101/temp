@@ -20,13 +20,13 @@ import { format } from 'date-fns';
   templateUrl: './batchimport.component.html',
 })
 export class SettingImportBatchimportComponent implements OnInit, OnChanges {
-  revenueMonth:Date;
+  revenueMonth: Date;
   theYear = new Date().getFullYear().toString();
   theMonth = (new Date().getMonth() + 1).toString();
   isRevenue = false;
   importOption: string;
   private _inputValue: string;
-  inputJsonObj:ProjectTransfer[]= [];
+  inputJsonObj: ProjectTransfer[] = [];
   @Input() set inputValue(value: string) {
     if (this._inputValue !== value) {
       this._inputValue = value;
@@ -36,6 +36,7 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
         this.pTime = this.inputJsonObj.length * 0.2;
         this._inputValue = JSON.stringify(this.inputJsonObj, undefined, '\t');
       } catch (e) {
+        console.log(e);
         if (e instanceof syntaxError) {
         } else {
         }
@@ -73,10 +74,10 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
       return;
     }
     // if((!this.validateRegister())&&this.importOption==='only'){
-      
+
     //   this.message.error('无法继续');
     // };
-    console.log(format(this.revenueMonth,'YYYYMM'));
+    console.log(format(this.revenueMonth, 'YYYYMM'));
     zip(
       this.http.post('person/SimpleCreateByProjects', this.inputJsonObj),
       this.http.post('home/Service/addandupdatecollection', this.inputJsonObj),
@@ -103,43 +104,41 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
             this.onlyImport();
             break;
         }
-        
       },
     );
   }
 
   onlyImport() {
-    
-    if(this.validateRegister()){
-      this.inputJsonObj.forEach(item=>{
-        item.RevenueMonth=format(this.revenueMonth,'YYYYMM');
-       });
-        this.http.post('home/revenueregisterbatch',this.inputJsonObj)
-        .subscribe(
-          res=>{console.log(res);},
-          err=>{
-            this.tailWork();
-          },
-          ()=>{
-            this.tailWork();
-          }
-        )
-    }else{
+    if (this.validateRegister()) {
+      this.inputJsonObj.forEach(item => {
+        item.RevenueMonth = format(this.revenueMonth, 'YYYYMM');
+      });
+      this.http.post('home/revenueregisterbatch', this.inputJsonObj).subscribe(
+        res => {
+          console.log(res);
+        },
+        err => {
+          this.tailWork();
+        },
+        () => {
+          this.tailWork();
+        },
+      );
+    } else {
       this.message.error('无法继续');
-    };
-   
+    }
   }
-  validateRegister():boolean{
-    if(!this.revenueMonth){
+  validateRegister(): boolean {
+    if (!this.revenueMonth) {
       this.message.error('月份未输入！');
       return false;
     }
-    this.inputJsonObj.forEach(item=>{
-      if(item.CompleteDate===null){
+    this.inputJsonObj.forEach(item => {
+      if (item.CompleteDate === null) {
         this.message.error('有项目还未完成！');
         return false;
       }
-      if(item.InvoicedFee===0){
+      if (item.InvoicedFee === 0) {
         this.message.error('有项目还没分钱');
         return false;
       }
@@ -166,9 +165,9 @@ export class SettingImportBatchimportComponent implements OnInit, OnChanges {
     );
   }
 
-  tailWork(){
+  tailWork() {
     this.loading = false;
-        this.disabled = false;
-        this.inputValue='';
+    this.disabled = false;
+    this.inputValue = '';
   }
 }

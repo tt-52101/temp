@@ -6,5 +6,13 @@
     (formSubmit)="submit($event)"
   ></sf>
 </nz-card>
-<nz-card *ngIf="needRevenue" nzTitle="Revenue"> </nz-card>
+<nz-card *ngIf="needRevenue" nzTitle="Revenue">
+  <g2-pie  [hasLegend]="true"
+  title="业务"
+  subTitle="金额"
+  [total]="total"
+  [valueFormat]="format"
+  [data]="jobAmountPieBiz"
+  height="294"></g2-pie>
+   </nz-card>
 <nz-card *ngIf="needJobin" nzTitle="Revenue"> </nz-card>

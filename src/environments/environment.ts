@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  SERVER_URL: `https://www.photonee.com/`,
+  SERVER_URL: `http://121.40.41.125/`,
   production: false,
   useHash: false,
   hmr: false,
