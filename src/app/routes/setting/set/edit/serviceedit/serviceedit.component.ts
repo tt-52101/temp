@@ -23,9 +23,9 @@ export class SettingSetEditServiceeditComponent implements OnInit {
         title: '业务类型',
         enum: [
           { value: 'Safety', label: '安规' },
-          { value: 'Energy Efficiency', label: '能效' },
+          { value: 'EE', label: '能效' },
           { value: 'Chemical', label: '化学' },
-          { value: ' ', label: '不确定' },
+          { value: 'Unknown', label: '不确定' },
         ],
       },
       RegionType: {
