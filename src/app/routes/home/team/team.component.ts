@@ -73,6 +73,7 @@ export class RoutesHomeTeamComponent implements OnInit {
       res => {
         // this.engineersList = res.Items;
         this.engineersShowList = res.Items;
+        console.log(this.engineersShowList);
         this.loading = false;
 
         this.maxLiveCount = this.engineersShowList.reduce(

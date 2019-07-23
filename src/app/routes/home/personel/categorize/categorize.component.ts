@@ -49,7 +49,9 @@ export class HomePersonelCategorizeComponent implements OnInit {
   }
   ngOnInit(): void {
     console.log(this.i);
-    let services: ServiceData[] = [];
+    let services: ServiceData[] = [
+      
+    ];
     let p1: PieData[] = [
       { x: 'Safety', y: 0 },
       { x: 'EE', y: 0 },
@@ -63,15 +65,15 @@ export class HomePersonelCategorizeComponent implements OnInit {
       { x: 'Unknown', y: 0 },
     ];
     this.i.forEach(element => {
-      let snames = element.ServiceNames.reduce((acc, cur) => acc + ' ' + cur);
+      let snames='';
+      element.ServiceNames.forEach(item=>snames+=item);
 
       let find = services.filter(p => p.Name === snames);
-
-      let pcFind = p1.filter(p => p.x === element.BType);
-      let paFind = p2.filter(p => p.x === element.BType);
+      console.log(find.length);
+      
       if (find.length !== 0) {
-        find['Count'] += 1;
-        find['Amount'] += element.QuotedFee;
+        find[0].Count += 1;
+        find[0].Amount += element.QuotedFee;
       } else {
         services.push({
           Name: snames,
@@ -88,7 +90,8 @@ export class HomePersonelCategorizeComponent implements OnInit {
       .reduce((acc, cur) => acc + cur.QuotedFee, 0)
       .toFixed(2)}`;
     this.totalCount = `${this.i.length}个`;
-    this.serviceData = services;
+    this.serviceData = services.sort((a, b) =>
+    a.Amount < b.Amount ? 1 : -1,);
     this.pieDataCount = p1;
     this.pieDataAmount = p2;
   }

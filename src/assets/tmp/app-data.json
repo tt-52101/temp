@@ -26,7 +26,7 @@
               "i18n": "menu.workspace.personeldataservice",
               "icon": "anticon anticon-dashboard",
               "acl": ["General Staff", "Admin"],
-              "link": "/home/personel"
+              "link": "/home/personel/self"
             },
             {
               "text": "数据窗口——团队",
