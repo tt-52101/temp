@@ -132,13 +132,13 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         type: 'string',
         title: '开案时间',
         format:'date',
-        ui: { widget: 'date', mode: 'range' },
+        ui: { widget: 'date', mode: 'range',allowClear:true },
       },
       CompleteDateFromTo: {
         type: 'string',
         title: '结案时间',
         format:'date',
-        ui: { widget: 'date', mode: 'range' },
+        ui: { widget: 'date', mode: 'range',allowClear:true },
       },
       IsFinished: {
         type: 'boolean',
