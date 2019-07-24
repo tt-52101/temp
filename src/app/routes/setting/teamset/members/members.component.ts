@@ -1,9 +1,4 @@
-
-import {
-  Component,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -21,21 +16,21 @@ export class SettingTeamsetMembersComponent implements OnInit {
   constructor(
     private http: _HttpClient,
     public msg: NzMessageService,
-    private fb:FormBuilder,
-    private modal:ModalHelper
+    private fb: FormBuilder,
+    private modal: ModalHelper,
   ) {}
   loading = false;
   users = [];
-  @ViewChild('st') st:STComponent;
-  form:FormGroup;
+  @ViewChild('st') st: STComponent;
+  form: FormGroup;
   listOfOption: Array<{ label: string; value: string }> = [];
-  
-  staffs: SyneltsUser[]=[];
+  listOfteam: Array<{ label: string; value: string }> = [];
+  staffs: SyneltsUser[] = [];
   staffColumns: STColumn[] = [
     {
-      title:'No',
-      index:'Id',
-      type:'checkbox',
+      title: 'No',
+      index: 'Id',
+      type: 'checkbox',
     },
     {
       title: 'Name',
@@ -90,7 +85,6 @@ export class SettingTeamsetMembersComponent implements OnInit {
             // }
           },
           click: 'reload',
-          
         },
         {
           icon: 'delete',
@@ -113,21 +107,29 @@ export class SettingTeamsetMembersComponent implements OnInit {
   ];
   ngOnInit() {
     const children: Array<{ label: string; value: string }> = [
-      {label:'工程师',value:'Engineer'},
-      {label:'工程助理',value:'EngineeringCS'},
-      {label:'销售',value:'Sales'},
-      {label:'销售助理',value:'SalesCS'},
+      { label: '工程师', value: 'Engineer' },
+      { label: '工程助理', value: 'EngineeringCS' },
+      { label: '销售', value: 'Sales' },
+      { label: '销售助理', value: 'SalesCS' },
+    ];
+    const teams: Array<{ label: string; value: string }> = [
+      { label: '安规', value: 'Safety' },
+      { label: '能效', value: 'EE' },
+      { label: '化学', value: 'Chemical' },
+      { label: '助理', value: 'CS' },
     ];
     this.form = this.fb.group({
-      Name:[''],
-      SyneltsRole:[''],
-      IsCurrentOnJob:[''],
+      Name: [''],
+      SyneltsRole: [''],
+      SubTeam: [''],
+      IsCurrentOnJob: [''],
     });
     this.listOfOption = children;
+    this.listOfteam=teams;
     this.http.get('person/userall').subscribe(
-      (res) => {
-        const data=this.handlePersonData(res);
-        this.staffs=data;
+      res => {
+        const data = this.handlePersonData(res);
+        this.staffs = data;
       },
       err => {},
       () => {
@@ -142,9 +144,9 @@ export class SettingTeamsetMembersComponent implements OnInit {
   _submitForm() {
     console.log(this.form.value);
     this.loading = true;
-    this.http.get('person/userbyfilter',this.form.value).subscribe(
-      (res) => {
-        this.staffs=this.handlePersonData(res.Items);
+    this.http.get('person/userbyfilter', this.form.value).subscribe(
+      res => {
+        this.staffs = this.handlePersonData(res.Items);
       },
       err => {},
       () => {
@@ -152,9 +154,8 @@ export class SettingTeamsetMembersComponent implements OnInit {
         this.loading = false;
       },
     );
-   
   }
-  
+
   private handlePersonData(res) {
     res.forEach(i => {
       const st = i.SyneltsRole.toString().split('');
@@ -165,21 +166,18 @@ export class SettingTeamsetMembersComponent implements OnInit {
           const role = SyneltsRole[ind];
           roles.push(role);
         });
-      }
-      else {
+      } else {
         const ind = parseInt(st[0], 10);
         const role = SyneltsRole[ind];
         roles.push(role);
       }
       i.SyneltsRoles = roles;
-      
     });
     return res;
   }
-  create(){
-    this.modal.create(SettingTeamsetEditStaffComponent,{},{size:'md'})
-    .subscribe(res=>console.log(res),err=>{},()=>{
-     
-    });
+  create() {
+    this.modal
+      .create(SettingTeamsetEditStaffComponent, {}, { size: 'md' })
+      .subscribe(res => console.log(res), err => {}, () => {});
   }
 }

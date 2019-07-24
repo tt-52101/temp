@@ -37,7 +37,7 @@ export class SettingTeamsetEditStaffComponent implements OnInit,OnDestroy {
       SyneltsRoles: {
         type: 'string',
         title: '角色',
-        enum: ['Engineer',  'EngineeringCS', 'Sales','SalesCS'],
+        enum: [{label:'工程师',value:'Engineer'},{label:'工程助理',value:'EngineeringCS'},{label:'销售',value: 'Sales'},{label:'销售助理',value:'SalesCS'}],
         ui: {
           widget: 'checkbox',
           span: 8,
