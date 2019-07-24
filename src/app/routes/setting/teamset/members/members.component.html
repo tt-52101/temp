@@ -2,7 +2,7 @@
   <form nz-form [formGroup]="form" [nzLayout]="'inline'" (ngSubmit)="_submitForm()" [nzLayout]="'vertical'">
 
     <nz-row nzGutter="16">
-      <nz-col nzLg="6" nzMd="12" nzSm="24">
+      <nz-col nzLg="4" nzMd="6" nzSm="24">
         <nz-form-item>
           <nz-form-control>
             
@@ -13,17 +13,27 @@
       </nz-col>
       
       
-      <nz-col nzLg="6" nzMd="12" nzSm="24">
+      <nz-col nzLg="4" nzMd="6" nzSm="24">
         <nz-form-item>
           <nz-form-control>
-            <nz-select nzPlaceHolder="请选择角色" formControlName="SyneltsRole" nzAllowClear="true" style="width: 180px">
+            <nz-select nzPlaceHolder="角色" formControlName="SyneltsRole" nzAllowClear="true" style="width: 120px">
               <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value">
               </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
       </nz-col>
-      <nz-col nzLg="6" nzMd="12" nzSm="24">
+      <nz-col nzLg="4" nzMd="6" nzSm="12">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-select nzPlaceHolder="组别" formControlName="SubTeam" nzAllowClear="true" style="width: 100px">
+              <nz-option *ngFor="let option of listOfteam" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg="6" nzMd="6" nzSm="12">
         <nz-form-item>
           <nz-form-control>
             <nz-radio-group formControlName="IsCurrentOnJob" id="OnJob">
@@ -33,10 +43,8 @@
           </nz-form-control>
         </nz-form-item>
       </nz-col>
-      <nz-col  nzLg="6" nzMd="12" nzSm="24">
-        
-        </nz-col>
-      <nz-col nzLg="6" nzMd="12" nzSm="24">
+      
+      <nz-col nzLg="6" nzMd="6" nzSm="12">
         <nz-form-item>
           <nz-form-control>
             <button nz-button nzType="primary" type="submit">Search</button>
