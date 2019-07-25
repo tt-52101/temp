@@ -1,46 +1,35 @@
-import { ActivatedRoute } from '@angular/router';
 import { SFSchema } from '@delon/form';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NzModalRef, NzMessageService, NzDrawerRef } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
-import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
-import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { ProjectTransfer } from 'app/services/biz/projecttransfer';
+import { of } from 'rxjs';
 
 @Component({
-  selector: 'app-home-personel-project',
-  templateUrl: './project.component.html',
+  selector: 'app-routes-components-project-drawer-view',
+  templateUrl: './project-drawer-view.component.html',
 })
-export class HomePersonelProjectComponent implements OnInit {
+export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
+  
+  isAdmin=false;
+  i: any;
 
-  form: FormGroup;
-  submitting = false;
-  i: any = {};
-  schema: SFSchema = {
+  constructor(
+    private drawer: NzDrawerRef,
+    public msg: NzMessageService,
+    public http: _HttpClient
+  ) { }
+
+  ngOnInit(): void {
+    const user = localStorage.getItem('user');
+    const userO = JSON.parse(user);
+    console.log(userO);
+    this.isAdmin=userO.Roles.some(p=>p==='Admin'||p==='Super Admin'||p==='God');
+  }
+  pSchema: SFSchema = {
     properties: {
-      ProjectNo: {
-        type: 'string',
-        title: 'Job No',
-        maxLength: 12,
-        readOnly: true,
-      },
-      QuotationNo: {
-        type: 'string',
-        title: 'Quotation No',
-        maxLength: 13,
-        readOnly: true,
-      },
-      ClientName: {
-        type: 'string',
-        title: 'Client',
-        maxLength: 100,
-        readOnly: true,
-      },
-      Product: { type: 'string', title: 'Product', readOnly: true },
-      ServiceNames: { type: 'string', title: 'Services', readOnly: true },
-      QuotedFee: { type: 'number', title: 'Fee', ui: { prefix: '￥' } },
-      ActualWorkloadFactor:{type:'number',title:'工作量系数',minimum:0,maximum:5},
+      
       CType: {
         type: 'string',
         title: '客户类型',
@@ -67,7 +56,7 @@ export class HomePersonelProjectComponent implements OnInit {
               { label: '安规', value: 'Safety' },
               { label: '能效', value: 'EE' },
               { label: '化学', value: 'Chemical' },
-              { label: '未知', value: null },
+              { label: '未知', value: 'Unknown' },
             ]).pipe(delay(100)),
           change: console.log,
         },
@@ -83,7 +72,7 @@ export class HomePersonelProjectComponent implements OnInit {
               { label: '欧洲', value: 'IEC' },
               { label: '北美', value: 'US' },
               { label: 'GMAP', value: 'GMAP' },
-              { label: '未知', value: null },
+              { label: '未知', value: 'Unknown' },
             ]).pipe(delay(100)),
           change: console.log,
         },
@@ -117,6 +106,7 @@ export class HomePersonelProjectComponent implements OnInit {
           change: console.log,
         },
       },
+      ActualWorkloadFactor:{type:'number',title:'工作量系数',minimum:0,maximum:5},
       TobeFinishFlag: {
         type: 'boolean',
         title: '是否本月完成',
@@ -129,26 +119,11 @@ export class HomePersonelProjectComponent implements OnInit {
             ]).pipe(delay(100)),
         },
       },
-    },
-  };
-  constructor(
-    private http: _HttpClient,
-    private fb: FormBuilder,
-    private msg: NzMessageService,
-    private routeInfo: ActivatedRoute
-  ) {}
 
-  ngOnInit() {
-    const proNo=this.routeInfo.snapshot.params['projectNo'];
-    console.log(proNo);
-    this.http.get(`home/projectbyprojectno/${proNo}`).subscribe(
-      (res)=>{
-        
-        this.i=res.Items[0];
-        console.log(res);
-      }
-    )
-  }
+    },
+    
+  };
+
   save(value: any) {
     console.log(value);
     this.http.put('home/project', value).subscribe(
@@ -161,11 +136,10 @@ export class HomePersonelProjectComponent implements OnInit {
       },
       err => {},
       () => {
-        
+        this.drawer.close(value);
       },
     );
   }
 
- 
-
+  
 }

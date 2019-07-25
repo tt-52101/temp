@@ -154,7 +154,7 @@
         <td>{{ data.ClientName }}</td>
         <td>{{ data.ServiceNames }}</td>
         <td>{{ data.QuotedFee|_currency }}</td>
-        <td><a [routerLink]="['/home/project',data.ProjectNo]">details</a></td>
+        <td><a (click)="view(data)">details</a></td>
       </tr>
     </tbody>
   </nz-table>

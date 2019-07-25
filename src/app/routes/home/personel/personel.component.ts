@@ -5,6 +5,7 @@ import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { _HttpClient, ModalHelper, DrawerHelper } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
 import { zip } from 'rxjs';
+import { RoutesComponentsProjectDrawerViewComponent } from 'app/routes/components/project-drawer-view/project-drawer-view.component';
 
 @Component({
   selector: 'app-routes-home-personel',
@@ -285,6 +286,11 @@ export class RoutesHomePersonelComponent implements OnInit {
         }
         break;
     }
+  }
+  view(i){
+    this.drawer.create(`${i.ProjectNo}详情`,RoutesComponentsProjectDrawerViewComponent,{i},{}).subscribe(
+      res=>console.log(res)
+    );
   }
   openCaculation(i:any){
     this.drawer.static('分类计算结果',HomePersonelCategorizeComponent,{i},{}).subscribe(

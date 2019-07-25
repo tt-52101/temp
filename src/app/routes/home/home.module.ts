@@ -4,7 +4,6 @@ import { SharedModule } from '@shared';
 import { HomeRoutingModule } from './home-routing.module';
 import { RoutesHomeTeamComponent } from './team/team.component';
 import { RoutesHomePersonelComponent } from './personel/personel.component';
-import { HomePersonelProjectComponent } from './personel/project/project.component';
 import { HomeTeamAnalysisComponent } from './team/analysis/analysis.component';
 import { HomePersonelCategorizeComponent } from './personel/categorize/categorize.component';
 
@@ -12,7 +11,6 @@ import { HomePersonelCategorizeComponent } from './personel/categorize/categoriz
 const COMPONENTS = [
   RoutesHomeTeamComponent,
   RoutesHomePersonelComponent,
-  HomePersonelProjectComponent,
   HomeTeamAnalysisComponent];
 const COMPONENTS_NOROUNT = [
 

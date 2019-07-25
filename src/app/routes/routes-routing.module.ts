@@ -14,6 +14,7 @@ import { CallbackComponent } from './callback/callback.component';
 import { JWTGuard } from '@delon/auth';
 import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
 import { RoutesDashboardsProjectdetailsComponent } from './dashboards/projectdetails/projectdetails.component';
+import { RoutesComponentsProjectDrawerViewComponent } from './components/project-drawer-view/project-drawer-view.component';
 
 const routes: Routes = [
   {
@@ -80,8 +81,7 @@ const routes: Routes = [
   // 单页不包裹Layout
   { path: 'callback/:type', component: CallbackComponent },
   { path: '**', redirectTo: 'exception/404' },
-];
-
+]
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
