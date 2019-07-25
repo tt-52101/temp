@@ -27,6 +27,7 @@ export class ProjectTransfer implements BaseEntity {
   Product: string;
   Models: string;
   ActualProjectWorkingDays:number;
+  ActualWorkloadFactor:number;
   SetDocuments:string;
   ProgressPercent:number;
   FinishedDocuments:string;
