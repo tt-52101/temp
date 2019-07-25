@@ -14,7 +14,6 @@ import { CacheService } from '@delon/cache';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
 import { STColumn, STChange, STComponent } from '@delon/abc';
 import { SFButton, SFSchema, SFComponent } from '@delon/form';
-import { SettingImportEditProjectComponent } from '../edit/project/project.component';
 import { SettingImportEditRecordsComponent } from '../edit/records/records.component';
 import { ReloadOutline } from '@ant-design/icons-angular/icons/public_api';
 

@@ -15,6 +15,7 @@ import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component
 import { RoutesDashboardsProjectdetailsComponent } from './dashboards/projectdetails/projectdetails.component';
 import { RoutesDashboardsProgressComponent } from './dashboards/progress/progress.component';
 import { RoutesDashboardsTaskComponent } from './dashboards/task/task.component';
+import { RoutesComponentsProjectDrawerViewComponent } from './components/project-drawer-view/project-drawer-view.component';
 const COMPONENTS = [
   // passport pages
   UserLoginComponent,
@@ -24,9 +25,10 @@ const COMPONENTS = [
   // single pages
   CallbackComponent,
   RoutesHomeDashboardsComponent,
-  RoutesDashboardsProjectdetailsComponent];
+  RoutesDashboardsProjectdetailsComponent,
+  ];
 const COMPONENTS_NOROUNT = [
-  
+  RoutesComponentsProjectDrawerViewComponent,
   RoutesDashboardsProgressComponent,
   RoutesDashboardsTaskComponent];
 

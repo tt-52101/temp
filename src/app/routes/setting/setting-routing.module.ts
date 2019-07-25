@@ -10,7 +10,6 @@ import { SettingTeamsetComponent } from './teamset/teamset.component';
 import { SettingTeamsetEditMonthlyDataEditComponent } from './teamset/edit/monthly-data-edit/monthly-data-edit.component';
 import { SettingTeamsetTargetComponent } from './teamset/target/target.component';
 import { SettingTeamsetMembersComponent } from './teamset/members/members.component';
-import { SettingImportEditProjectComponent } from './import/edit/project/project.component';
 import { SettingImportEditRecordsComponent } from './import/edit/records/records.component';
 import { SettingTeamsetEditStaffComponent } from './teamset/edit/staff/staff.component';
 import { SettingTeamsetRoutingComponent } from './teamset/routing/routing.component';
@@ -24,8 +23,6 @@ const routes: Routes = [
   { path: 'monthlyDataEdit', component: SettingTeamsetEditMonthlyDataEditComponent },
   { path: 'target', component: SettingTeamsetTargetComponent },
   { path: 'members', component: SettingTeamsetMembersComponent },
- 
-  { path: 'project', component: SettingImportEditProjectComponent },
   { path: 'records', component: SettingImportEditRecordsComponent },
   { path: 'staff', component: SettingTeamsetEditStaffComponent },
   { path: 'routing', component: SettingTeamsetRoutingComponent }];

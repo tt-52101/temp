@@ -24,16 +24,14 @@ import {
   STChange,
   STData,
   STColumnTag,
-  TagSelectComponent,
   STWidthMode,
 } from '@delon/abc';
-import { NzMessageService, isTemplateRef } from 'ng-zorro-antd';
-import { SettingImportEditProjectComponent } from '../../import/edit/project/project.component';
+import { NzMessageService } from 'ng-zorro-antd';
 import { SettingImportEditRecordsComponent } from '../../import/edit/records/records.component';
 import { SyneltsUser } from 'app/services/biz/SyneltsUser';
-import { ConstantPool } from '@angular/compiler';
 import { of } from 'rxjs';
 import { __getInputValues } from '@angularclass/hmr';
+import { RoutesComponentsProjectDrawerViewComponent } from 'app/routes/components/project-drawer-view/project-drawer-view.component';
 
 @Component({
   selector: 'app-setting-teamset-routing',
@@ -280,11 +278,11 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       buttons: [
         {
           icon: 'edit',
-          type: 'static',
-          modal: {
-            component: SettingImportEditProjectComponent,
+          type: 'drawer',
+          drawer: {
+            component: RoutesComponentsProjectDrawerViewComponent,
             paramsName: 'i',
-            size: 'lg',
+            size: 'md',
           },
           click: (i, m, c) => {
             if (this.expandForm) {

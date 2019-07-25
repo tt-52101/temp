@@ -14,7 +14,6 @@ import { _HttpClient, ModalHelper } from '@delon/theme';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { DocumentsServiceService } from 'app/services/biz/documents-service.service';
 import { ProgressType } from 'app/services/biz/ProgressType';
-import { SettingImportEditProjectComponent } from '../setting/import/edit/project/project.component';
 import { RoutesDashboardsProgressComponent } from './progress/progress.component';
 
 @Component({
