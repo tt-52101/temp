@@ -1,0 +1,18 @@
+<page-header>
+  <div nz-row style="margin-bottom: 15px;margin-top: 15px;">
+    <button nz-button nzType="primary" (click)="createUser()">新建</button>
+    <nz-dropdown [nzPlacement]="'bottomLeft'">
+      <button nz-button nz-dropdown>
+        批量操作
+        <i nz-icon type="down"></i>
+      </button>
+      <ul nz-menu>
+        <li nz-menu-item  (click)=resetPwd()>重置密码</li>
+      </ul>
+    </nz-dropdown>
+
+
+
+  </div>
+  <st #st [columns]="uColumns" [data]="data" (change)="stChange($event)"></st>
+</page-header>

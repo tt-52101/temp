@@ -29,13 +29,12 @@ export class UserRegisterComponent implements OnDestroy {
 
   constructor(
     fb: FormBuilder,
-    private router: Router,
     public http: _HttpClient,
     public msg: NzMessageService,
   ) {
     this.form = fb.group({
-      mail: [null, [Validators.required, Validators.email]],
-      password: [
+      Email: [null, [Validators.required, Validators.email]],
+      SecuredPwd: [
         null,
         [
           Validators.required,
@@ -51,9 +50,7 @@ export class UserRegisterComponent implements OnDestroy {
           UserRegisterComponent.passwordEquar,
         ],
       ],
-      mobilePrefix: ['+86'],
-      mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)]],
-      captcha: [null, [Validators.required]],
+      
     });
   }
 
@@ -87,21 +84,19 @@ export class UserRegisterComponent implements OnDestroy {
 
   // #region fields
 
-  get mail() {
-    return this.form.controls.mail;
+  get Email() {
+    return this.form.controls.Email;
   }
-  get password() {
-    return this.form.controls.password;
+  get SecuredPwd() {
+    return this.form.controls.SecuredPwd;
   }
   get confirm() {
     return this.form.controls.confirm;
   }
-  get mobile() {
-    return this.form.controls.mobile;
-  }
-  get captcha() {
-    return this.form.controls.captcha;
-  }
+  // get mobile() {
+  //   return this.form.controls.mobile;
+  // }
+  
 
   // #endregion
 
@@ -110,18 +105,18 @@ export class UserRegisterComponent implements OnDestroy {
   count = 0;
   interval$: any;
 
-  getCaptcha() {
-    if (this.mobile.invalid) {
-      this.mobile.markAsDirty({ onlySelf: true });
-      this.mobile.updateValueAndValidity({ onlySelf: true });
-      return;
-    }
-    this.count = 59;
-    this.interval$ = setInterval(() => {
-      this.count -= 1;
-      if (this.count <= 0) clearInterval(this.interval$);
-    }, 1000);
-  }
+  // getCaptcha() {
+  //   if (this.mobile.invalid) {
+  //     this.mobile.markAsDirty({ onlySelf: true });
+  //     this.mobile.updateValueAndValidity({ onlySelf: true });
+  //     return;
+  //   }
+  //   this.count = 59;
+  //   this.interval$ = setInterval(() => {
+  //     this.count -= 1;
+  //     if (this.count <= 0) clearInterval(this.interval$);
+  //   }, 1000);
+  // }
 
   // #endregion
 
@@ -136,11 +131,9 @@ export class UserRegisterComponent implements OnDestroy {
     }
 
     const data = this.form.value;
-    this.http.post('/register', data).subscribe(() => {
-      this.router.navigateByUrl('/passport/register-result', {
-        queryParams: { email: data.mail },
-      });
-    });
+    this.http.post('auth/register', data).subscribe(
+      res=>console.log(res)
+      );
   }
 
   ngOnDestroy(): void {

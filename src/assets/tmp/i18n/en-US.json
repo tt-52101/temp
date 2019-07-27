@@ -15,7 +15,8 @@
   "menu.settings.import": "Data Import",
   "menu.settings.set": "Rule Setting",
   "menu.settings.teamset": "Team Setting",
-
+  "menu.settings.userset":"User Setting",
+  
   "menu.shortcut": "Shortcut",
   "menu.widgets": "Widgets",
   "menu.alain": "Alain",

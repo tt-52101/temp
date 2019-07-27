@@ -12,7 +12,7 @@
           "text": "工作入口",
           "i18n": "menu.dashboard",
           "icon": "anticon anticon-dashboard",
-          "acl": ["General Staff", "Admin"],
+          "acl": ["God","Super Admin","General Staff", "Admin"],
           "link": "/dashboard",
           "shortcut": true
         },
@@ -25,21 +25,21 @@
               "text": "数据窗口——个人",
               "i18n": "menu.workspace.personeldataservice",
               "icon": "anticon anticon-dashboard",
-              "acl": ["General Staff", "Admin"],
+              "acl": ["God","Super Admin","Admin","General Staff"],
               "link": "/home/personel/self"
             },
             {
               "text": "数据窗口——团队",
               "i18n": "menu.workspace.teamdataservice",
               "icon": "anticon anticon-dashboard",
-              "acl": ["Admin"],
+              "acl": ["God","Super Admin","Admin"],
               "link": "/home/team"
             },
             {
               "text": "数据窗口——分析",
               "i18n": "menu.workspace.dataanalysis",
               "icon": "anticon anticon-dashboard",
-              "acl": ["Admin"],
+              "acl": ["God","Super Admin","Admin"],
               "link": "/home/analysis"
             }
           ]
@@ -52,22 +52,29 @@
               "text": "数据导入",
               "i18n": "menu.settings.import",
               "icon": "anticon anticon-dashboard",
-              "acl": ["General Staff"],
+              "acl": ["God","Super Admin","Admin"],
               "link": "/settings/import"
             },
             {
               "text": "数据设置",
               "i18n": "menu.settings.set",
               "icon": "anticon anticon-dashboard",
-              "acl": ["General Staff"],
+              "acl": ["God","Super Admin","Admin"],
               "link": "/settings/set"
             },
             {
               "text": "团队设置",
               "i18n": "menu.settings.teamset",
               "icon": "anticon anticon-dashboard",
-              "acl": ["General Staff"],
+              "acl": ["God","Super Admin","Admin"],
               "link": "/settings/teamset"
+            },
+            {
+              "text": "用户设置",
+              "i18n": "menu.settings.userset",
+              "icon": "anticon anticon-dashboard",
+              "acl": ["God","Super Admin"],
+              "link": "/user/manage"
             }
           ]
         }

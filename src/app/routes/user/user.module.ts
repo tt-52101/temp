@@ -5,12 +5,16 @@ import { UserUsersettingComponent } from './usersetting/usersetting.component';
 import { UserUsersettingBasicComponent } from './usersetting/basic/basic.component';
 import { UserUsersettingSecurityComponent } from './usersetting/security/security.component';
 import { UserUsersettingSecurityPwdEditComponent } from './usersetting/security/pwd-edit/pwd-edit.component';
+import { UserManageComponent } from './manage/manage.component';
+import { UserManageUserEditComponent } from './manage/user-edit/user-edit.component';
 
 const COMPONENTS = [
   UserUsersettingComponent,
   UserUsersettingBasicComponent,
   UserUsersettingSecurityComponent,
-  UserUsersettingSecurityPwdEditComponent];
+  UserUsersettingSecurityPwdEditComponent,
+  UserManageComponent,
+  UserManageUserEditComponent];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({

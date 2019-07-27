@@ -15,7 +15,7 @@
   "menu.settings.import": "数据导入",
   "menu.settings.set": "规则设置",
   "menu.settings.teamset": "团队设置",
-
+  "menu.settings.userset":"用户设置",
   "menu.tools": "工具",
   "menu.tools.safety": "安规",
   "menu.tools.performance": "性能",
