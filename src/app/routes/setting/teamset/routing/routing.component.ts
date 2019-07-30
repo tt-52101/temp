@@ -51,7 +51,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     private drawer: DrawerHelper,
     public cache: CacheService,
     private cdr: ChangeDetectorRef,
-    private xlsx:XlsxService
+    private xlsx: XlsxService,
   ) {}
   // forms
   users = [];
@@ -132,14 +132,14 @@ export class SettingTeamsetRoutingComponent implements OnInit {
       OpenDateFromTo: {
         type: 'string',
         title: '开案时间',
-        format:'date',
-        ui: { widget: 'date', mode: 'range',allowClear:true },
+        format: 'date',
+        ui: { widget: 'date', mode: 'range', allowClear: true },
       },
       CompleteDateFromTo: {
         type: 'string',
         title: '结案时间',
-        format:'date',
-        ui: { widget: 'date', mode: 'range',allowClear:true },
+        format: 'date',
+        ui: { widget: 'date', mode: 'range', allowClear: true },
       },
       IsFinished: {
         type: 'boolean',
@@ -171,7 +171,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         format: 'month',
         ui: {
           span: 4,
-          optionalHelp:'搜索产出月份，会使其他选项失效',
+          optionalHelp: '搜索产出月份，会使其他选项失效',
         },
       },
       ToMonth: {
@@ -180,7 +180,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         format: 'month',
         ui: {
           span: 4,
-          optionalHelp:'搜索产出月份，会使其他选项失效',
+          optionalHelp: '搜索产出月份，会使其他选项失效',
         },
       },
     },
@@ -203,19 +203,24 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     { label: 'Quotation No', value: 'QuotationNo', checked: false },
     { label: 'Open Date', value: 'OpenDate', checked: false },
     { label: 'Complete Date', value: 'CompleteDate', checked: false },
+    { label: 'Engineer', value: 'EngineerName', checked: true },
+    { label: 'Engineer CS', value: 'EngineeringCSName', checked: false },
+    { label: 'Sales', value: 'SalesName', checked: false },
     { label: 'Client', value: 'ClientName', checked: true },
     { label: 'Product', value: 'Product', checked: false },
     { label: 'Models', value: 'Models', checked: false },
     { label: 'Service', value: 'ServiceNames', checked: true },
     { label: 'Quoted Fee', value: 'QuotedFee', checked: true },
     { label: 'Invoiced Fee', value: 'InvoicedFee', checked: false },
-    {label:'Workload factor',value:'ActualWorkloadFactor',checked:false},
-    {label:'Can be fininshed in this month',value:'TobeFinishFlag',checked:false},
+    { label: 'Workload factor', value: 'ActualWorkloadFactor', checked: false },
+    {
+      label: 'Can be fininshed in this month',
+      value: 'TobeFinishFlag',
+      checked: false,
+    },
     { label: 'Business Type', value: 'BType', checked: true },
     { label: 'Client Type', value: 'CType', checked: true },
     { label: 'Region Type', value: 'RType', checked: true },
-    
-    
   ];
   // table
   pageInfo = {
@@ -237,8 +242,8 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     Unknown: { text: '未知', color: 'red' },
     '': { text: '未知', color: 'red' },
     ' ': { text: '未知', color: 'red' },
-    true:{text:'yes',color:'green'},
-    false:{text:'no',color:'black'},
+    true: { text: 'yes', color: 'green' },
+    false: { text: 'no', color: 'black' },
   };
   ptColumns: STColumn[] = [
     {
@@ -263,17 +268,17 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.QuotationNo > b.QuotationNo ? 1 : -1,
       },
-      iif: () => this.isChoose('QuotationNo')
+      iif: () => this.isChoose('QuotationNo'),
     },
     {
       title: 'Open Date',
       index: 'OpenDate',
-      type:'date',
+      type: 'date',
       sort: {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.OpenDate > b.OpenDate ? 1 : -1,
       },
-      iif: () => this.isChoose('OpenDate')
+      iif: () => this.isChoose('OpenDate'),
     },
     {
       title: 'Complete Date',
@@ -282,7 +287,34 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.CompleteDate > b.CompleteDate ? 1 : -1,
       },
-      iif: () => this.isChoose('CompleteDate')
+      iif: () => this.isChoose('CompleteDate'),
+    },
+    {
+      title: 'Engineer',
+      index: 'EngineerName',
+      sort: {
+        compare: (a: ProjectTransfer, b: ProjectTransfer) =>
+          a.EngineerName > b.EngineerName ? 1 : -1,
+      },
+      iif: () => this.isChoose('EngineerName'),
+    },
+    {
+      title: 'Engineer CS',
+      index: 'EngineeringCSName',
+      sort: {
+        compare: (a: ProjectTransfer, b: ProjectTransfer) =>
+          a.EngineeringCSName > b.EngineeringCSName ? 1 : -1,
+      },
+      iif: () => this.isChoose('EngineeringCSName'),
+    },
+    {
+      title: 'Sales',
+      index: 'SalesName',
+      sort: {
+        compare: (a: ProjectTransfer, b: ProjectTransfer) =>
+          a.SalesName > b.SalesName ? 1 : -1,
+      },
+      iif: () => this.isChoose('SalesName'),
     },
     {
       title: 'Client',
@@ -291,7 +323,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.ClientName > b.ClientName ? 1 : -1,
       },
-      iif: () => this.isChoose('ClientName')
+      iif: () => this.isChoose('ClientName'),
     },
     {
       title: 'Product',
@@ -300,7 +332,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.Product > b.Product ? 1 : -1,
       },
-      iif: () => this.isChoose('Product')
+      iif: () => this.isChoose('Product'),
     },
     {
       title: 'Models',
@@ -309,7 +341,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.Models > b.Models ? 1 : -1,
       },
-      iif: () => this.isChoose('Models')
+      iif: () => this.isChoose('Models'),
     },
     {
       title: 'Service',
@@ -318,7 +350,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.ServiceNames > b.ServiceNames ? 1 : -1,
       },
-      iif: () => this.isChoose('ServiceNames')
+      iif: () => this.isChoose('ServiceNames'),
     },
     {
       title: 'Fee',
@@ -328,7 +360,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.QuotedFee - b.QuotedFee,
       },
-      iif: () => this.isChoose('QuotedFee')
+      iif: () => this.isChoose('QuotedFee'),
     },
     {
       title: 'Invoiced Fee',
@@ -338,21 +370,21 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.InvoicedFee - b.InvoicedFee,
       },
-      iif: () => this.isChoose('InvoicedFee')
+      iif: () => this.isChoose('InvoicedFee'),
     },
     {
       title: 'Workload Factor',
       index: 'ActualWorkloadFactor',
       type: 'number',
-     
-      iif: () => this.isChoose('ActualWorkloadFactor')
+
+      iif: () => this.isChoose('ActualWorkloadFactor'),
     },
     {
       title: 'can finished?',
       index: 'TobeFinishFlag',
-      type:'tag',
+      type: 'tag',
       tag: this.tags,
-      iif: () => this.isChoose('TobeFinishFlag')
+      iif: () => this.isChoose('TobeFinishFlag'),
     },
     {
       title: 'Business Type',
@@ -363,7 +395,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.BType > b.BType ? 1 : -1,
       },
-      iif: () => this.isChoose('BType')
+      iif: () => this.isChoose('BType'),
     },
     {
       title: 'Client Type',
@@ -374,7 +406,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.CType > b.CType ? 1 : -1,
       },
-      iif: () => this.isChoose('CType')
+      iif: () => this.isChoose('CType'),
     },
     {
       title: 'Region Type',
@@ -385,7 +417,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         compare: (a: ProjectTransfer, b: ProjectTransfer) =>
           a.RType > b.RType ? 1 : -1,
       },
-      iif: () => this.isChoose('RType')
+      iif: () => this.isChoose('RType'),
     },
     {
       title: 'Operation',
@@ -567,12 +599,11 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     this.loading = true;
     console.log(this.sf.value);
     const sfv = this.sf.value;
-    
-    
-    if(this.sf.value.IsFinished===false){
-      sfv.CompleteDateFrom=null;
-      sfv.CompleteDateTo=null;
-    }else{
+
+    if (this.sf.value.IsFinished === false) {
+      sfv.CompleteDateFrom = null;
+      sfv.CompleteDateTo = null;
+    } else {
       if (sfv.OpenDateFromTo) {
         sfv.OpenDateFrom = this.sf.value.OpenDateFromTo[0];
         sfv.OpenDateTo = this.sf.value.OpenDateFromTo[1];
@@ -655,7 +686,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         c =>
           c.BType === 'Unknown' ||
           c.CType === 'Unknown' ||
-          c.RType === 'Unknown'
+          c.RType === 'Unknown',
       );
       this.settingChoose = '显示全部项目';
     } else {
@@ -695,7 +726,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
         );
     }
   }
-  exportExcel(){
+  exportExcel() {
     const data = [this.ptColumns.map(i => i.title)];
     this.pts.forEach(i =>
       data.push(this.ptColumns.map(c => i[c.index as string])),

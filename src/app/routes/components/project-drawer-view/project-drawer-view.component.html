@@ -17,5 +17,5 @@
   </div>
 </nz-card>
 <nz-card nzTitle="自定义信息" *ngIf="isAdmin">
-  <sf [schema]="pSchema" [formData]="i" (formSubmit)="save($event)"></sf>
+  <sf [schema]="pSchema" [formData]="i" loading="http.loading" (formSubmit)="save($event)"></sf>
 </nz-card>

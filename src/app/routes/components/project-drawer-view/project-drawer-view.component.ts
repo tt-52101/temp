@@ -1,35 +1,74 @@
+import { CacheService } from '@delon/cache';
+import { SyneltsRole } from 'app/services/biz/SyneltsRole';
 import { SFSchema } from '@delon/form';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NzModalRef, NzMessageService, NzDrawerRef } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { delay } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, zip } from 'rxjs';
 
 @Component({
   selector: 'app-routes-components-project-drawer-view',
   templateUrl: './project-drawer-view.component.html',
 })
 export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
-  
-  isAdmin=false;
+  isAdmin = false;
   i: any;
 
   constructor(
     private drawer: NzDrawerRef,
     public msg: NzMessageService,
-    public http: _HttpClient
-  ) { }
-
+    public http: _HttpClient,
+    public cache: CacheService,
+  ) {}
+  engineers = [];
+  engineeringCSs = [];
+  sales = [];
   ngOnInit(): void {
     const user = localStorage.getItem('user');
     const userO = JSON.parse(user);
     console.log(userO);
-    this.isAdmin=userO.Roles.some(p=>p==='Admin'||p==='Super Admin'||p==='God');
+    this.isAdmin = userO.Roles.some(
+      p => p === 'Admin' || p === 'Super Admin' || p === 'God',
+    );
+    this.engineers = this.cache.getNone('engineers');
+    this.engineeringCSs = this.cache.getNone('engineeringCss');
+    this.sales = this.cache.getNone('sales');
+    console.log(this.engineers);
   }
   pSchema: SFSchema = {
     properties: {
-      
+      EngineerName: {
+        type: 'string',
+        title: '工程师',
+        enum:this.engineers,
+        ui: {
+          widget: 'select',
+          placeholder: '请选择', 
+          allowClear: true
+        },
+      },
+      EngineeringCSName: {
+        type: 'string',
+        title: '工程助理',
+        enum: this.engineeringCSs,
+        ui: {
+          widget: 'select',
+          placeholder: '请选择',
+          allowClear: true
+        },
+      },
+      SalesName: {
+        type: 'string',
+        title: '销售',
+        enum: this.sales,
+        ui: {
+          widget: 'select',
+          placeholder: '请选择', 
+          allowClear: true
+        },
+      },
       CType: {
         type: 'string',
         title: '客户类型',
@@ -106,7 +145,12 @@ export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
           change: console.log,
         },
       },
-      ActualWorkloadFactor:{type:'number',title:'工作量系数',minimum:0,maximum:5},
+      ActualWorkloadFactor: {
+        type: 'number',
+        title: '工作量系数',
+        minimum: 0,
+        maximum: 5,
+      },
       TobeFinishFlag: {
         type: 'boolean',
         title: '是否本月完成',
@@ -119,9 +163,7 @@ export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
             ]).pipe(delay(100)),
         },
       },
-
     },
-    
   };
 
   save(value: any) {
@@ -140,6 +182,4 @@ export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
       },
     );
   }
-
-  
 }
