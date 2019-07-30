@@ -18,15 +18,7 @@ export class UserManageUserEditComponent implements OnInit {
   schema: SFSchema = {
     properties: {
       name: { type: 'string', title: 'User Name',
-      ui:
-      {
-        autofocus:true,
-        validator:(data:string)=>{
-          if(data.toLocaleLowerCase().endsWith('@intertek.com')){
-            return [{keyword:'格式错误',message:'只能是intertek邮件地址'}]
-          }
-        }
-      } 
+     
     },
       
       SyneltsName: { type: 'string', title: 'Synelts Name'},
@@ -54,7 +46,7 @@ export class UserManageUserEditComponent implements OnInit {
     $name:{
       autofocus:true,
       validator:(data:string)=>{
-        if(data.toLocaleLowerCase().endsWith('@intertek.com')){
+        if(!data.toLocaleLowerCase().endsWith('@intertek.com')){
           return [{keyword:'格式错误',message:'只能是intertek邮件地址'}]
         }
       }

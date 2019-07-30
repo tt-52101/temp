@@ -1,0 +1,10 @@
+<page-header [title]="'编辑 ' + i.ProjectNo||'new Project' + ' 信息'"></page-header>
+<nz-card>
+  <nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
+  <sf #sf [schema]="pSchema" [formData]="i" (formSubmit)="save($event)">
+    <div errorCollect class="text-right">
+      <button nz-button type="button" (click)="sf.reset()" >返回</button>
+      <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">保存</button>
+    </div>
+  </sf>
+</nz-card>

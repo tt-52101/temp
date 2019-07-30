@@ -25,6 +25,7 @@ import {
   STData,
   STColumnTag,
   STWidthMode,
+  XlsxService,
 } from '@delon/abc';
 import { NzMessageService } from 'ng-zorro-antd';
 import { SettingImportEditRecordsComponent } from '../../import/edit/records/records.component';
@@ -50,6 +51,7 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     private drawer: DrawerHelper,
     public cache: CacheService,
     private cdr: ChangeDetectorRef,
+    private xlsx:XlsxService
   ) {}
   // forms
   users = [];
@@ -651,11 +653,9 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     if (this.settingChoose === '只显示未设置项目') {
       this.pts = this.pts.filter(
         c =>
-          c.BType === '' ||
-          c.CType === '' ||
-          c.RType === '' ||
-          c.BType === ' ' ||
-          c.BType === null,
+          c.BType === 'Unknown' ||
+          c.CType === 'Unknown' ||
+          c.RType === 'Unknown'
       );
       this.settingChoose = '显示全部项目';
     } else {
@@ -694,5 +694,19 @@ export class SettingTeamsetRoutingComponent implements OnInit {
           () => {},
         );
     }
+  }
+  exportExcel(){
+    const data = [this.ptColumns.map(i => i.title)];
+    this.pts.forEach(i =>
+      data.push(this.ptColumns.map(c => i[c.index as string])),
+    );
+    this.xlsx.export({
+      sheets: [
+        {
+          data: data,
+          name: 'sheet name',
+        },
+      ],
+    });
   }
 }

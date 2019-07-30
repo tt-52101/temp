@@ -16,6 +16,7 @@ import { RoutesDashboardsProjectdetailsComponent } from './dashboards/projectdet
 import { RoutesDashboardsProgressComponent } from './dashboards/progress/progress.component';
 import { RoutesDashboardsTaskComponent } from './dashboards/task/task.component';
 import { RoutesComponentsProjectDrawerViewComponent } from './components/project-drawer-view/project-drawer-view.component';
+import { RoutesComponentsProjectEditComponent } from './components/project-edit/project-edit.component';
 const COMPONENTS = [
   // passport pages
   UserLoginComponent,
@@ -26,7 +27,8 @@ const COMPONENTS = [
   CallbackComponent,
   RoutesHomeDashboardsComponent,
   RoutesDashboardsProjectdetailsComponent,
-  ];
+  
+  RoutesComponentsProjectEditComponent];
 const COMPONENTS_NOROUNT = [
   RoutesComponentsProjectDrawerViewComponent,
   RoutesDashboardsProgressComponent,

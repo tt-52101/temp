@@ -1,16 +1,14 @@
-import { NzMessageService, arraysEqual } from 'ng-zorro-antd';
+import { SyneltsUser } from 'app/services/biz/SyneltsUser';
+import { ProjectTransfer } from 'app/services/biz/projecttransfer';
+import { NzMessageService } from 'ng-zorro-antd';
 import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-  AbstractControl,
-  FormArray,
-} from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { _HttpClient } from '@delon/theme';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { strictEqual } from 'assert';
+import { SFSchema, SFButton, SFComponent } from '@delon/form';
+import { XlsxService } from '@delon/abc';
 
 @Component({
   selector: 'app-setting-import-singleimport',
@@ -19,220 +17,289 @@ import { strictEqual } from 'assert';
 export class SettingImportSingleimportComponent implements OnInit {
   constructor(
     private http: _HttpClient,
-    private httpclient: HttpClient,
-    private fb: FormBuilder,
     private msg: NzMessageService,
+    private xls:XlsxService
   ) {}
-  stepText = '执行';
-  context = '';
-
-  currentStep = 1;
-
-  status = 'process';
-  creds = 'currentDomainNo=' + 'patrickc' + '&computerName=' + 'CCHNHZHL0027';
-  public headers = new HttpHeaders({
-    'Content-Type': 'application/x-www-form-urlencoded',
-  });
-  requestForm: FormGroup;
-
-  controlArray: Array<{
-    id: number;
-    controlInstance1: string;
-    controlInstance2: string;
-  }> = [];
-  bodyArray: Array<{
-    id: number;
-    controlInstance1: string;
-    controlInstance2: string;
-  }> = [];
-  addParamField(e?: MouseEvent): void {
-    if (e) {
-      e.preventDefault();
-    }
-    const id =
-      this.controlArray.length > 0
-        ? this.controlArray[this.controlArray.length - 1].id + 1
-        : 0;
-
-    const control = {
-      id,
-      controlInstance1: `param${id}key`,
-      controlInstance2: `param${id}value`,
+  @ViewChild('sf1') sf1:SFComponent;
+  @ViewChild('sf2') sf2:SFComponent;
+  i: ProjectTransfer;
+  users = [];
+  engineers = [];
+  engineeringCSs = [];
+  sales = [];
+  salesCSs = [];
+  sheets=[];
+  headers=[];
+  allHeaders=[];
+  fSchema:SFSchema={
+    properties:{
+      
+      upload: {
+        type: 'string',
+        title: '文件',
+        ui: {
+          widget: 'upload',
+          action: 'person/file',
+          accept:'.xls,.xlsx',
+          resReName: 'Records.fileName',
+          type: 'drag',
+          beforeUpload:(file)=>this.xlsPreHandle(file),
+          hint:'点击打开文件，或拖曳文件到此打开文件'
+        },
+      },
+    },
     };
-    const index = this.controlArray.push(control);
-    console.log(this.controlArray[this.controlArray.length - 1]);
-    this.requestForm.addControl(
-      this.controlArray[index - 1].controlInstance1,
-      new FormControl(null, Validators.required),
-    );
-    this.requestForm.addControl(
-      this.controlArray[index - 1].controlInstance2,
-      new FormControl(null, Validators.required),
-    );
-  }
-  addBodyField(e?: MouseEvent): void {
-    if (e) {
-      e.preventDefault();
-    }
-    const id =
-      this.bodyArray.length > 0
-        ? this.bodyArray[this.bodyArray.length - 1].id + 1
-        : 0;
-
-    const control = {
-      id,
-      controlInstance1: `body${id}key`,
-      controlInstance2: `body${id}value`,
-    };
-    const index = this.bodyArray.push(control);
-    console.log(this.bodyArray[this.bodyArray.length - 1]);
-    this.requestForm.addControl(
-      this.bodyArray[index - 1].controlInstance1,
-      new FormControl(null, Validators.required),
-    );
-    this.requestForm.addControl(
-      this.bodyArray[index - 1].controlInstance2,
-      new FormControl(null, Validators.required),
-    );
-  }
-
-  removeParamField(
-    i: { id: number; controlInstance1: string; controlInstance2: string },
-    e: MouseEvent,
-  ): void {
-    e.preventDefault();
-    if (this.controlArray.length > 1) {
-      const index = this.controlArray.indexOf(i);
-      this.controlArray.splice(index, 1);
-      console.log(this.controlArray);
-      this.requestForm.removeControl(i.controlInstance1);
-      this.requestForm.removeControl(i.controlInstance2);
-    }
-  }
-
-  removeBodyField(
-    i: { id: number; controlInstance1: string; controlInstance2: string },
-    e: MouseEvent,
-  ): void {
-    e.preventDefault();
-    if (this.bodyArray.length > 1) {
-      const index = this.bodyArray.indexOf(i);
-      this.bodyArray.splice(index, 1);
-      console.log(this.bodyArray);
-      this.requestForm.removeControl(i.controlInstance1);
-      this.requestForm.removeControl(i.controlInstance2);
-    }
-  }
-  getFormControl(name: string): AbstractControl {
-    return this.requestForm.controls[name];
-  }
-
-  ngOnInit() {
-    this.requestForm = this.fb.group({
-      requestType: ['', [Validators.required]],
-      baseUrl: ['', [Validators.required]],
-      requestUrl: ['', [Validators.required]],
-    });
-  }
-  paramArray = [];
-  createParamString() {
-    const data = this.requestForm.value;
-    const param = Object.keys(data)
-      .filter(f => f.startsWith('param'))
-      .filter(f => f.endsWith('key'))
-      .reduce((obj, f, cur, arr) => {
-        const key = data[f];
-        const vkey = f.substring(0, 6) + 'value';
-        const value = data[vkey];
-        obj[key] = value;
-        return obj;
-      }, {});
-    console.log(param);
-    return param;
-    // let st=''
-    // for(let key in param){
-    //   st+=key+'='+param[key]+'&';
-    // }
-    // if(st.lastIndexOf('&')===st.length-1){
-    //   st=st.substring(0,st.length-2);
-    // }
-    // console.log(st);
-    // return st;
-  }
-  createBodyString() {
-    const data = this.requestForm.value;
-    const param = Object.keys(data)
-      .filter(f => f.startsWith('body'))
-      .filter(f => f.endsWith('key'))
-      .reduce((obj, f, cur, arr) => {
-        const key = data[f];
-        const vkey = f.substring(0, 5) + 'value';
-        const value = data[vkey];
-        obj[key] = value;
-        return obj;
-      }, {});
-    console.log(param);
-    return param;
-    // let st=''
-    // for(let key in param){
-    //   st+=key+'='+param[key]+'&';
-    // }
-    // if(st.lastIndexOf('&')===st.length-1){
-    //   st=st.substring(0,st.length-2);
-    // }
-    // console.log(st);
-    // return st;
-  }
-  submit() {
-    const params = this.createParamString();
-    const body = this.createBodyString();
-    console.log(params);
-    console.log(body);
-    let url = '';
-    const mode = this.requestForm.value.requestType;
-    switch (mode) {
-      case 'GET':
-        {
-          url =
-            this.requestForm.value.baseUrl +
-            '/' +
-            this.requestForm.value.requestUrl;
-          console.log(url);
-          this.http
-            .get(url, params)
-            .subscribe(
-              res => console.log(res),
-              err => console.log(err),
-              () => console.log('request finished'),
-            );
-        }
-        break;
-      case 'POST': {
-        url =
-          this.requestForm.value.baseUrl +
-          '/' +
-          this.requestForm.value.requestUrl;
-        console.log(url);
-        this.http
-          .post(url, body)
-          .subscribe(
-            res => console.log(res),
-            err => console.log(err),
-            () => console.log('request finished'),
-          );
+    pSchema:SFSchema={
+      properties:{
+        sheet:{
+          type:'string',
+          title:'sheets',
+          enum:this.sheets,
+          
+          ui:{
+            widget:'select',
+            change:(option)=>{
+              console.log(option);
+              const i=this.allHeaders.forEach(item=>{
+                if(item&&item[option]){
+                  return item;
+                }
+              })
+              console.log(i);
+            }
+          },
+        },
+        headers: {
+          type: 'string',
+          title: '列名',
+          enum: this.headers,
+          ui: {
+            widget: 'transfer',
+            titles: ['excel中', '预备导入'],
+          },
+        },
       }
     }
+    sfBtn:SFButton={
+      submit:'分析',
+    };
+  ngOnInit(): void {
+    this.i = new ProjectTransfer();
+   
+  }
+  xlsPreHandle(file):boolean{
+    let data:any;
+    this.xls.import(file).then(res=>{
+      data=res
+      console.log(res);
+      let c=Object.keys(data);
+      c.forEach(item=>{
+        this.sheets.push({label:item,value:item});
+      });
+      if(this.sheets){
+        for(let i in data){
+          let o={};
+          
+          o[i]=data[i][0];
+          this.allHeaders.push(o);
+        }
+       
+      }
+      console.log(this.allHeaders);
+      console.log(this.headers);
+      if(this.sheets){
+        return true;
+      }else{
+        return false;
+      }
+    });
+    return true;
 
-    // this.httpclient.get<any>('url',this.creds,{headers:this.headers}).subscribe(
-    //   res=>{
-    //     console.log(res);
+   
+  }
+  // pSchema: SFSchema = {
+  //   properties: {
+  //     ProjectNo: {
+  //       type: 'string',
+  //       title: '项目号',
+  //     },
+  //     QuotationNo: {
+  //       type: 'string',
+  //       title: '报价单号',
+  //     },
+  //     OpenDate: {
+  //       type: 'string',
+  //       title: '开案日期',
+  //       format: 'date',
+  //     },
+  //     CompleteDate: {
+  //       type: 'string',
+  //       title: '完成日期',
+  //       format: 'date',
+  //     },
+  //     EngineerName: {
+  //       type: 'string',
+  //       title: '工程师',
+  //       enum: this.engineers,
+  //       ui: { 
+  //         widget: 'select', 
+  //         allowClear: true,
+  //         placeholder:'工程师',
+          
+  //        },
+  //     },
+  //     EngineeringCE: {
+  //       type: 'string',
+  //       title: '工程助理',
+  //       enum: this.engineeringCSs,
+  //       ui: { widget: 'select' },
+  //     },
+  //     Sales: {
+  //       type: 'string',
+  //       title: '工程师',
+  //       enum: this.sales,
+  //       ui: { widget: 'select' },
+  //     },
+  //     SalesCS: {
+  //       type: 'string',
+  //       title: '工程师',
+  //       enum: this.salesCSs,
+  //       ui: { widget: 'select' },
+  //     },
+  //     ClientName: {
+  //       type: 'string',
+  //       title: '客户名',
+  //     },
+  //     ServiceName: {
+  //       type: 'string',
+  //       title: '服务',
+  //     },
+  //     Product: {
+  //       type: 'string',
+  //       title: '产品',
+  //     },
+  //     Models: {
+  //       type: 'string',
+  //       title: '型号',
+  //     },
+  //     QuotedFee: {
+  //       type: 'number',
+  //       title: '报价金额',
+  //     },
+  //     InvoicedFee: {
+  //       type: 'number',
+  //       title: '开票金额',
+  //     },
+  //     CType: {
+  //       type: 'string',
+  //       title: '客户类型',
+  //       ui: {
+  //         widget: 'radio',
+  //         asyncData: () =>
+  //           of([
+  //             { label: '普通客户', value: 'Normal' },
+  //             { label: 'VIP客户', value: 'VIP' },
+  //             { label: 'Agent客户', value: 'Agent' },
+  //             { label: '未知', value: null },
+  //           ]).pipe(delay(100)),
+  //         change: console.log,
+  //       },
+  //       default: '',
+  //     },
+  //     BType: {
+  //       type: 'string',
+  //       title: '业务类型',
+  //       ui: {
+  //         widget: 'radio',
+  //         asyncData: () =>
+  //           of([
+  //             { label: '安规', value: 'Safety' },
+  //             { label: '能效', value: 'EE' },
+  //             { label: '化学', value: 'Chemical' },
+  //             { label: '未知', value: 'Unknown' },
+  //           ]).pipe(delay(100)),
+  //         change: console.log,
+  //       },
+  //       default: '',
+  //     },
+  //     RType: {
+  //       type: 'string',
+  //       title: '区域类型',
+  //       ui: {
+  //         widget: 'radio',
+  //         asyncData: () =>
+  //           of([
+  //             { label: '欧洲', value: 'IEC' },
+  //             { label: '北美', value: 'US' },
+  //             { label: 'GMAP', value: 'GMAP' },
+  //             { label: '未知', value: 'Unknown' },
+  //           ]).pipe(delay(100)),
+  //         change: console.log,
+  //       },
+  //       default: '',
+  //     },
+  //     ManualProgress: {
+  //       type: 'string',
+  //       title: '当前进度',
+  //       ui: {
+  //         widget: 'radio',
+  //         asyncData: () =>
+  //           of([
+  //             { label: 'Testing', value: 'Testing' },
+  //             { label: 'Reporting', value: 'Reporting' },
+  //             {
+  //               label: 'Waiting for Documents',
+  //               value: 'Waiting for Documents',
+  //             },
+  //             { label: 'Apply Certificate', value: 'Apply Certificate' },
+  //             { label: 'Waiting for FI', value: 'Waiting for FI' },
+  //             {
+  //               label: 'Waiting for Confirmation',
+  //               value: 'Waiting for Client Confirmation',
+  //             },
+  //             {
+  //               label: 'Waiting for Modification',
+  //               value: 'Waiting for Client Modification',
+  //             },
+  //             { label: 'Apply Termination', value: 'Apply Termination' },
+  //           ]).pipe(delay(100)),
+  //         change: console.log,
+  //       },
+  //     },
+  //     ActualWorkloadFactor: {
+  //       type: 'number',
+  //       title: '工作量系数',
+  //       minimum: 0,
+  //       maximum: 5,
+  //     },
+  //     TobeFinishFlag: {
+  //       type: 'boolean',
+  //       title: '是否本月完成',
+  //       ui: {
+  //         widget: 'radio',
+  //         asyncData: () =>
+  //           of([
+  //             { label: '能', value: true },
+  //             { label: '不能', value: false },
+  //           ]).pipe(delay(100)),
+  //       },
+  //     },
+  //   },
+  // };
+
+  save(value: any) {
+    console.log(value);
+    this.http.get('person/headerlist',{fileName:value.upload,})
+    // this.http.put('home/project', value).subscribe(
+    //   res => {
+    //     if (res.Message === 'OK') {
+    //       this.msg.success('保存成功');
+    //     } else {
+    //       this.msg.warning('出了点问题');
+    //     }
     //   },
-    //   err=>{
-
-    //   },
-    //   ()=>{
-
-    //   }
+    //   err => {},
+    //   () => {},
     // );
   }
 }

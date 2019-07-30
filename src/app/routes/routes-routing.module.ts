@@ -15,6 +15,7 @@ import { JWTGuard } from '@delon/auth';
 import { RoutesHomeDashboardsComponent } from './dashboards/dashboards.component';
 import { RoutesDashboardsProjectdetailsComponent } from './dashboards/projectdetails/projectdetails.component';
 import { RoutesComponentsProjectDrawerViewComponent } from './components/project-drawer-view/project-drawer-view.component';
+import { RoutesComponentsProjectEditComponent } from './components/project-edit/project-edit.component';
 
 const routes: Routes = [
   {
@@ -81,7 +82,8 @@ const routes: Routes = [
   // 单页不包裹Layout
   { path: 'callback/:type', component: CallbackComponent },
   { path: '**', redirectTo: 'exception/404' },
-]
+
+  { path: 'project-edit', component: RoutesComponentsProjectEditComponent }]
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {

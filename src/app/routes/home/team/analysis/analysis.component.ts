@@ -39,9 +39,11 @@ theMonth=new Date().getMonth();
       },
       err => {},
       () => {
-        
-          this.submit({FromMonth:parseInt(this.theYear.toString()+'01',10),ToMonth:parseInt(this.theYear.toString()+'0'+(this.theMonth-1).toString(),10)});
-          
+        const from=parseInt(this.theYear.toString()+'01',10);
+        const to =parseInt(this.theYear.toString()+'0'+(this.theMonth-1).toString(),10);
+        console.log(from);
+        console.log(to);
+        this.GetAnalysisData(from,to);
       },
     );
   }
@@ -74,12 +76,18 @@ theMonth=new Date().getMonth();
   };
   jobStatusData=[];
   submit(data: any) {
+    const from = format(this.sf.value.FromMonth, 'YYYYMM');
+    const to = format(this.sf.value.ToMonth, 'YYYYMM');
+    
+    console.log(data);
+    this.GetAnalysisData(from,to)
+  }
+  GetAnalysisData(from,to){
     this.loading=true;
     this.isFinished=true;
     const theYear=new Date().getFullYear();
-    console.log(data);
-    const from = format(this.sf.value.FromMonth, 'YYYYMM');
-    const to = format(this.sf.value.ToMonth, 'YYYYMM');
+    
+    
     // 获取选择时间间隔的所有register案子，使用revenueMonth属性
     zip(this.http
       .get('home/projectsbyfilter', {

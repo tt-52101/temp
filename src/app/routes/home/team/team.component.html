@@ -3,7 +3,7 @@
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card1" [title]="'年度完成Revenue'" contentHeight="144px" [action]="action1" [footer]="footer1">
         <ng-template #action1>
-          <nz-tooltip [nzTitle]="titleTemplate1">
+          <nz-tooltip [nzTitle]="'Revenue of this year until last month'">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
@@ -15,7 +15,7 @@
         </g2-water-wave>
         <ng-template #footer1>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Till Last Month:{{ actualTotoal | _currency }}</span>
+            <span class="ml-sm">{{ actualTotoal | _currency }}</span>
           </p>
         </ng-template>
       </g2-card>
@@ -24,7 +24,7 @@
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card2" [title]="'年度Job In趋势'" contentHeight="144px" [action]="action2" [footer]="footer2">
         <ng-template #action2>
-          <nz-tooltip [nzTitle]="'Job in of every month'">
+          <nz-tooltip [nzTitle]="'Job in of this year until last month'">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
@@ -34,7 +34,7 @@
         </div>
         <ng-template #footer2>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Year to Day: {{jobInYTD|_currency}}</span>
+            <span class="ml-sm">{{jobInYTD|_currency}}</span>
           </p>
         </ng-template>
       </g2-card>
@@ -43,7 +43,7 @@
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card3" [title]="'月度完成Revenue'" contentHeight="144px" [action]="action3" [footer]="footer3">
         <ng-template #action3>
-          <nz-tooltip [nzTitle]="titleTemplate2">
+          <nz-tooltip [nzTitle]="'Revenue finished in this month'">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
@@ -55,7 +55,7 @@
         </g2-water-wave>
         <ng-template #footer3>
           <p class="text-truncate mb0">
-            <span class="ml-sm">Till Yesterday:{{ actualMonth | _currency }} </span>
+            <span class="ml-sm">{{ actualMonth | _currency }} </span>
           </p>
         </ng-template>
       </g2-card>
@@ -66,7 +66,7 @@
     <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6">
       <g2-card id="card4" [title]="'月度Job In'" contentHeight="144px" [action]="action4" [footer]="footer4">
         <ng-template #action4>
-          <nz-tooltip [nzTitle]="'Job In of this month'">
+          <nz-tooltip [nzTitle]="'Job In of this month Daily'">
             <i nz-tooltip nz-icon type="info-circle"></i>
           </nz-tooltip>
         </ng-template>
@@ -75,7 +75,6 @@
         </div>
         <ng-template #footer4>
           <p class="text-truncate mb0">
-            Year to Day:
             <span class="ml-sm">{{ jobInMTD|_currency }}</span>
           </p>
         </ng-template>
