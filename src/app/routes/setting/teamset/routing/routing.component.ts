@@ -50,7 +50,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     public http: _HttpClient,
     private drawer: DrawerHelper,
     public cache: CacheService,
-    private cdr: ChangeDetectorRef,
     private xlsx: XlsxService,
   ) {}
   // forms
@@ -503,7 +502,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
             let i = 0;
             if (item.SyneltsRole.indexOf('0') !== -1) {
               this.engineers.push({
-                index: i,
                 label: item.Name,
                 value: item.Name,
               });
@@ -512,7 +510,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
             let j = 0;
             if (item.SyneltsRole.indexOf('1') !== -1) {
               this.engineeringCSs.push({
-                index: j,
                 label: item.Name,
                 value: item.Name,
               });
@@ -521,7 +518,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
             let k = 0;
             if (item.SyneltsRole.indexOf('2') !== -1) {
               this.sales.push({
-                index: k,
                 label: item.Name,
                 value: item.Name,
               });
@@ -659,7 +655,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
     // console.log(e);
     if (e.checkbox) {
       this.selectRows = e.checkbox;
-      this.cdr.detectChanges();
       console.log(this.selectRows);
     }
     if (e.type === 'ps') {
@@ -714,7 +709,6 @@ export class SettingTeamsetRoutingComponent implements OnInit {
               this.loading = false;
 
               this.getData();
-              this.cdr.detectChanges();
               console.log(res.Items);
             } else {
               this.msg.success('失败！');

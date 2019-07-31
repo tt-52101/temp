@@ -26,27 +26,40 @@ export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
   engineeringCSs = [];
   sales = [];
   ngOnInit(): void {
+    let eng = [];
+    let engcs = [];
+    let ss = [];
+    eng = this.cache.getNone('engineers');
+    engcs = this.cache.getNone('engineeringCss');
+    ss = this.cache.getNone('sales');
+    eng.forEach(item => {
+      this.engineers.push(item);
+    });
+    engcs.forEach(item => {
+      this.engineeringCSs.push(item);
+    });
+    ss.forEach(item => {
+      this.sales.push(item);
+    });
     const user = localStorage.getItem('user');
     const userO = JSON.parse(user);
     console.log(userO);
     this.isAdmin = userO.Roles.some(
       p => p === 'Admin' || p === 'Super Admin' || p === 'God',
     );
-    this.engineers = this.cache.getNone('engineers');
-    this.engineeringCSs = this.cache.getNone('engineeringCss');
-    this.sales = this.cache.getNone('sales');
+
     console.log(this.engineers);
   }
-  pSchema: SFSchema = {
+  sSchema: SFSchema = {
     properties: {
       EngineerName: {
         type: 'string',
         title: '工程师',
-        enum:this.engineers,
+        enum: this.engineers,
         ui: {
           widget: 'select',
-          placeholder: '请选择', 
-          allowClear: true
+          placeholder: '请选择',
+          allowClear: true,
         },
       },
       EngineeringCSName: {
@@ -56,7 +69,7 @@ export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
         ui: {
           widget: 'select',
           placeholder: '请选择',
-          allowClear: true
+          allowClear: true,
         },
       },
       SalesName: {
@@ -65,8 +78,8 @@ export class RoutesComponentsProjectDrawerViewComponent implements OnInit {
         enum: this.sales,
         ui: {
           widget: 'select',
-          placeholder: '请选择', 
-          allowClear: true
+          placeholder: '请选择',
+          allowClear: true,
         },
       },
       CType: {

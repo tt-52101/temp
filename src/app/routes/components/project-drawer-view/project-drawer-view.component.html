@@ -1,21 +1,20 @@
-
 <nz-card nzTitle="基本信息">
-  
-  <div sv-container  col="2" *ngIf="i">
+
+  <div sv-container col="2" *ngIf="i">
     <sv label="项目号" type="primary">{{ i.ProjectNo }}</sv>
     <sv label="报价单号">{{i.QuotationNo}}</sv>
     <sv label="开案日期">{{i.OpenDate|_date}}</sv>
     <sv label="产品" col="1">{{i.Product}}</sv>
     <sv label="完成日期" *ngIf="i.CompleteDate">{{i.CompleteDate|_date}}</sv>
     <sv label="客户名" col="1">{{i.ClientName}}</sv>
-    
+
     <sv label="型号" col="1" optional="'skdfjka'" optionalHelp="'dfad'">{{i.Models}}</sv>
     <sv label="服务" col="1" type="danger">{{i.ServiceNames}}</sv>
     <sv label="费用" col="1" type="success">{{i.QuotedFee|_currency}}</sv>
-    
-    
+
+
   </div>
 </nz-card>
 <nz-card nzTitle="自定义信息" *ngIf="isAdmin">
-  <sf [schema]="pSchema" [formData]="i" loading="http.loading" (formSubmit)="save($event)"></sf>
+  <sf #sf [schema]="sSchema" [formData]="i" (formSubmit)="save($event)"></sf>
 </nz-card>
